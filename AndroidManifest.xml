@@ -13,6 +13,7 @@
         android:icon="@drawable/ic_launcher"
         android:theme="@style/AppTheme">
 
+        <uses-library android:name="com.google.android.maps"/>
     </application>
 
 </manifest>
