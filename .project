@@ -3,6 +3,7 @@
 	<name>InfoCity</name>
 	<comment></comment>
 	<projects>
+		<project>android-mapviewballoons</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
