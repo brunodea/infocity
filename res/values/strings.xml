@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">InfoCity</string>
+    <string name="no_internet_dialog_title">Problema de Conexão</string>
+    <string name="go_to_internet_settings">Ir para configurações sem fio e rede?</string>
+    <string name="settings">Configurações</string>
+    <string name="cancel">Cancelar</string>
 </resources>
