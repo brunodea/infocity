@@ -2,28 +2,29 @@ package br.ufsm.brunodea.tcc.map;
 
 import java.util.ArrayList;
 
-import android.graphics.drawable.Drawable;
+import android.content.Context;
+import br.ufsm.brunodea.tcc.event.EventItem;
+import br.ufsm.brunodea.tcc.event.EventItem.EventType;
+import br.ufsm.brunodea.tcc.util.Util;
 
 import com.google.android.maps.MapView;
-import com.google.android.maps.OverlayItem;
 import com.readystatesoftware.mapviewballoons.BalloonItemizedOverlay;
 
-public class EventsItemizedOverlay extends BalloonItemizedOverlay<OverlayItem> {
+public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
+	private ArrayList<EventItem> mEventOverlays;
 	
-	private ArrayList<OverlayItem> mEventOverlays;
-	
-	public EventsItemizedOverlay(Drawable defaultMarker, MapView mapView) {
-		super(defaultMarker, mapView);
-		mEventOverlays = new ArrayList<OverlayItem>();
+	public EventsItemizedOverlay(Context c, EventType type, MapView mapView) {
+		super(boundCenter(Util.getEventTypeMarker(c, type)), mapView);
+		mEventOverlays = new ArrayList<EventItem>();
 	}
 
-	public void addEvent(OverlayItem event_overlay) {
-		mEventOverlays.add(event_overlay);
+	public void addEventItem(EventItem eventitem) {
+		mEventOverlays.add(eventitem);
 		populate();
 	}
 	
 	@Override
-	protected OverlayItem createItem(int i) {
+	protected EventItem createItem(int i) {
 		return mEventOverlays.get(i);
 	}
 
@@ -33,7 +34,7 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<OverlayItem> {
 	}
 	
 	@Override
-	protected boolean onBalloonTap(int index, OverlayItem item) {
+	protected boolean onBalloonTap(int index, EventItem item) {
 		return true;
 	}
 }
