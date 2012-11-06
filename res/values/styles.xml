@@ -1,5 +1,8 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppTheme" parent="android:Theme.Light" />
-
+    <style name="AppTheme" parent="android:Theme.Light">
+        <item name="android:windowTitleSize">@dimen/window_title_height</item>
+        <item name="android:windowTitleBackgroundStyle">@drawable/window_title_bg</item>
+    </style>
+        
 </resources>
