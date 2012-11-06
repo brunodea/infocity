@@ -2,7 +2,10 @@ package br.ufsm.brunodea.tcc.map;
 
 import java.util.List;
 
+import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 import br.ufsm.brunodea.tcc.R;
 import br.ufsm.brunodea.tcc.event.EventItem;
 import br.ufsm.brunodea.tcc.event.EventItem.EventType;
@@ -22,9 +25,13 @@ public class InfoCityMap extends MapActivity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceBundle) {
-		super.onCreate(savedInstanceBundle);		
+		super.onCreate(savedInstanceBundle);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		setContentView(R.layout.map);
-		
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.windowtitle);
+		getWindow().setFormat(PixelFormat.RGBA_8888);
+	 
 		init();
 		addTestMarkers();
 		
@@ -57,7 +64,7 @@ public class InfoCityMap extends MapActivity {
 		eio.addEventItem(event);
 		eio.addEventItem(event2);
 
-		mMapView.getOverlays().add(eio);
+		mMapOverlays.add(eio);
 		
 		mMapController.animateTo(event.getPoint());
 	}
