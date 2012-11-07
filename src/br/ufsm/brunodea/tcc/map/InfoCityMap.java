@@ -2,10 +2,17 @@ package br.ufsm.brunodea.tcc.map;
 
 import java.util.List;
 
+import android.content.Context;
 import android.graphics.PixelFormat;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import br.ufsm.brunodea.tcc.R;
 import br.ufsm.brunodea.tcc.event.EventItem;
 import br.ufsm.brunodea.tcc.event.EventItem.EventType;
@@ -17,11 +24,19 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 
-public class InfoCityMap extends MapActivity {
+public class InfoCityMap extends MapActivity implements OnClickListener {
 
 	private MapView mMapView;
 	private MapController mMapController;
 	private List<Overlay> mMapOverlays;
+	
+	private LocationManager mLocationManager;
+	private InfoCityLocationListener mLocationListener;
+	
+	private Location mLastKnownLocation;
+	
+	private Button mWindowTitleButtonAddEvent;
+	private ProgressBar mWindowTitleProgressBar;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceBundle) {
@@ -33,6 +48,8 @@ public class InfoCityMap extends MapActivity {
 		getWindow().setFormat(PixelFormat.RGBA_8888);
 	 
 		init();
+		initGUIElements();
+		
 		addTestMarkers();
 		
 		Internet.hasConnection(this, true);
@@ -47,12 +64,70 @@ public class InfoCityMap extends MapActivity {
 		mMapController = mMapView.getController();
 		
 		mMapOverlays = mMapView.getOverlays();
+		
+		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		mLocationListener = new InfoCityLocationListener(this);
+
+		mLastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		if(mLastKnownLocation == null) {
+			mLastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		}
+	
+		centerMapInLastKnownLocation();
+	}
+	
+	private void initGUIElements() {
+		mWindowTitleButtonAddEvent = (Button)findViewById(R.id.button_add_event);
+		mWindowTitleButtonAddEvent.setOnClickListener(this);
+		
+		mWindowTitleProgressBar = (ProgressBar)findViewById(R.id.progressbar_window_title);
+		mWindowTitleProgressBar.setVisibility(View.GONE);
 	}
 	
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
 	}
+	
+	public void startRequestLocationUpdates() {
+		mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+				0, 5, mLocationListener);
+		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+				0, 5, mLocationListener);
+	}
+	
+	public void stopRequestLocationUpdates() {
+		mLocationManager.removeUpdates(mLocationListener);
+	}
+	
+	public void centerMapInLastKnownLocation() {
+		if(mLastKnownLocation != null) {
+			mMapController.setCenter(
+					new GeoPoint(
+						(int)(mLastKnownLocation.getLatitude()*1E6), 
+						(int)(mLastKnownLocation.getLongitude()*1E6)
+				    ));
+		}
+	}
+
+	public void onClick(View v) {
+		if(v == mWindowTitleButtonAddEvent) {
+			toggleWindowTitleAddEventProgressBar();
+			startRequestLocationUpdates();
+		}
+	}
+	
+	public void setLastKnownLocation(Location location) {
+		mLastKnownLocation = location;
+	}	
+	
+	public void toggleWindowTitleAddEventProgressBar() {
+		int pb_vis = mWindowTitleProgressBar.getVisibility();
+		mWindowTitleProgressBar.setVisibility(
+				pb_vis == View.VISIBLE ? View.GONE : View.VISIBLE);
+		mWindowTitleButtonAddEvent.setEnabled(!mWindowTitleButtonAddEvent.isEnabled());
+	}
+	
 	
 	private void addTestMarkers() {
 		EventsItemizedOverlay eio = 
