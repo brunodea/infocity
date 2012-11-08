@@ -68,15 +68,9 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		mMapController = mMapView.getController();
 		
 		mMapOverlays = mMapView.getOverlays();
-		mUnknownEventsOverlay = 
-				new EventsItemizedOverlay(this, EventType.UNKNOWN, mMapView, BalloonType.INFO);
-		mAddEventsOverlay = 
-				new EventsItemizedOverlay(this, EventType.UNKNOWN, mMapView, BalloonType.ADD);
-		
-		mMapOverlays.add(mUnknownEventsOverlay);
-		mMapOverlays.add(mAddEventsOverlay);
-		
-		
+		mUnknownEventsOverlay = null;
+		mAddEventsOverlay = null;
+				
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		mLocationListener = new InfoCityLocationListener(this);
 
@@ -143,6 +137,11 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	public void addAddEventItemMarker() {
 		EventItem new_event = createEventItem(mLastKnownLocation.getLatitude(),
 				mLastKnownLocation.getLongitude(), "New Event", "New Event", EventType.UNKNOWN);
+		if(mAddEventsOverlay == null) {
+			mAddEventsOverlay =
+					new EventsItemizedOverlay(this, EventType.UNKNOWN, mMapView, BalloonType.ADD);
+			mMapOverlays.add(mAddEventsOverlay);
+		}
 		mAddEventsOverlay.addEventItem(new_event);
 	}
 	
@@ -151,10 +150,15 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 				"Descrição do Teste Um.", EventType.UNKNOWN);
 		EventItem event2 = createEventItem(-29.696031, -53.860044, "Teste Dois",
 				"Descrição do Teste Dois", EventType.UNKNOWN);
+		
+		if(mUnknownEventsOverlay == null) {
+			mUnknownEventsOverlay =
+					new EventsItemizedOverlay(this, EventType.UNKNOWN, mMapView, BalloonType.INFO);
+			mMapOverlays.add(mUnknownEventsOverlay);
+		}
+		
 		mUnknownEventsOverlay.addEventItem(event);
 		mUnknownEventsOverlay.addEventItem(event2);
-
-		mMapOverlays.add(mUnknownEventsOverlay);
 		
 		mUnknownEventsOverlay.removeEventItem(event);
 	}
