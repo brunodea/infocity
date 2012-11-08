@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/balloon_addevent_layout"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:minWidth="300dip" 
+    android:background="@drawable/balloon_overlay_bg_selector">         
+    <RelativeLayout
+       android:id="@id/balloon_inner_layout"
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content">
+        <ImageView
+            android:id="@id/balloon_close"
+            android:src="@drawable/balloon_overlay_close"
+            android:contentDescription="@string/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="10dp"/>
+        
+       
+        <EditText
+            android:id="@+id/edittext_title_addevent_balloon"
+            android:hint="@string/title"
+            android:textSize="@dimen/default_text_size"
+            android:inputType="text"
+            android:layout_toLeftOf="@id/balloon_close"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"/>
+        
+    </RelativeLayout>
+    <EditText 
+        android:id="@+id/edittext_descr_addevent_balloon"
+        android:hint="@string/description"
+        android:textSize="@dimen/default_text_size"
+        android:inputType="textMultiLine"
+        android:gravity="top"
+        android:singleLine="false"
+        android:lines="3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
+   
+    <TextView 
+        android:id="@+id/textivew_keywords_addevent_balloon"
+        android:text="-"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:orientation="horizontal">
+        
+        <Button
+            android:id="@+id/button_addkeyword_addevent_balloon"
+            android:text="@string/keywords"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"/>
+        
+	    <Spinner
+	        android:id="@+id/spinner_type_addevent_balloon"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="right"/>
+    </LinearLayout>
+        
+    <ImageButton
+        android:id="@+id/button_save_addevent_balloon"
+        android:src="@drawable/okay"
+        android:background="@null"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:scaleType="fitXY"
+        android:contentDescription="@string/save"
+        android:layout_gravity="center"/>
+</LinearLayout>
