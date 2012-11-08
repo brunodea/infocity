@@ -11,12 +11,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import br.ufsm.brunodea.tcc.R;
 import br.ufsm.brunodea.tcc.event.EventItem;
 import br.ufsm.brunodea.tcc.event.EventItem.EventType;
 import br.ufsm.brunodea.tcc.internet.Internet;
+import br.ufsm.brunodea.tcc.map.EventsItemizedOverlay.BalloonType;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -35,8 +36,12 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	
 	private Location mLastKnownLocation;
 	
-	private Button mWindowTitleButtonAddEvent;
+	private ImageButton mWindowTitleButtonAddEvent;
 	private ProgressBar mWindowTitleProgressBar;
+	
+
+	private EventsItemizedOverlay mAddEventsOverlay;
+	private EventsItemizedOverlay mUnknownEventsOverlay;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceBundle) {
@@ -46,9 +51,9 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		setContentView(R.layout.map);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.windowtitle);
 		getWindow().setFormat(PixelFormat.RGBA_8888);
-	 
-		init();
+
 		initGUIElements();
+		init();
 		
 		addTestMarkers();
 		
@@ -57,13 +62,20 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	
 	private void init() {
 		mMapView = (MapView) findViewById(R.id.mapview);
-		mMapView.setBuiltInZoomControls(true);
 		mMapView.getController().setZoom(20);
 		mMapView.setSatellite(true);
 		
 		mMapController = mMapView.getController();
 		
 		mMapOverlays = mMapView.getOverlays();
+		mUnknownEventsOverlay = 
+				new EventsItemizedOverlay(this, EventType.UNKNOWN, mMapView, BalloonType.INFO);
+		mAddEventsOverlay = 
+				new EventsItemizedOverlay(this, EventType.UNKNOWN, mMapView, BalloonType.ADD);
+		
+		mMapOverlays.add(mUnknownEventsOverlay);
+		mMapOverlays.add(mAddEventsOverlay);
+		
 		
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		mLocationListener = new InfoCityLocationListener(this);
@@ -77,7 +89,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	}
 	
 	private void initGUIElements() {
-		mWindowTitleButtonAddEvent = (Button)findViewById(R.id.button_add_event);
+		mWindowTitleButtonAddEvent = (ImageButton)findViewById(R.id.button_add_event);
 		mWindowTitleButtonAddEvent.setOnClickListener(this);
 		
 		mWindowTitleProgressBar = (ProgressBar)findViewById(R.id.progressbar_window_title);
@@ -128,26 +140,28 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		mWindowTitleButtonAddEvent.setEnabled(!mWindowTitleButtonAddEvent.isEnabled());
 	}
 	
-	
-	private void addTestMarkers() {
-		EventsItemizedOverlay eio = 
-				new EventsItemizedOverlay(this, EventType.UNKNOWN, mMapView);
-		
-		EventItem event = createTestEventMarker(-29.708332, -53.818674);
-		EventItem event2 = createTestEventMarker(-29.696031, -53.860044);
-		
-		eio.addEventItem(event);
-		eio.addEventItem(event2);
-
-		mMapOverlays.add(eio);
-		
-		mMapController.animateTo(event.getPoint());
+	public void addAddEventItemMarker() {
+		EventItem new_event = createEventItem(mLastKnownLocation.getLatitude(),
+				mLastKnownLocation.getLongitude(), "New Event", "New Event", EventType.UNKNOWN);
+		mAddEventsOverlay.addEventItem(new_event);
 	}
 	
-	private EventItem createTestEventMarker(double lat, double lon) {
+	private void addTestMarkers() {		
+		EventItem event = createEventItem(-29.708332, -53.818674, "Teste Um", 
+				"Descrição do Teste Um.", EventType.UNKNOWN);
+		EventItem event2 = createEventItem(-29.696031, -53.860044, "Teste Dois",
+				"Descrição do Teste Dois", EventType.UNKNOWN);
+		mUnknownEventsOverlay.addEventItem(event);
+		mUnknownEventsOverlay.addEventItem(event2);
+
+		mMapOverlays.add(mUnknownEventsOverlay);
+		
+		mUnknownEventsOverlay.removeEventItem(event);
+	}
+	
+	private EventItem createEventItem(double lat, double lon, String title, 
+			String description, EventType type) {
 		GeoPoint gp = new GeoPoint((int)(lat*1E6),(int)(lon*1E6));
-		EventItem event = new EventItem(gp, "teste", "esse é um teste.", 
-				EventType.UNKNOWN);
-		return event;
+		return new EventItem(gp, title,  description, type);
 	}
 }
