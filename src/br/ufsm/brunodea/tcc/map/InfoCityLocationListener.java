@@ -18,6 +18,7 @@ public class InfoCityLocationListener implements LocationListener {
 		mInfoCityMap.setLastKnownLocation(location);
 		mInfoCityMap.toggleWindowTitleAddEventProgressBar();
 		mInfoCityMap.centerMapInLastKnownLocation();
+		mInfoCityMap.addAddEventItemMarker();
 		mInfoCityMap.stopRequestLocationUpdates();
 	}
 
