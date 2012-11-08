@@ -5,4 +5,12 @@
     <string name="settings">Configurações</string>
     <string name="cancel">Cancelar</string>
     <string name="add">Adicionar</string>
+    <string name="title">Título</string>
+    <string name="description">Descrição</string>
+    <string name="cancel">Cancelar</string>
+    <string name="save">Salvar</string>
+    <string name="close">Fechar</string>
+    <string name="type">Tipo</string>
+    <string name="unknown">Desconhecido</string>
+    <string name="keywords">Palavras-Chave</string>
 </resources>
