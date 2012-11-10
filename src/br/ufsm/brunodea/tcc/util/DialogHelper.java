@@ -57,5 +57,7 @@ public class DialogHelper {
                  handler.sendEmptyMessage(1);
              }
          });
+         
+         builder.show();
     }
 }
