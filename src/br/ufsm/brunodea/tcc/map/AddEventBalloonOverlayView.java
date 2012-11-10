@@ -76,5 +76,26 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 	
 	@Override
 	protected void setBalloonData(EventItem item, ViewGroup parent) {
+		mEventItem = item;
+	}
+
+	public void onClick(View v) {
+		if(v == mImageButtonCancel) {
+			Handler yesnohandler = new Handler() {
+				@Override
+				public void handleMessage(Message msg) {
+					if(msg.what == 0) {
+						App.instance().getEventOverlayManager().
+							removeEventItem(mEventItem);
+					} else {
+						//no
+					}
+				}
+			};
+			DialogHelper.yesNoDialog(mContext, 
+					mContext.getResources().getString(R.string.alert), 
+					mContext.getResources().getString(R.string.cancel_addevent),
+					yesnohandler);
+		}
 	}
 }
