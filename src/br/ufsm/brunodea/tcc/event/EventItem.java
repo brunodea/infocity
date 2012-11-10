@@ -6,7 +6,7 @@ import com.google.android.maps.OverlayItem;
 public class EventItem extends OverlayItem {
 	
 	public enum EventType {
-		UNKNOWN,
+		ADD, UNKNOWN,
 	}
 	
 	private EventType mType;
