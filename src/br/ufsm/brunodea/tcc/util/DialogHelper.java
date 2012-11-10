@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
 import android.provider.Settings;
 import br.ufsm.brunodea.tcc.R;
 
@@ -37,5 +38,24 @@ public class DialogHelper {
         });
 
         builder.show();
+    }
+    
+    public static void yesNoDialog(Context c, String title, String description, 
+    		final Handler handler) {
+    	 AlertDialog.Builder builder = new AlertDialog.Builder(c);
+         builder.setCancelable(true);
+         builder.setTitle(title);
+         builder.setMessage(description);
+         
+         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+             public void onClick(DialogInterface dialog, int which) {
+            	 handler.sendEmptyMessage(0);
+             }
+         });
+         builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+             public void onClick(DialogInterface dialog, int which) {
+                 handler.sendEmptyMessage(1);
+             }
+         });
     }
 }

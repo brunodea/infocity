@@ -3,9 +3,8 @@ package br.ufsm.brunodea.tcc.map;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import br.ufsm.brunodea.tcc.event.EventItem;
-import br.ufsm.brunodea.tcc.event.EventItem.EventType;
-import br.ufsm.brunodea.tcc.util.Util;
 
 import com.google.android.maps.MapView;
 import com.readystatesoftware.mapviewballoons.BalloonItemizedOverlay;
@@ -18,19 +17,16 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 		INFO, ADD
 	}
 
-	private EventType mEventType;
+	private Drawable mMarker;
 	private BalloonType mBalloonType;
 	
-	private Context mContext;
-	
-	public EventsItemizedOverlay(Context c, EventType event_type, MapView mapView, 
+	public EventsItemizedOverlay(Context c, Drawable marker, MapView mapView, 
 			BalloonType balloon_type) {
-		super(boundCenterBottom(Util.getEventTypeMarker(c, event_type)), mapView);
+		super(boundCenterBottom(marker), mapView);
 		mEventOverlays = new ArrayList<EventItem>();
 		
-		mEventType = event_type;
+		mMarker = marker;
 		mBalloonType = balloon_type;
-		mContext = c;
 	}
 	
 	public void addEventItem(EventItem eventitem) {
@@ -77,8 +73,7 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 			break;
 		case ADD:
 			res = new AddEventBalloonOverlayView<EventItem>(
-					getMapView().getContext(), 
-					Util.getEventTypeMarker(mContext, mEventType).getIntrinsicHeight());
+					getMapView().getContext(), mMarker.getIntrinsicHeight());
 			break;
 		default:
 			res = super.createBalloonOverlayView();

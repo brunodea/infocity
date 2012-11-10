@@ -3,7 +3,6 @@ package br.ufsm.brunodea.tcc.map;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.PixelFormat;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -13,11 +12,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import br.ufsm.brunodea.tcc.App;
 import br.ufsm.brunodea.tcc.R;
 import br.ufsm.brunodea.tcc.event.EventItem;
 import br.ufsm.brunodea.tcc.event.EventItem.EventType;
 import br.ufsm.brunodea.tcc.internet.Internet;
-import br.ufsm.brunodea.tcc.map.EventsItemizedOverlay.BalloonType;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -39,10 +39,6 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	private ImageButton mWindowTitleButtonAddEvent;
 	private ProgressBar mWindowTitleProgressBar;
 	
-
-	private EventsItemizedOverlay mAddEventsOverlay;
-	private EventsItemizedOverlay mUnknownEventsOverlay;
-	
 	@Override
 	public void onCreate(Bundle savedInstanceBundle) {
 		super.onCreate(savedInstanceBundle);
@@ -50,12 +46,9 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		setContentView(R.layout.map);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.windowtitle);
-		getWindow().setFormat(PixelFormat.RGBA_8888);
 
 		initGUIElements();
 		init();
-		
-		addTestMarkers();
 		
 		Internet.hasConnection(this, true);
 	}
@@ -68,9 +61,9 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		mMapController = mMapView.getController();
 		
 		mMapOverlays = mMapView.getOverlays();
-		mUnknownEventsOverlay = null;
-		mAddEventsOverlay = null;
-				
+		
+		App.instance().initEventOverlayManager(this, mMapView, mMapOverlays);
+		
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		mLocationListener = new InfoCityLocationListener(this);
 
@@ -131,36 +124,17 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		int pb_vis = mWindowTitleProgressBar.getVisibility();
 		mWindowTitleProgressBar.setVisibility(
 				pb_vis == View.VISIBLE ? View.GONE : View.VISIBLE);
+		TextView tv = (TextView)findViewById(R.id.textview_gettingpos_window_title);
+		int tv_vis = tv.getVisibility();
+		tv.setVisibility(tv_vis == View.VISIBLE ? View.GONE : View.VISIBLE);
+		
 		mWindowTitleButtonAddEvent.setEnabled(!mWindowTitleButtonAddEvent.isEnabled());
 	}
 	
 	public void addAddEventItemMarker() {
 		EventItem new_event = createEventItem(mLastKnownLocation.getLatitude(),
-				mLastKnownLocation.getLongitude(), "New Event", "New Event", EventType.UNKNOWN);
-		if(mAddEventsOverlay == null) {
-			mAddEventsOverlay =
-					new EventsItemizedOverlay(this, EventType.UNKNOWN, mMapView, BalloonType.ADD);
-			mMapOverlays.add(mAddEventsOverlay);
-		}
-		mAddEventsOverlay.addEventItem(new_event);
-	}
-	
-	private void addTestMarkers() {		
-		EventItem event = createEventItem(-29.708332, -53.818674, "Teste Um", 
-				"Descrição do Teste Um.", EventType.UNKNOWN);
-		EventItem event2 = createEventItem(-29.696031, -53.860044, "Teste Dois",
-				"Descrição do Teste Dois", EventType.UNKNOWN);
-		
-		if(mUnknownEventsOverlay == null) {
-			mUnknownEventsOverlay =
-					new EventsItemizedOverlay(this, EventType.UNKNOWN, mMapView, BalloonType.INFO);
-			mMapOverlays.add(mUnknownEventsOverlay);
-		}
-		
-		mUnknownEventsOverlay.addEventItem(event);
-		mUnknownEventsOverlay.addEventItem(event2);
-		
-		mUnknownEventsOverlay.removeEventItem(event);
+				mLastKnownLocation.getLongitude(), "New Event", "New Event", EventType.ADD);
+		App.instance().getEventOverlayManager().addEventItem(new_event);
 	}
 	
 	private EventItem createEventItem(double lat, double lon, String title, 
