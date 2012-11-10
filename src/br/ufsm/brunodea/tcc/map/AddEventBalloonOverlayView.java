@@ -87,6 +87,8 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 				public void handleMessage(Message msg) {
 					if(msg.what == 0) {
 						App.instance().getEventOverlayManager().
+							getEventOverlay(mEventItem.getType()).setShowClose(false);
+						App.instance().getEventOverlayManager().
 							removeEventItem(mEventItem);
 					} else {
 						//no

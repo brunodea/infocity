@@ -35,18 +35,8 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 	}
 	
 	public void removeEventItem(EventItem eventitem) {
-		boolean removed = false;
-		for(int i = 0; i < mEventOverlays.size(); i++) {
-			EventItem curr = mEventOverlays.get(i);
-			if(curr.compareIdentifiers(eventitem)) {
-				mEventOverlays.remove(i);
-				removed = true;
-				break;
-			}
-		}
-		if(removed) {
-			populate();
-		}
+		mEventOverlays.remove(eventitem);
+		populate();
 	}
 	
 	@Override

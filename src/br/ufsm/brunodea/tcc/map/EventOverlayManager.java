@@ -45,6 +45,7 @@ public class EventOverlayManager {
 			}
 			eio = new EventsItemizedOverlay(mContext, getEventTypeMarker(type),
 					mMapView, balloon_type);
+			
 			sEIOMap.put(type, eio);
 			mMapOverlays.add(eio);
 		}
