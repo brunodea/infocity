@@ -13,4 +13,10 @@
     <string name="type">Tipo</string>
     <string name="unknown">Desconhecido</string>
     <string name="keywords">Palavras-Chave</string>
+    <string name="no_keywords">-</string>
+    <string name="getting_pos">Buscando localização</string>
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
+    <string name="alert">Alerta</string>
+    <string name="cancel_addevent">Tem certeza de que deseja cancelar a adição do evento?</string>
 </resources>
