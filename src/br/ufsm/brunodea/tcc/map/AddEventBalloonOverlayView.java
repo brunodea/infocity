@@ -79,6 +79,7 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 		mEventItem = item;
 	}
 
+	@Override
 	public void onClick(View v) {
 		if(v == mImageButtonCancel) {
 			Handler yesnohandler = new Handler() {

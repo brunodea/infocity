@@ -109,6 +109,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		}
 	}
 
+	@Override
 	public void onClick(View v) {
 		if(v == mWindowTitleButtonAddEvent) {
 			toggleWindowTitleAddEventProgressBar();
