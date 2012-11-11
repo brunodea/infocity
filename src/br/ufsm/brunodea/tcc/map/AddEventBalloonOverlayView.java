@@ -1,5 +1,7 @@
 package br.ufsm.brunodea.tcc.map;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -7,11 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import br.ufsm.brunodea.tcc.App;
 import br.ufsm.brunodea.tcc.event.EventItem;
 import br.ufsm.brunodea.tcc.util.DialogHelper;
@@ -26,6 +31,8 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 	private EditText mEditTextTitle;
 	private EditText mEditTextDescription;
 
+	private TextView mTextViewKeywords;
+	
 	private Button mButtonKeywords;
 	private Spinner mSpinnerEventType;
 	
@@ -61,6 +68,8 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 		mEditTextTitle = (EditText)v.findViewById(R.id.edittext_title_addevent_balloon);
 		mEditTextDescription = (EditText)v.findViewById(R.id.edittext_descr_addevent_balloon);
 		
+		mTextViewKeywords = (TextView)v.findViewById(R.id.textivew_keywords_addevent_balloon);
+		
 		mButtonKeywords = (Button)v.findViewById(R.id.button_addkeyword_addevent_balloon);
 		mSpinnerEventType = (Spinner)v.findViewById(R.id.spinner_type_addevent_balloon);
 		
@@ -87,7 +96,7 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 				public void handleMessage(Message msg) {
 					if(msg.what == 0) {
 						App.instance().getEventOverlayManager().
-							getEventOverlay(mEventItem.getType()).setShowClose(false);
+							getEventOverlay(mEventItem.getType()).setFocus(null);
 						App.instance().getEventOverlayManager().
 							removeEventItem(mEventItem);
 					} else {
@@ -99,6 +108,47 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 					mContext.getResources().getString(R.string.alert), 
 					mContext.getResources().getString(R.string.cancel_addevent),
 					yesnohandler);
+		} else if(v == mButtonKeywords) {
+			Handler handler = new Handler() {
+				@Override
+				public void handleMessage(Message msg) {
+					ArrayList<String> keywords = (ArrayList<String>) msg.obj;
+					if(keywords.size() == 0) {
+						mTextViewKeywords.setText(mContext.getResources()
+								.getString(R.string.no_keywords));
+					} else {
+						mEventItem.setKeywords(keywords);
+						mTextViewKeywords.setText(mEventItem.keywordsToString());
+					}
+				}
+			};
+			DialogHelper.addKeywordDialog(mContext, mEventItem.getKeywords(), 5, handler);
+		} else if(v == mImageButtonSave) {
+			if(validate()) {
+				
+			}
 		}
+	}
+	
+	private boolean validate() {
+		boolean ok = false;
+		String title = mEditTextTitle.getText().toString();
+		String descr = mEditTextDescription.getText().toString();
+		
+		int type_pos = mSpinnerEventType.getSelectedItemPosition();
+		ok = type_pos != 0 && !title.equals("") && !descr.equals("");
+		
+		Animation shake = AnimationUtils.loadAnimation(mContext, R.anim.shake);
+		if(type_pos == 0) {
+			mSpinnerEventType.startAnimation(shake);
+		}
+		if(title.equals("")) {
+			mEditTextTitle.startAnimation(shake);
+		}
+		if(descr.equals("")) {
+			mEditTextDescription.startAnimation(shake);
+		}
+		
+		return ok;
 	}
 }

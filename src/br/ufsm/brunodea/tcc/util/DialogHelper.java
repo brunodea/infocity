@@ -1,11 +1,22 @@
 package br.ufsm.brunodea.tcc.util;
 
+import java.util.ArrayList;
+
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import br.ufsm.brunodea.tcc.R;
 
 public class DialogHelper {
@@ -59,5 +70,97 @@ public class DialogHelper {
          });
          
          builder.show();
+    }
+    
+    private static void inflateAddKeywordRow(final LinearLayout rows,
+    		final Context c, int id, String text) {
+    	LayoutInflater inflater = (LayoutInflater)c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    	View v = inflater.inflate(R.layout.addkeyword_row, null);
+		v.setId(id);
+
+    	EditText et = (EditText)v.findViewById(R.id.edittext_addkeywords_dialog);
+    	ImageButton ib = (ImageButton)v.findViewById(R.id.button_removekeyword_dialog);
+    	
+    	et.setId(id);
+    	ib.setId(id);
+    	
+		et.setText(text);
+    	
+		ib.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				LinearLayout l = (LinearLayout) rows.findViewById(v.getId());
+				EditText et = (EditText) l.getChildAt(0);
+				et.setText("");
+				adjustKeywordsDialog(c,rows,getKeywords(rows));
+			}
+		});
+		
+		rows.addView(v);
+		v.requestFocus();
+    }
+    
+    private static void adjustKeywordsDialog(final Context context,
+    		final LinearLayout rows, final ArrayList<String> keywords) {
+    	rows.removeAllViews();
+    	for(int i = 0; i < keywords.size(); i++) {
+    		inflateAddKeywordRow(rows, context, i, keywords.get(i));
+    	}
+    	if(keywords.size() == 0) {
+    		inflateAddKeywordRow(rows, context, 0, "");
+    	}
+    }
+    
+    private static ArrayList<String> getKeywords(final LinearLayout rows) {
+    	ArrayList<String> res = new ArrayList<String>();
+    	for(int i = 0; i < rows.getChildCount(); i++) {
+    		LinearLayout v = (LinearLayout) rows.getChildAt(i);
+    		EditText et = (EditText)v.getChildAt(0);
+    		if(et != null) {
+	    		String text = et.getText().toString();
+	    		if(!text.equals("")) {
+	    			res.add(et.getText().toString());
+	    		}
+    		}
+    	}
+    	
+    	return res;
+    }
+    
+    public static void addKeywordDialog(final Context context, final ArrayList<String> keywords, 
+    		final int max_keywords, final Handler handler) {
+    	final Dialog dialog = new Dialog(context);
+    	dialog.setContentView(R.layout.addkeyword_dialog);
+    	dialog.setTitle(context.getResources().getString(R.string.add)+" "+
+    			context.getResources().getString(R.string.keywords));
+    	
+    	final LinearLayout rows = (LinearLayout)dialog.findViewById(R.id.linearlayout_keywordrow_dialog);
+    	adjustKeywordsDialog(context, rows, keywords);
+
+    	final ImageButton ib = (ImageButton)dialog.findViewById(R.id.button_addkeyword_dialog);
+    	ib.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(rows.getChildCount() < max_keywords) {
+					inflateAddKeywordRow(rows, context, keywords.size(),"");
+				}
+			}
+		});
+    	
+    	Button done = (Button)dialog.findViewById(R.id.button_done_addkeyord_dialog);
+    	done.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+				keywords.clear();
+				keywords.addAll(getKeywords(rows));
+				
+				Message msg = handler.obtainMessage();
+				msg.obj = keywords;
+				handler.sendMessage(msg);
+			}
+		});
+    	
+    	dialog.show();
     }
 }
