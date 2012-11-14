@@ -15,9 +15,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import br.ufsm.brunodea.tcc.App;
 import br.ufsm.brunodea.tcc.R;
-import br.ufsm.brunodea.tcc.event.EventItem;
-import br.ufsm.brunodea.tcc.event.EventItem.EventType;
 import br.ufsm.brunodea.tcc.internet.Internet;
+import br.ufsm.brunodea.tcc.model.EventItem;
+import br.ufsm.brunodea.tcc.model.EventItem.EventType;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;

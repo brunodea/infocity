@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import br.ufsm.brunodea.tcc.event.EventItem;
+import br.ufsm.brunodea.tcc.model.EventItem;
 
 import com.google.android.maps.MapView;
 import com.readystatesoftware.mapviewballoons.BalloonItemizedOverlay;

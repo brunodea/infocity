@@ -6,9 +6,9 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import br.ufsm.brunodea.tcc.R;
-import br.ufsm.brunodea.tcc.event.EventItem;
-import br.ufsm.brunodea.tcc.event.EventItem.EventType;
 import br.ufsm.brunodea.tcc.map.EventsItemizedOverlay.BalloonType;
+import br.ufsm.brunodea.tcc.model.EventItem;
+import br.ufsm.brunodea.tcc.model.EventItem.EventType;
 
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
