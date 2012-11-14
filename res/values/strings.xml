@@ -22,4 +22,7 @@
     <string name="cancel_addevent">Tem certeza de que deseja cancelar a adição do evento?</string>
     <string name="done">Pronto</string>
     <string name="remove">Remover</string>
+    <string name="saving_event">Salvando evento no servidor.</string>
+    <string name="server_error">Erro no servidor.</string>
+    <string name="save_success">Evento salvo com sucesso!</string>
 </resources>
