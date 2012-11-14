@@ -2,6 +2,9 @@ package br.ufsm.brunodea.tcc.map;
 
 import java.util.ArrayList;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -17,13 +20,16 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import br.ufsm.brunodea.tcc.App;
-import br.ufsm.brunodea.tcc.event.EventItem;
+import br.ufsm.brunodea.tcc.R;
+import br.ufsm.brunodea.tcc.internet.InfoCityServer;
+import br.ufsm.brunodea.tcc.model.EventItem;
+import br.ufsm.brunodea.tcc.model.EventItem.EventType;
 import br.ufsm.brunodea.tcc.util.DialogHelper;
 
 import com.google.android.maps.OverlayItem;
 import com.readystatesoftware.mapviewballoons.BalloonOverlayView;
-import com.readystatesoftware.mapviewballoons.R;
 
 public class AddEventBalloonOverlayView <Item extends OverlayItem>
 	extends BalloonOverlayView<EventItem> implements OnClickListener {
@@ -125,9 +131,54 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 			DialogHelper.addKeywordDialog(mContext, mEventItem.getKeywords(), 5, handler);
 		} else if(v == mImageButtonSave) {
 			if(validate()) {
-				
+				toggleProgressbar();
+				final Handler handler = new Handler() {
+					@Override
+					public void handleMessage(Message msg) {
+						JSONObject response = (JSONObject) msg.obj;
+						String message = "";
+						if(response != null && response.has("response")) {
+							try {
+								String r = response.getString("response");
+								if(!r.equals("ok")) {
+									message = mContext.getResources()
+											.getString(R.string.server_error);
+								} else {
+									message = mContext.getResources()
+											.getString(R.string.save_success);
+								}
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+						} else {
+							message = mContext.getResources()
+									.getString(R.string.server_error);
+						}
+						Toast.makeText(mContext, message,
+								Toast.LENGTH_SHORT).show();
+						toggleProgressbar();
+					}
+				};
+				Thread t = new Thread() {
+					@Override
+					public void run() {
+						Message msg = handler.obtainMessage();
+						msg.obj = InfoCityServer.saveEvent(createEvent());
+						handler.sendMessage(msg);
+					}
+				};
+				t.start();
 			}
 		}
+	}
+	
+	private void toggleProgressbar() {
+		View v = findViewById(R.id.linearlayout_progressbar_addevent_balloon);
+		int visibility = v.getVisibility() == View.VISIBLE ? 
+				View.GONE : View.VISIBLE;
+		v.setVisibility(visibility);
+		findViewById(R.id.linearlayout_balloon_form).setVisibility(
+				visibility == View.VISIBLE ? View.GONE : View.VISIBLE);
 	}
 	
 	private boolean validate() {
@@ -150,5 +201,25 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 		}
 		
 		return ok;
+	}
+	
+	private EventItem createEvent() {
+		String title = mEditTextTitle.getText().toString();
+		String descr = mEditTextDescription.getText().toString();
+		
+		EventItem event = new EventItem(mEventItem.getPoint(), title, descr, 
+				selectedEventType());
+		event.setKeywords(mEventItem.getKeywords());
+		
+		return event;
+	}
+	
+	private EventType selectedEventType() {
+		EventType type = null;
+		String str_type = mSpinnerEventType.getSelectedItem().toString();
+		if(str_type.equalsIgnoreCase("desconhecido")) {
+			type = EventType.UNKNOWN;
+		}
+		return type;
 	}
 }
