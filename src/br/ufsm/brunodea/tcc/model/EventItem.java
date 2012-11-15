@@ -95,13 +95,11 @@ public class EventItem extends Model {
 	@Override
 	public List<NameValuePair> getListNameValuePair() throws JSONException {
 		JSONObject json = toJSON();
-		String keywords = mKeywords.toString();
 		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("event", "["+json.toString()+"]"));
-		params.add(new BasicNameValuePair("event_keywords", keywords));
-		params.add(new BasicNameValuePair("event_type", "[" +
-				Util.toJSON("eventtype", new EventTypeJSON(mType)).toString()+"]"));
+		params.add(new BasicNameValuePair("event_keywords", mKeywords.toString()));
+		params.add(new BasicNameValuePair("event_type", mType.toString()));
 		
 		return params;
 	}
