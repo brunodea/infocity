@@ -11,6 +11,9 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,8 +25,14 @@ public class InfoCityServer {
 	private static String makeRequest(String url, List<NameValuePair> nameValuePairs) throws Exception {
 	    DefaultHttpClient httpclient = new DefaultHttpClient();
 	    HttpPost httppost = new HttpPost(url);
+	    HttpParams params = httppost.getParams();
+
+	    HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+	    HttpProtocolParams.setHttpElementCharset(params, HTTP.UTF_8);
 	    
-        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+	    httppost.setParams(params);
+	    
+        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
 
 	    httppost.setHeader("Accept", "application/json");
 	    httppost.setHeader("Content-type", "application/json; charset=UTF-8");
