@@ -3,9 +3,15 @@ package br.ufsm.brunodea.tcc.model;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import br.ufsm.brunodea.tcc.util.Util;
 
 import com.google.android.maps.GeoPoint;
 
@@ -52,38 +58,51 @@ public class EventItem extends Model {
 	public Date getPubDate() {
 		return mPubDate;
 	}
+	
+	private class EventJSON {
+		private String title;
+		private String description;
+		private String pub_date;
+		private String geo_coord;
+		
+		public EventJSON(String title, String descr, String pubdate, String coord) {
+			this.title = title;
+			this.description = descr;
+			this.pub_date = pubdate;
+			this.geo_coord = coord;
+		}
+	}
+	
+	private class EventTypeJSON {
+		private String name;
+		
+		public EventTypeJSON(EventType type) {
+			name = type.toString();
+		}
+	}
 
 	@Override
 	public JSONObject toJSON() throws JSONException {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+		EventJSON event = new EventJSON(mTitle, mSnippet, 
+				new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(mPubDate), 
+				getPoint().toString());
 		
-		String json = "{\"pk\": null, \"model\": \"events.event\", \"fields\": " +
-				"{" +
-				"\"title\":\"" + getTitle() + "\"," +
-				"\"description\":\"" + getSnippet() + "\"," +
-				"\"geo_coord\":\"" + getPoint().toString() + "\"," +
-				"\"pub_date\":\"" + sdf.format(mPubDate) + "\"," +
-				"\"event_type\":" + eventTypeToJSON(mType) + ",";
-		if(mKeywords.size() > 0) {
-			json += "\"keywords\": {";
-			for(int i = 0; i < mKeywords.size(); i++) {
-				json += "\"" + i + "\": \"" + mKeywords.get(i) + "\"";
-				if(i + 1 < mKeywords.size()) {
-					json += ",";
-				}
-			}
-			json += "}";
-		}
-		json += "}}";
-		return new JSONObject(json);
+		JSONObject json = Util.toJSON("event", event);
+
+		return json;
 	}
-	
-	public static JSONObject eventTypeToJSON(EventType event_type) throws JSONException {
-		String json = "{\"pk\": null, \"model\": \"events.eventtype\", \"fields\": " +
-				"{" +
-				"\"name\":\"" + event_type.toString() + "\"" + 
-				"}}";
+
+	@Override
+	public List<NameValuePair> getListNameValuePair() throws JSONException {
+		JSONObject json = toJSON();
+		String keywords = mKeywords.toString();
 		
-		return new JSONObject(json);
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("event", "["+json.toString()+"]"));
+		params.add(new BasicNameValuePair("event_keywords", keywords));
+		params.add(new BasicNameValuePair("event_type", "[" +
+				Util.toJSON("eventtype", new EventTypeJSON(mType)).toString()+"]"));
+		
+		return params;
 	}
 }
