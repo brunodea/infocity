@@ -11,7 +11,7 @@ public class Util {
 	
 	public static JSONObject toJSON(String modelname, Object obj) throws JSONException {
 		String json = new Gson().toJson(obj);
-		String root = "{'pk':null,'model':'events."+modelname+"','fields':"+json+"}";
+		String root = "{'model':'events."+modelname+"','fields':"+json+"}";
 		
 		return new JSONObject(root);
 	}
