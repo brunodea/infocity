@@ -77,6 +77,8 @@ public class InfoCityServer {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
+			//erro de conexão.
+			e.printStackTrace();
 		}
 		
 		return ret;
