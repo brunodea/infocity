@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/mapview"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:state_enabled="true"
-        android:clickable="true"
-        android:apiKey="0ZRVTRrJUnIpCJEpSRd508JdSAeG-kMAVQIRk_A"/>
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+	<com.google.android.maps.MapView
+	        android:id="@+id/mapview"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:state_enabled="true"
+	        android:clickable="true"
+	        android:apiKey="0ZRVTRrJUnIpCJEpSRd508JdSAeG-kMAVQIRk_A"/>
+	
+     <ImageView
+         android:id="@+id/imageview_map_drag"
+         android:src="@drawable/ic_launcher"
+         android:contentDescription="@string/drag_image"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:visibility="gone"/>
+</RelativeLayout>
