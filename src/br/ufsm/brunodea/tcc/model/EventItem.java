@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,14 +69,6 @@ public class EventItem extends Model {
 			this.description = descr;
 			this.pub_date = pubdate;
 			this.geo_coord = coord;
-		}
-	}
-	
-	private class EventTypeJSON {
-		private String name;
-		
-		public EventTypeJSON(EventType type) {
-			name = type.toString();
 		}
 	}
 

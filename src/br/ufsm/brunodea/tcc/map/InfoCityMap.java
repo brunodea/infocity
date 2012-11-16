@@ -3,6 +3,7 @@ package br.ufsm.brunodea.tcc.map;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
