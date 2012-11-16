@@ -25,4 +25,5 @@
     <string name="saving_event">Salvando evento no servidor.</string>
     <string name="server_error">Erro no servidor.</string>
     <string name="save_success">Evento salvo com sucesso!</string>
+    <string name="drag_image">Imagem para arrasto.</string>
 </resources>
