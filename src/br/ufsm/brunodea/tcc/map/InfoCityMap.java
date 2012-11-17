@@ -114,6 +114,21 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	}
 
 	@Override
+	public void onBackPressed() {
+		boolean closed_balloons = false;
+		for(EventsItemizedOverlay e : App.instance().getEventOverlayManager().getItemizedOverlays()) {
+			if(e.getFocus() != null) {
+				e.setFocus(null);
+				closed_balloons = true;
+			}
+		}
+		
+		if(!closed_balloons) {
+			super.onBackPressed();
+		}
+	}
+	
+	@Override
 	public void onClick(View v) {
 		if(v == mWindowTitleButtonAddEvent) {
 			toggleWindowTitleAddEventProgressBar();

@@ -17,7 +17,10 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+import android.content.res.Resources.NotFoundException;
 import android.util.Log;
+import br.ufsm.brunodea.tcc.R;
 import br.ufsm.brunodea.tcc.model.EventItem;
 import br.ufsm.brunodea.tcc.util.Util;
 
@@ -63,7 +66,7 @@ public class InfoCityServer {
         return result;
 	}
 	
-	public static JSONObject saveEvent(EventItem event) {
+	public static JSONObject saveEvent(Context c, EventItem event) {
 		JSONObject ret = null;
 		try {			
 			String response = makeRequest(Util.URL+"add/?", event.getListNameValuePair());
@@ -73,12 +76,25 @@ public class InfoCityServer {
 				} else {
 					Log.d("InfoCityServer.saveEvent", response);
 				}
+			} else {
+				ret = new JSONObject();
+				ret.put("error", c.getResources().getString(R.string.server_error));
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
+			ret = new JSONObject();
+			try {
+				ret.put("error", c.getResources().getString(R.string.server_error));
+			} catch (NotFoundException e1) {
+			} catch (JSONException e1) {
+			}
 		} catch (Exception e) {
-			//erro de conexão.
-			e.printStackTrace();
+			ret = new JSONObject();
+			try {
+				ret.put("error",  c.getResources().getString(R.string.conn_error));
+			} catch (NotFoundException e1) {
+			} catch (JSONException e1) {
+			}
 		}
 		
 		return ret;

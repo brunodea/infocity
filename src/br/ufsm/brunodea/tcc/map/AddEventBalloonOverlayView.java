@@ -143,13 +143,17 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 						String message = "";
 						if(response != null && response.has("response")) {
 							try {
-								String r = response.getString("response");
-								if(!r.equals("ok")) {
-									message = mContext.getResources()
-											.getString(R.string.server_error);
+								if(response.has("error")) {
+									message = response.getString("error");
 								} else {
-									message = mContext.getResources()
-											.getString(R.string.save_success);
+									String r = response.getString("response");
+									if(!r.equals("ok")) {
+										message = mContext.getResources()
+												.getString(R.string.server_error);
+									} else {
+										message = mContext.getResources()
+												.getString(R.string.save_success);
+									}
 								}
 							} catch (JSONException e) {
 								e.printStackTrace();
@@ -167,7 +171,7 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 					@Override
 					public void run() {
 						Message msg = handler.obtainMessage();
-						msg.obj = InfoCityServer.saveEvent(createEvent());
+						msg.obj = InfoCityServer.saveEvent(mContext, createEvent());
 						handler.sendMessage(msg);
 					}
 				};

@@ -123,7 +123,6 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
         boolean result = false;
     	
         if(action == MotionEvent.ACTION_DOWN) {
-        	setFocus(null);
         	for(final EventItem item : mEventOverlays) {
                 Point p = mapView.getProjection().toPixels(item.getPoint(), null);
 

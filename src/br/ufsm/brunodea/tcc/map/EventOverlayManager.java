@@ -1,5 +1,6 @@
 package br.ufsm.brunodea.tcc.map;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,20 +20,20 @@ public class EventOverlayManager {
 	private MapView mMapView;
 	private List<Overlay> mMapOverlays;
 	
-	private HashMap<EventType, EventsItemizedOverlay> sEIOMap;
+	private HashMap<EventType, EventsItemizedOverlay> mEIOMap;
 	
 	public EventOverlayManager(Context context, MapView mapview, 
 			List<Overlay> overlays) {
 		mContext = context;
 		mMapView = mapview;
-		sEIOMap = new HashMap<EventType, EventsItemizedOverlay>();
+		mEIOMap = new HashMap<EventType, EventsItemizedOverlay>();
 		mMapOverlays = overlays;
 	}
 	
 	public EventsItemizedOverlay getEventOverlay(EventType type, InfoCityMap infocitymap) {
 		EventsItemizedOverlay eio = null;
-		if(sEIOMap.containsKey(type)) {
-			eio = sEIOMap.get(type);
+		if(mEIOMap.containsKey(type)) {
+			eio = mEIOMap.get(type);
 		} else {
 			BalloonType balloon_type = null;
 			boolean draggable = false;
@@ -49,7 +50,7 @@ public class EventOverlayManager {
 					mMapView, balloon_type, type, infocitymap);
 			eio.setDraggable(draggable);
 			
-			sEIOMap.put(type, eio);
+			mEIOMap.put(type, eio);
 			mMapOverlays.add(eio);
 		}
 		
@@ -76,5 +77,9 @@ public class EventOverlayManager {
 		}
 		
 		return marker;
+	}
+	
+	public Collection<EventsItemizedOverlay> getItemizedOverlays() {
+		return mEIOMap.values();
 	}
 }
