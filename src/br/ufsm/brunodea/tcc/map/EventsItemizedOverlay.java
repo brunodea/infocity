@@ -34,10 +34,10 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 	private EventItem mDragItem;
 	private ImageView mDragImage;
 
-    private int xDragImageOffset = 0;
-    private int yDragImageOffset = 0;
-    private int xDragTouchOffset = 0;
-    private int yDragTouchOffset = 0;
+    private int mXDragImageOffset = 0;
+    private int mYDragImageOffset = 0;
+    private int mXDragTouchOffset = 0;
+    private int mYDragTouchOffset = 0;
 	
 	public EventsItemizedOverlay(Context c, Drawable marker, MapView mapView, 
 			BalloonType balloon_type, EventType event_type) {
@@ -52,8 +52,8 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 		mDragItem = null;
 		mDraggable = false;
 
-		xDragImageOffset = marker.getIntrinsicWidth()/2;
-		yDragImageOffset = marker.getIntrinsicHeight();
+		mXDragImageOffset = marker.getIntrinsicWidth()/2;
+		mYDragImageOffset = marker.getIntrinsicHeight();
 
 		mMarker = marker;
 		mBalloonType = balloon_type;
@@ -132,21 +132,21 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
                 	mEventOverlays.remove(item);
                 	populate();
                 	
-                	xDragTouchOffset = 0;
-                	yDragTouchOffset = 0;
+                	mXDragTouchOffset = 0;
+                	mYDragTouchOffset = 0;
             		
                 	setDragImagePosition(x, y);
                 	mDragImage.setVisibility(View.VISIBLE);
 
-                	xDragTouchOffset = x-p.x;
-                  	yDragTouchOffset = y-p.y;
+                	mXDragTouchOffset = x-p.x;
+                  	mYDragTouchOffset = y-p.y;
 
                   	break;
                 }
         	}
         } else if (action==MotionEvent.ACTION_UP && mDragItem != null) {
-            GeoPoint pt = mapView.getProjection().fromPixels(x-xDragTouchOffset,
-            		                                         y-yDragTouchOffset);
+            GeoPoint pt = mapView.getProjection().fromPixels(x-mXDragTouchOffset,
+            		                                         y-mYDragTouchOffset);
 
         	mDragImage.setVisibility(View.GONE);
             EventItem toDrop = new EventItem(pt, mDragItem.getTitle(), 
@@ -157,7 +157,6 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
             mEventOverlays.add(toDrop);
             populate();
             
-        	mapView.getController().animateTo(pt);
         	setFocus(toDrop);
 
             mDragItem = null;
@@ -169,6 +168,10 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
             result = true;
         }
         
+        if(mDragItem == null) {
+        	return super.onTouchEvent(event, mapView);
+        }
+        
         return result || super.onTouchEvent(event, mapView);
     }
 
@@ -176,8 +179,8 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
     	RelativeLayout.LayoutParams lp=
     			(RelativeLayout.LayoutParams)mDragImage.getLayoutParams();
 
-      	lp.setMargins(x-xDragImageOffset-xDragTouchOffset,
-                      y-yDragImageOffset-yDragTouchOffset, 0, 0);
+      	lp.setMargins(x-mXDragImageOffset-mXDragTouchOffset,
+                      y-mYDragImageOffset-mYDragTouchOffset, 0, 0);
       	mDragImage.setLayoutParams(lp);
     }
 }

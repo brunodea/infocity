@@ -57,7 +57,6 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	private void init() {
 		mMapView = (MapView) findViewById(R.id.mapview);
 		mMapView.getController().setZoom(20);
-		mMapView.setBuiltInZoomControls(true);
 		mMapView.setSatellite(true);
 		
 		mMapController = mMapView.getController();
