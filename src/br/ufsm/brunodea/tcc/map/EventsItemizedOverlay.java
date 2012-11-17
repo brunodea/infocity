@@ -25,6 +25,8 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 	public enum BalloonType {
 		INFO, ADD
 	}
+	
+	private InfoCityMap mInfoCityMap;
 
 	private boolean mDraggable;
 	
@@ -40,8 +42,10 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
     private int mYDragTouchOffset = 0;
 	
 	public EventsItemizedOverlay(Context c, Drawable marker, MapView mapView, 
-			BalloonType balloon_type, EventType event_type) {
+			BalloonType balloon_type, EventType event_type, InfoCityMap infocitymap) {
 		super(boundCenterBottom(marker), mapView);
+		mInfoCityMap = infocitymap;
+		
 		mEventOverlays = new ArrayList<EventItem>();
 		
 		mDragImage = (ImageView) ((View)mapView.getParent()).findViewById(R.id.imageview_map_drag);
@@ -93,7 +97,7 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 			break;
 		case ADD:
 			res = new AddEventBalloonOverlayView<EventItem>(
-					getMapView().getContext(), mMarker.getIntrinsicHeight());
+					getMapView().getContext(), mMarker.getIntrinsicHeight(), mInfoCityMap);
 			break;
 		default:
 			res = super.createBalloonOverlayView();

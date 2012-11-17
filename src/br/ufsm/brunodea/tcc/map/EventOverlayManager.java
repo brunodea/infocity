@@ -29,7 +29,7 @@ public class EventOverlayManager {
 		mMapOverlays = overlays;
 	}
 	
-	public EventsItemizedOverlay getEventOverlay(EventType type) {
+	public EventsItemizedOverlay getEventOverlay(EventType type, InfoCityMap infocitymap) {
 		EventsItemizedOverlay eio = null;
 		if(sEIOMap.containsKey(type)) {
 			eio = sEIOMap.get(type);
@@ -46,7 +46,7 @@ public class EventOverlayManager {
 				break;
 			}
 			eio = new EventsItemizedOverlay(mContext, getEventTypeMarker(type),
-					mMapView, balloon_type, type);
+					mMapView, balloon_type, type, infocitymap);
 			eio.setDraggable(draggable);
 			
 			sEIOMap.put(type, eio);
@@ -56,11 +56,11 @@ public class EventOverlayManager {
 		return eio;
 	}
 	
-	public void addEventItem(EventItem item) {
-		getEventOverlay(item.getType()).addEventItem(item);
+	public void addEventItem(EventItem item, InfoCityMap infocitymap) {
+		getEventOverlay(item.getType(), infocitymap).addEventItem(item);
 	}
 	public void removeEventItem(EventItem item) {
-		getEventOverlay(item.getType()).removeEventItem(item);
+		getEventOverlay(item.getType(), null).removeEventItem(item);
 	}
 
 	public Drawable getEventTypeMarker(EventType type) {

@@ -120,7 +120,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 			startRequestLocationUpdates();
 		} else if(v == mWindowTitleButtonCenterOn) {
 			GeoPoint p = App.instance().getEventOverlayManager().
-					getEventOverlay(EventType.ADD).getItem(0).getPoint();
+					getEventOverlay(EventType.ADD, this).getItem(0).getPoint();
 			mMapController.setCenter(p);
 		}
 	}
@@ -150,7 +150,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	public void addAddEventItemMarker() {
 		EventItem new_event = createEventItem(mLastKnownLocation.getLatitude(),
 				mLastKnownLocation.getLongitude(), "New Event", "New Event", EventType.ADD);
-		App.instance().getEventOverlayManager().addEventItem(new_event);
+		App.instance().getEventOverlayManager().addEventItem(new_event, this);
 		
 		toggleWindowTitleAddEventCenterOn();
 	}

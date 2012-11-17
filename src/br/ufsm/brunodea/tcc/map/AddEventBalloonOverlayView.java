@@ -48,9 +48,12 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 	private EventItem mEventItem;
 	
 	private Context mContext;
+	private InfoCityMap mInfoCityMap;
 	
-	public AddEventBalloonOverlayView(Context context, int balloonBottomOffset) {
+	public AddEventBalloonOverlayView(Context context, int balloonBottomOffset,
+			InfoCityMap infocitymap) {
 		super(context, balloonBottomOffset);
+		mInfoCityMap = infocitymap;
 		mContext = context;
 	}
 
@@ -102,10 +105,10 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 				public void handleMessage(Message msg) {
 					if(msg.what == 0) {
 						App.instance().getEventOverlayManager().
-							getEventOverlay(mEventItem.getType()).setFocus(null);
+							getEventOverlay(mEventItem.getType(), mInfoCityMap).setFocus(null);
 						App.instance().getEventOverlayManager().
 							removeEventItem(mEventItem);
-
+						mInfoCityMap.toggleWindowTitleAddEventCenterOn();
 					} else {
 						//no
 					}
