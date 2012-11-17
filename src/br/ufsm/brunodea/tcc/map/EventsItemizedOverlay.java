@@ -26,6 +26,8 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 		INFO, ADD
 	}
 
+	private boolean mDraggable;
+	
 	private Drawable mMarker;
 	private BalloonType mBalloonType;
 	
@@ -48,6 +50,7 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 		mDragImage.setImageDrawable(dragimg_drawable);
 
 		mDragItem = null;
+		mDraggable = false;
 
 		xDragImageOffset = marker.getIntrinsicWidth()/2;
 		yDragImageOffset = marker.getIntrinsicHeight();
@@ -99,8 +102,16 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 		return res;
 	}
 
+	public void setDraggable(boolean draggable) {
+		mDraggable = draggable;
+	}
+	
     @Override
     public boolean onTouchEvent(MotionEvent event, MapView mapView) {
+    	if(mDraggable == false) {
+    		return super.onTouchEvent(event, mapView);
+    	}
+    	
     	final int action = event.getAction();
         final int x = (int)event.getX();
         final int y = (int)event.getY();

@@ -35,9 +35,11 @@ public class EventOverlayManager {
 			eio = sEIOMap.get(type);
 		} else {
 			BalloonType balloon_type = null;
+			boolean draggable = false;
 			switch(type) {
 			case ADD:
 				balloon_type = BalloonType.ADD;
+				draggable = true;
 				break;
 			default:
 				balloon_type = BalloonType.INFO;
@@ -45,6 +47,7 @@ public class EventOverlayManager {
 			}
 			eio = new EventsItemizedOverlay(mContext, getEventTypeMarker(type),
 					mMapView, balloon_type, type);
+			eio.setDraggable(draggable);
 			
 			sEIOMap.put(type, eio);
 			mMapOverlays.add(eio);
