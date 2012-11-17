@@ -3,7 +3,6 @@ package br.ufsm.brunodea.tcc.map;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -37,6 +36,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	
 	private Location mLastKnownLocation;
 	
+	private ImageButton mWindowTitleButtonCenterOn;
 	private ImageButton mWindowTitleButtonAddEvent;
 	private ProgressBar mWindowTitleProgressBar;
 	
@@ -82,6 +82,9 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		
 		mWindowTitleProgressBar = (ProgressBar)findViewById(R.id.progressbar_window_title);
 		mWindowTitleProgressBar.setVisibility(View.GONE);
+		
+		mWindowTitleButtonCenterOn = (ImageButton)findViewById(R.id.button_centeron_marker);
+		mWindowTitleButtonCenterOn.setOnClickListener(this);
 	}
 	
 	@Override
@@ -115,6 +118,10 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		if(v == mWindowTitleButtonAddEvent) {
 			toggleWindowTitleAddEventProgressBar();
 			startRequestLocationUpdates();
+		} else if(v == mWindowTitleButtonCenterOn) {
+			GeoPoint p = App.instance().getEventOverlayManager().
+					getEventOverlay(EventType.ADD).getItem(0).getPoint();
+			mMapController.setCenter(p);
 		}
 	}
 	
@@ -133,10 +140,19 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		mWindowTitleButtonAddEvent.setEnabled(!mWindowTitleButtonAddEvent.isEnabled());
 	}
 	
+	public void toggleWindowTitleAddEventCenterOn() {
+		int add_vis = mWindowTitleButtonAddEvent.getVisibility();
+		mWindowTitleButtonAddEvent.setVisibility(
+				add_vis == View.VISIBLE ? View.GONE : View.VISIBLE);
+		mWindowTitleButtonCenterOn.setVisibility(add_vis);
+	}
+	
 	public void addAddEventItemMarker() {
 		EventItem new_event = createEventItem(mLastKnownLocation.getLatitude(),
 				mLastKnownLocation.getLongitude(), "New Event", "New Event", EventType.ADD);
 		App.instance().getEventOverlayManager().addEventItem(new_event);
+		
+		toggleWindowTitleAddEventCenterOn();
 	}
 	
 	private EventItem createEventItem(double lat, double lon, String title, 

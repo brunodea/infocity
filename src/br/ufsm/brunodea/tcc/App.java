@@ -17,7 +17,7 @@ public class App extends Application {
 	public void initEventOverlayManager(Context c, MapView mv, List<Overlay> overlays) {
 		mEOManager = new EventOverlayManager(c, mv, overlays);
 	}
-	
+
 	public EventOverlayManager getEventOverlayManager() {
 		return mEOManager;
 	}

@@ -16,6 +16,18 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"/>
     
+    <ImageButton 
+        android:id="@+id/button_centeron_marker"
+        android:src="@drawable/centeron_selector"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:contentDescription="@string/add"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"/>
+    
     <TextView
         android:id="@+id/textview_gettingpos_window_title"
         android:layout_width="wrap_content"

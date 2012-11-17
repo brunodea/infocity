@@ -105,6 +105,7 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 							getEventOverlay(mEventItem.getType()).setFocus(null);
 						App.instance().getEventOverlayManager().
 							removeEventItem(mEventItem);
+
 					} else {
 						//no
 					}

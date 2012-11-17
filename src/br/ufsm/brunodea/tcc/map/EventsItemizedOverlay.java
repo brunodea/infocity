@@ -63,12 +63,12 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 		mEventOverlays.add(eventitem);
 		populate();
 	}
-	
+
 	public void removeEventItem(EventItem eventitem) {
 		mEventOverlays.remove(eventitem);
 		populate();
 	}
-	
+
 	@Override
 	protected EventItem createItem(int i) {
 		return mEventOverlays.get(i);
@@ -78,12 +78,12 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 	public int size() {
 		return mEventOverlays.size();
 	}
-	
+
 	@Override
 	protected boolean onBalloonTap(int index, EventItem item) {
 		return true;
 	}
-	
+
 	@Override
 	protected BalloonOverlayView<EventItem> createBalloonOverlayView() {
 		BalloonOverlayView<EventItem> res = null;
