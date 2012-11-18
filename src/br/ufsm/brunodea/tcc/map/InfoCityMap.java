@@ -170,6 +170,10 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		toggleWindowTitleAddEventCenterOn();
 	}
 	
+	public void addEventItem(EventItem event_item) {
+		App.instance().getEventOverlayManager().addEventItem(event_item, this);
+	}
+	
 	private EventItem createEventItem(double lat, double lon, String title, 
 			String description, EventType type) {
 		GeoPoint gp = new GeoPoint((int)(lat*1E6),(int)(lon*1E6));

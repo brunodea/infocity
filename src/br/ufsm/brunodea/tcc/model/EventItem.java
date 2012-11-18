@@ -17,7 +17,18 @@ import com.google.android.maps.GeoPoint;
 public class EventItem extends Model {
 	
 	public enum EventType {
-		ADD, UNKNOWN,
+		NONE, ADD, UNKNOWN;
+		
+		public EventType fromString(String str_type) {
+			EventType type = EventType.NONE;
+			if(str_type.equalsIgnoreCase("desconhecido")) {
+				type = EventType.UNKNOWN;
+			} else if(str_type.equalsIgnoreCase("adicionar")) {
+				type = EventType.ADD;
+			}
+			
+			return type;
+		}
 	}
 	
 	private EventType mType;

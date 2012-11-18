@@ -104,11 +104,7 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 				@Override
 				public void handleMessage(Message msg) {
 					if(msg.what == 0) {
-						App.instance().getEventOverlayManager().
-							getEventOverlay(mEventItem.getType(), mInfoCityMap).setFocus(null);
-						App.instance().getEventOverlayManager().
-							removeEventItem(mEventItem);
-						mInfoCityMap.toggleWindowTitleAddEventCenterOn();
+						removeAddEventItem();
 					} else {
 						//no
 					}
@@ -147,12 +143,15 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 									message = response.getString("error");
 								} else {
 									String r = response.getString("response");
-									if(!r.equals("ok")) {
-										message = mContext.getResources()
-												.getString(R.string.server_error);
-									} else {
+									if(r.equals("ok")) {
+										mInfoCityMap.addEventItem(createEvent());
+										removeAddEventItem();
+										
 										message = mContext.getResources()
 												.getString(R.string.save_success);
+									} else {
+										message = mContext.getResources()
+												.getString(R.string.server_error);
 									}
 								}
 							} catch (JSONException e) {
@@ -218,16 +217,23 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 		EventItem event = new EventItem(mEventItem.getPoint(), title, descr, 
 				selectedEventType());
 		event.setKeywords(mEventItem.getKeywords());
+		event.setPubDate(mEventItem.getPubDate());
 		
 		return event;
 	}
 	
 	private EventType selectedEventType() {
-		EventType type = null;
+		EventType type = EventType.NONE;
 		String str_type = mSpinnerEventType.getSelectedItem().toString();
-		if(str_type.equalsIgnoreCase("desconhecido")) {
-			type = EventType.UNKNOWN;
-		}
-		return type;
+		
+		return type.fromString(str_type);
+	}
+	
+	private void removeAddEventItem() {
+		App.instance().getEventOverlayManager().
+			getEventOverlay(mEventItem.getType(), mInfoCityMap).setFocus(null);
+		App.instance().getEventOverlayManager().
+			removeEventItem(mEventItem);
+		mInfoCityMap.toggleWindowTitleAddEventCenterOn();
 	}
 }
