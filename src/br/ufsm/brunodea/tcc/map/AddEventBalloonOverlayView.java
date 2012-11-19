@@ -211,15 +211,23 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 		if(descr.equals("")) {
 			mEditTextDescription.startAnimation(shake);
 		}
-		
 		return ok;
 	}
 	
-	private EventItem createEvent() {
+	private EventItem createEvent(boolean to_server) {
 		String title = mEditTextTitle.getText().toString();
 		String descr = mEditTextDescription.getText().toString();
-		
-		EventItem event = new EventItem(mEventItem.getPoint(), title, descr, 
+
+		int lat = mEventItem.getPoint().getLatitudeE6();
+		int lon = mEventItem.getPoint().getLongitudeE6();
+		GeoPoint p = null;
+		if(to_server) {
+			p = new GeoPoint(lon, lat);
+		} else {
+			p = mEventItem.getPoint();
+		}
+		//pois no server é ao contrário: POINT(<lon> <lat>).
+		EventItem event = new EventItem(p, title, descr, 
 				selectedEventType());
 		event.setKeywords(mEventItem.getKeywords());
 		event.setPubDate(mEventItem.getPubDate());
@@ -228,17 +236,15 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 	}
 	
 	private EventType selectedEventType() {
-		EventType type = EventType.NONE;
 		String str_type = mSpinnerEventType.getSelectedItem().toString();
-		
-		return type.fromString(str_type);
+		return EventType.fromString(str_type);
 	}
 	
 	private void removeAddEventItem() {
-		App.instance().getEventOverlayManager().
-			getEventOverlay(mEventItem.getType(), mInfoCityMap).setFocus(null);
-		App.instance().getEventOverlayManager().
-			removeEventItem(mEventItem);
+		App.instance().getEventOverlayManager()
+			.getEventOverlay(EventType.ADD, mInfoCityMap).setFocus(null);
+		App.instance().getEventOverlayManager()
+			.getEventOverlay(EventType.ADD, mInfoCityMap).removeInvalidEventItemsPk();
 		mInfoCityMap.toggleWindowTitleAddEventCenterOn();
 	}
 }
