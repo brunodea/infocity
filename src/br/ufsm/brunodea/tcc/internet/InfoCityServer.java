@@ -100,15 +100,14 @@ public class InfoCityServer {
         return res;
 	}
 	
-	public static JSONObject saveEvent(Context c, EventItem event) {
+	private static JSONObject checkResponse(Context c, String response) {
 		JSONObject ret = null;
-		try {			
-			String response = makeRequest(Util.URL+"add/?", event.getListNameValuePair());
+		try {
 			if(response != null && !response.equals("")) {
 				if(!response.startsWith("<!DOCTYPE")) {
 					ret = new JSONObject(response);
 				} else {
-					Log.d("InfoCityServer.saveEvent", response);
+					Log.d("InfoCityServer.checkResponse", response);
 				}
 			} else {
 				ret = new JSONObject();
