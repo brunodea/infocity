@@ -183,20 +183,90 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	}
 	
 	public void addAddEventItemMarker() {
-		EventItem new_event = createEventItem(mLastKnownLocation.getLatitude(),
+		EventItem new_event = Util.createEventItem(mLastKnownLocation.getLatitude(),
 				mLastKnownLocation.getLongitude(), "New Event", "New Event", EventType.ADD);
 		App.instance().getEventOverlayManager().addEventItem(new_event, this);
-		
+
 		toggleWindowTitleAddEventCenterOn();
 	}
 	
 	public void addEventItem(EventItem event_item) {
 		App.instance().getEventOverlayManager().addEventItem(event_item, this);
 	}
+
+	private void toggleRefreshAnimation() {
+		boolean clickable = mWindowTitleButtonRefresh.isClickable();
+		mWindowTitleButtonRefresh.setClickable(!clickable);
+		if(mWindowTitleButtonRefresh.isClickable()) {
+			mWindowTitleButtonRefresh.getAnimation().cancel();
+		} else {
+			mWindowTitleButtonRefresh.startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate));
+		}
+	}
 	
-	private EventItem createEventItem(double lat, double lon, String title, 
-			String description, EventType type) {
-		GeoPoint gp = new GeoPoint((int)(lat*1E6),(int)(lon*1E6));
-		return new EventItem(gp, title,  description, type);
+	public void fetchEvents() {
+		final Handler done_handler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				toggleRefreshAnimation();
+				if(msg.what == 0) {
+					//good
+					mMapView.invalidate();
+				} else if(msg.what == 1) {
+					Toast.makeText(InfoCityMap.this, getResources()
+							.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+				}
+			}
+		};
+		
+		final Handler event_handler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				EventItem event = (EventItem) msg.obj;
+				if(!App.instance().getEventOverlayManager()
+					.getEventOverlay(event.getType(), InfoCityMap.this)
+					.containsEventItem(event)) {
+					
+					addEventItem(event);
+				}
+			}
+		};
+		
+		Thread t = new Thread() {
+			@Override
+			public void run() {
+				boolean fine = false;
+				JSONObject res = InfoCityServer.getEvents(InfoCityMap.this, mLastKnownLocation, 50000f,
+						App.instance().getEventOverlayManager().getAllPks());
+				if(res != null && res.has("size")) {
+					try {
+						//App.instance().getEventOverlayManager().clearItemizedOverlays();
+						int size = res.getInt("size");
+						for(int i = 0; i < size; i++) {
+							if(res.has("event_"+i)) {
+								JSONObject event = res.getJSONObject("event_"+i);
+								try {
+									Message msg = event_handler.obtainMessage();
+									msg.obj = Util.eventItemFromJSON(event);
+									event_handler.sendMessage(msg);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						}
+						fine = true;
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+				if(fine) {
+					done_handler.sendEmptyMessage(0);
+				} else {
+					done_handler.sendEmptyMessage(1);
+				}
+			}
+		};
+		
+		t.start();
 	}
 }
