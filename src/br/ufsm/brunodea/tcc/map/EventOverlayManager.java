@@ -1,5 +1,6 @@
 package br.ufsm.brunodea.tcc.map;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +62,19 @@ public class EventOverlayManager {
 		getEventOverlay(item.getType(), infocitymap).addEventItem(item);
 	}
 	public void removeEventItem(EventItem item) {
-		getEventOverlay(item.getType(), null).removeEventItem(item);
+		getEventOverlay(item.getType(), null).removeEventItemByPk(item.getPrimaryKey());
+	}
+	public void clearItemizedOverlays() {
+		for(EventType type : mEIOMap.keySet()) {
+			getEventOverlay(type, null).clearOverlays();
+		}
+	}
+	public ArrayList<Integer> getAllPks() {
+		ArrayList<Integer> pks = new ArrayList<Integer>();
+		for(EventsItemizedOverlay eio : mEIOMap.values()) {
+			pks.addAll(eio.getAllPks());
+		}
+		return pks;
 	}
 
 	public Drawable getEventTypeMarker(EventType type) {
