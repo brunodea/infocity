@@ -28,6 +28,7 @@ import br.ufsm.brunodea.tcc.model.EventItem;
 import br.ufsm.brunodea.tcc.model.EventItem.EventType;
 import br.ufsm.brunodea.tcc.util.DialogHelper;
 
+import com.google.android.maps.GeoPoint;
 import com.google.android.maps.OverlayItem;
 import com.readystatesoftware.mapviewballoons.BalloonOverlayView;
 
@@ -144,8 +145,12 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 								} else {
 									String r = response.getString("response");
 									if(r.equals("ok")) {
-										mInfoCityMap.addEventItem(createEvent());
+										int pk = response.getInt("pk");
+										EventItem e = createEvent(false);
+										e.setPrimaryKey(pk);
+										
 										removeAddEventItem();
+										mInfoCityMap.addEventItem(e);
 										
 										message = mContext.getResources()
 												.getString(R.string.save_success);
@@ -170,7 +175,7 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 					@Override
 					public void run() {
 						Message msg = handler.obtainMessage();
-						msg.obj = InfoCityServer.saveEvent(mContext, createEvent());
+						msg.obj = InfoCityServer.saveEvent(mContext, createEvent(true));
 						handler.sendMessage(msg);
 					}
 				};
