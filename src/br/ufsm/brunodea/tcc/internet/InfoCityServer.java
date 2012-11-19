@@ -129,7 +129,21 @@ public class InfoCityServer {
 			} catch (JSONException e1) {
 			}
 		}
-		
+
 		return ret;
+	}
+
+	public static JSONObject saveEvent(Context c, EventItem event) {
+		return checkResponse(c, postRequest(Util.URL+"add/?", event.getListNameValuePair()));
+	}
+
+	public static JSONObject getEvents(Context c, Location location, float radius,
+			ArrayList<Integer> discardPks) {
+		String dpk = "";
+		for(int pk : discardPks) {
+			dpk += pk + "/";
+		}
+		return checkResponse(c, getRequest(Util.URL+"getWithin/"+location.getLatitude()+
+					"/"+location.getLongitude()+"/"+radius+"/"+dpk));
 	}
 }
