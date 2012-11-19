@@ -43,6 +43,7 @@
 		        android:id="@+id/edittext_title_addevent_balloon"
 		        android:hint="@string/title"
 		        android:textSize="@dimen/default_text_size"
+		        android:maxLength="64"
 		        android:inputType="text"
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"/>
@@ -51,6 +52,7 @@
 		        android:id="@+id/edittext_descr_addevent_balloon"
 		        android:hint="@string/description"
 		        android:textSize="@dimen/default_text_size"
+                android:maxLength="512"
 		        android:inputType="textMultiLine"
 		        android:gravity="top"
 		        android:singleLine="false"

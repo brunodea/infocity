@@ -9,6 +9,7 @@
     <EditText
         android:id="@+id/edittext_addkeywords_dialog"
         android:hint="@string/keyword"
+        android:maxLength="64"
         android:inputType="text"
         android:layout_width="200dp"
         android:layout_height="wrap_content"/>
