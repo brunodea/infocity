@@ -41,14 +41,47 @@ public class InfoCityServer {
 	    HttpProtocolParams.setHttpElementCharset(params, HTTP.UTF_8);
 	    
 	    httppost.setParams(params);
-	    
-        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
+	    HttpResponse response = null;
+        try {
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
 
-	    httppost.setHeader("Accept", "application/json");
-	    httppost.setHeader("Content-type", "application/json; charset=UTF-8");
-	    HttpResponse response = httpclient.execute(httppost);
+		    httppost.setHeader("Accept", "application/json");
+		    httppost.setHeader("Content-type", "application/json; charset=UTF-8");
+		    response = httpclient.execute(httppost);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	    
 	    return responseToString(response);
+	}
+	
+	private static String getRequest(String url) {
+		HttpResponse response = null;    
+        HttpClient client = new DefaultHttpClient();
+        
+        HttpGet request = new HttpGet();
+        HttpParams params = request.getParams();
+        
+        HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+        HttpProtocolParams.setHttpElementCharset(params, HTTP.UTF_8);
+        
+        request.setParams(params);
+        try {
+			request.setURI(new URI(url));
+			response = client.execute(request);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
+		return responseToString(response);
 	}
 
 	private static String responseToString(HttpResponse response) {
