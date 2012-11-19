@@ -6,19 +6,40 @@ import android.os.Bundle;
 
 public class InfoCityLocationListener implements LocationListener {
 
-	private InfoCityMap mInfoCityMap;	
+	public enum LocationAction {
+		ADD_EVENT, GET_EVENTS
+	}
+	
+	private InfoCityMap mInfoCityMap;
+	private LocationAction mCurrAction;
 	
 	public InfoCityLocationListener(InfoCityMap infocity_map) {
 		super();
 		
 		mInfoCityMap = infocity_map;
+		mCurrAction = null;
+	}
+	
+	public void setCurrAction(LocationAction action) {
+		mCurrAction = action;
 	}
 	
 	public void onLocationChanged(Location location) {
 		mInfoCityMap.setLastKnownLocation(location);
-		mInfoCityMap.toggleWindowTitleAddEventProgressBar();
-		mInfoCityMap.centerMapInLastKnownLocation();
-		mInfoCityMap.addAddEventItemMarker();
+
+		switch(mCurrAction) {
+		case ADD_EVENT:
+			mInfoCityMap.toggleWindowTitleAddEventProgressBar();
+			mInfoCityMap.centerMapInLastKnownLocation();
+			mInfoCityMap.addAddEventItemMarker();
+			break;
+		case GET_EVENTS:
+			mInfoCityMap.fetchEvents();
+			break;
+		default:
+			break;
+		}
+
 		mInfoCityMap.stopRequestLocationUpdates();
 	}
 
