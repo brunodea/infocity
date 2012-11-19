@@ -85,25 +85,19 @@ public class InfoCityServer {
 	}
 
 	private static String responseToString(HttpResponse response) {
-		String result = null;
-		InputStream is;
+		if(response == null) {
+			return null;
+		}
+		String res = null;
 		try {
-			is = response.getEntity().getContent();
-			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(is, "utf-8"));
-	        StringBuilder sb = new StringBuilder();
-	        String line = null;
-	        while ((line = reader.readLine()) != null) {
-	        	sb.append(line + "\n");
-	        }
-	        is.close();
-	        result = sb.toString();
-		} catch (IllegalStateException e) {
+			res = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
+			res = new String(res.getBytes("UTF-8"), "UTF-8");
+		} catch (ParseException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-        return result;
+        return res;
 	}
 	
 	public static JSONObject saveEvent(Context c, EventItem event) {
