@@ -148,13 +148,14 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 	protected boolean onBalloonTap(int index, EventItem item) {
 		return true;
 	}
-
+	
 	@Override
 	protected BalloonOverlayView<EventItem> createBalloonOverlayView() {
 		BalloonOverlayView<EventItem> res = null;
 		switch(mBalloonType) {
 		case INFO:
-			res = super.createBalloonOverlayView();
+			res = new InfoEventBalloonOverlayView<EventItem>(
+					getMapView().getContext(),  mMarker.getIntrinsicHeight());
 			break;
 		case ADD:
 			res = new AddEventBalloonOverlayView<EventItem>(
@@ -170,7 +171,7 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 	public void setDraggable(boolean draggable) {
 		mDraggable = draggable;
 	}
-	
+
     @Override
     public boolean onTouchEvent(MotionEvent event, MapView mapView) {
     	if(mDraggable == false) {
