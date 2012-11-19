@@ -19,9 +19,10 @@ public class EventItem extends Model {
 	public enum EventType {
 		NONE, ADD, UNKNOWN;
 		
-		public EventType fromString(String str_type) {
+		public static EventType fromString(String str_type) {
 			EventType type = EventType.NONE;
-			if(str_type.equalsIgnoreCase("desconhecido")) {
+			if(str_type.equalsIgnoreCase("desconhecido") ||
+					str_type.equalsIgnoreCase("unknown")) {
 				type = EventType.UNKNOWN;
 			} else if(str_type.equalsIgnoreCase("adicionar")) {
 				type = EventType.ADD;
@@ -34,12 +35,22 @@ public class EventItem extends Model {
 	private EventType mType;
 	private ArrayList<String> mKeywords;
 	private Date mPubDate;
+	private int mPrimaryKey;
 	
 	public EventItem(GeoPoint pos, String title, String snippet, EventType type) {
 		super(pos, title, snippet);
 		mType = type;
 		mKeywords = new ArrayList<String>();
 		mPubDate = new Date();
+		mPrimaryKey = -1;
+	}
+	
+	public EventItem(int primarykey, GeoPoint pos, String title, String snippet, EventType type) {
+		super(pos, title, snippet);
+		mType = type;
+		mKeywords = new ArrayList<String>();
+		mPubDate = new Date();
+		mPrimaryKey = primarykey;
 	}
 	
 	public EventType getType() {
@@ -67,6 +78,12 @@ public class EventItem extends Model {
 	}
 	public Date getPubDate() {
 		return mPubDate;
+	}
+	public void setPrimaryKey(int pk) {
+		mPrimaryKey = pk;
+	}
+	public int getPrimaryKey() {
+		return mPrimaryKey;
 	}
 	
 	private class EventJSON {
