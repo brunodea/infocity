@@ -2,22 +2,32 @@ package br.ufsm.brunodea.tcc.map;
 
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import br.ufsm.brunodea.tcc.App;
 import br.ufsm.brunodea.tcc.R;
+import br.ufsm.brunodea.tcc.internet.InfoCityServer;
 import br.ufsm.brunodea.tcc.internet.Internet;
+import br.ufsm.brunodea.tcc.map.InfoCityLocationListener.LocationAction;
 import br.ufsm.brunodea.tcc.model.EventItem;
 import br.ufsm.brunodea.tcc.model.EventItem.EventType;
+import br.ufsm.brunodea.tcc.util.Util;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -36,6 +46,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	
 	private Location mLastKnownLocation;
 	
+	private ImageButton mWindowTitleButtonRefresh;
 	private ImageButton mWindowTitleButtonCenterOn;
 	private ImageButton mWindowTitleButtonAddEvent;
 	private ProgressBar mWindowTitleProgressBar;
@@ -52,6 +63,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		init();
 		
 		Internet.hasConnection(this, true);
+		onClick(mWindowTitleButtonRefresh);
 	}
 	
 	private void init() {
@@ -85,6 +97,9 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		
 		mWindowTitleButtonCenterOn = (ImageButton)findViewById(R.id.button_centeron_marker);
 		mWindowTitleButtonCenterOn.setOnClickListener(this);
+		
+		mWindowTitleButtonRefresh = (ImageButton)findViewById(R.id.button_refresh_events);
+		mWindowTitleButtonRefresh.setOnClickListener(this);
 	}
 	
 	@Override
@@ -132,11 +147,16 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	public void onClick(View v) {
 		if(v == mWindowTitleButtonAddEvent) {
 			toggleWindowTitleAddEventProgressBar();
+			mLocationListener.setCurrAction(LocationAction.ADD_EVENT);
 			startRequestLocationUpdates();
 		} else if(v == mWindowTitleButtonCenterOn) {
 			GeoPoint p = App.instance().getEventOverlayManager().
 					getEventOverlay(EventType.ADD, this).getItem(0).getPoint();
 			mMapController.setCenter(p);
+		} else if(v == mWindowTitleButtonRefresh) {
+			toggleRefreshAnimation();
+			mLocationListener.setCurrAction(LocationAction.GET_EVENTS);
+			startRequestLocationUpdates();
 		}
 	}
 	
