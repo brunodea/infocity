@@ -1,6 +1,7 @@
 package br.ufsm.brunodea.tcc.map;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import android.content.Context;
 import android.graphics.Point;
@@ -61,6 +62,8 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 
 		mMarker = marker;
 		mBalloonType = balloon_type;
+		
+		populate();
 	}
 	
 	public void addEventItem(EventItem eventitem) {
@@ -68,11 +71,69 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 		populate();
 	}
 
-	public void removeEventItem(EventItem eventitem) {
-		mEventOverlays.remove(eventitem);
+	public void removeEventItemByPk(int pk) {
+		boolean removed = false;
+		Iterator<EventItem> it = mEventOverlays.iterator();
+		while(it.hasNext()) {
+			EventItem e = it.next();
+			if(e.getPrimaryKey() == pk) {
+				it.remove();
+				removed = true;
+				break;
+			}
+		}
+		if(removed) {
+			populate();
+		}
+	}
+	
+	public void removeInvalidEventItemsPk() {
+		boolean removed = false;
+		Iterator<EventItem> it = mEventOverlays.iterator();
+		while(it.hasNext()) {
+			EventItem e = it.next();
+			if(e.getPrimaryKey() == -1) {
+				it.remove();
+				removed = true;
+			}
+		}
+		if(removed) {
+			populate();
+		}
+	}
+	
+	public boolean containsEventItem(EventItem eventitem) {
+		boolean contains = false;
+		for(EventItem e : mEventOverlays) {
+			if(e.getPrimaryKey() == eventitem.getPrimaryKey()) {
+				contains = true;
+				break;
+			}
+		}
+		
+		return contains;
+	}
+	
+	public void clearOverlays() {
+		mEventOverlays.clear();
 		populate();
 	}
-
+	
+	/**
+	 * 
+	 * @return Lista com todas primary keys maiores que -1.
+	 */
+	public ArrayList<Integer> getAllPks() {
+		ArrayList<Integer> pks = new ArrayList<Integer>();
+		for(EventItem e : mEventOverlays) {
+			int pk = e.getPrimaryKey();
+			if(pk >= 0) {
+				pks.add(pk);
+			}
+		}
+		return pks;
+	}
+	
 	@Override
 	protected EventItem createItem(int i) {
 		return mEventOverlays.get(i);
