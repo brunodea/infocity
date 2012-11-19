@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/balloon_main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:minWidth="300dip">
+    <LinearLayout 
+        android:id="@id/balloon_inner_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/balloon_overlay_bg_selector">
+        <TextView 
+            android:id="@id/balloon_close"
+            android:textStyle="bold"
+            android:textSize="@dimen/big_text_size"
+            android:drawableRight="@drawable/balloon_overlay_close"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_margin="5dp"/>
+                    
+        <TextView
+            android:id="@+id/textview_pubdate_infoballoon"
+            android:textSize="@dimen/small_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"/>
+            
+        <TextView 
+            android:id="@+id/textview_description_infoballoon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"/>
+        
+        <TextView
+            android:id="@+id/textview_keywords_infoballoon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/small_text_size"
+            android:textStyle="italic"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+</LinearLayout>
