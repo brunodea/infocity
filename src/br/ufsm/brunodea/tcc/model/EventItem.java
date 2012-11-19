@@ -101,18 +101,25 @@ public class EventItem extends Model {
 	}
 
 	@Override
-	public JSONObject toJSON() throws JSONException {
+	public JSONObject toJSON() {
+		double latitude = getPoint().getLatitudeE6() / 1E6;
+		double longitude = getPoint().getLongitudeE6() / 1E6;
 		EventJSON event = new EventJSON(mTitle, mSnippet, 
-				new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(mPubDate), 
-				getPoint().toString());
+				new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(mPubDate),
+				latitude+","+longitude);
 		
-		JSONObject json = Util.toJSON("event", event);
+		JSONObject json = null;
+		try {
+			json = Util.toJSON("event", event);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 
 		return json;
 	}
 
 	@Override
-	public List<NameValuePair> getListNameValuePair() throws JSONException {
+	public List<NameValuePair> getListNameValuePair() {
 		JSONObject json = toJSON();
 		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
