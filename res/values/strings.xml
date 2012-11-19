@@ -27,4 +27,6 @@
     <string name="conn_error">Erro de conexão com o servidor.</string>
     <string name="save_success">Evento salvo com sucesso!</string>
     <string name="drag_image">Imagem para arrasto.</string>
+    <string name="close">Fechar</string>
+    <string name="refresh">Recarregar</string>
 </resources>
