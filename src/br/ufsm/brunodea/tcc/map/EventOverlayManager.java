@@ -15,6 +15,15 @@ import br.ufsm.brunodea.tcc.model.EventItem.EventType;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 
+/**
+ * Classe para gerenciar os diferentes tipos de EventsItemizedOverlays.
+ * Como serão diversos tipos, tendo em vista que cada EventType tem seu
+ * próprio EventsItemizedOverlay achou-se por bem criar uma classe para gerenciar
+ * estes dados.
+ * 
+ * @author bruno
+ *
+ */
 public class EventOverlayManager {
 	
 	private Context mContext;
@@ -31,6 +40,13 @@ public class EventOverlayManager {
 		mMapOverlays = overlays;
 	}
 	
+	/**
+	 * Retorna o EventsItemizedOverlay correspondente ao tipo passado como parâmetro.
+	 * 
+	 * @param type Tipo que determina qual EventsItemizedOverlay vai ser retornado.
+	 * @param infocitymap Referência à activity que EventsItemizedOverlay necessita.
+	 * @return EventsItemizedOverlay correspondente ao tipo type.
+	 */
 	public EventsItemizedOverlay getEventOverlay(EventType type, InfoCityMap infocitymap) {
 		EventsItemizedOverlay eio = null;
 		if(mEIOMap.containsKey(type)) {
@@ -58,6 +74,9 @@ public class EventOverlayManager {
 		return eio;
 	}
 	
+	/**
+	 * Método de manipulação dos dados dos EventsItemizedOverlays.
+	 */
 	public void addEventItem(EventItem item, InfoCityMap infocitymap) {
 		getEventOverlay(item.getType(), infocitymap).addEventItem(item);
 	}
@@ -77,6 +96,12 @@ public class EventOverlayManager {
 		return pks;
 	}
 
+	/**
+	 * Retorna o Drawable correspondente ao tipo de evento.
+	 * 
+	 * @param type Tipo de evento que determina o drawable.
+	 * @return Drawable correspondente ao tipo de evento.
+	 */
 	public Drawable getEventTypeMarker(EventType type) {
 		Drawable marker = null;
 

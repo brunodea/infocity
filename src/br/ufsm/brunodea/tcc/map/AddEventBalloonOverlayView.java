@@ -32,6 +32,14 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.OverlayItem;
 import com.readystatesoftware.mapviewballoons.BalloonOverlayView;
 
+/**
+ * Classe que monta e manipula os dados do balão com o formulário para a adição
+ * de um novo evento.
+ * 
+ * @author bruno
+ *
+ * @param <Item>
+ */
 public class AddEventBalloonOverlayView <Item extends OverlayItem>
 	extends BalloonOverlayView<EventItem> implements OnClickListener {
 	
@@ -131,6 +139,10 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 			};
 			DialogHelper.addKeywordDialog(mContext, mEventItem.getKeywords(), 5, handler);
 		} else if(v == mImageButtonSave) {
+			/**
+			 * Faz a requisição ao servidor para salvar no seu banco de dados
+			 * o evento recém criado.
+			 */
 			if(validate()) {
 				toggleProgressbar();
 				final Handler handler = new Handler() {
@@ -149,7 +161,7 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 										EventItem e = createEvent(false);
 										e.setPrimaryKey(pk);
 										
-										removeAddEventItem();
+										removeAddEventItem(); //remove o evento com balão de adicionar evento.
 										mInfoCityMap.addEventItem(e);
 										
 										message = mContext.getResources()
@@ -184,6 +196,9 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 		}
 	}
 	
+	/**
+	 * "liga"/"desliga" a barra de progresso no windowtitle. 
+	 */
 	private void toggleProgressbar() {
 		View v = findViewById(R.id.linearlayout_progressbar_addevent_balloon);
 		int visibility = v.getVisibility() == View.VISIBLE ? 
@@ -193,6 +208,11 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 				visibility == View.VISIBLE ? View.GONE : View.VISIBLE);
 	}
 	
+	/**
+	 * Faz a validação do formulário.
+	 * 
+	 * @return true se o formulário foi preenchido corretamente.
+	 */
 	private boolean validate() {
 		boolean ok = false;
 		String title = mEditTextTitle.getText().toString();
@@ -214,6 +234,15 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 		return ok;
 	}
 	
+	/**
+	 * Cria um evento com os dados passados ao formulário.
+	 * Recebe um booleano dizendo se vai ser enviado ao servidor, pois se este for o caso,
+	 * deve-se inverter a ordem da latitude e longitude já que no servidor é assim
+	 * ao contrário.
+	 * 
+	 * @param to_server true se esse evento vai ser enviado ao servidor.
+	 * @return Evento criado a partir dos dados do formulário.
+	 */
 	private EventItem createEvent(boolean to_server) {
 		String title = mEditTextTitle.getText().toString();
 		String descr = mEditTextDescription.getText().toString();
@@ -240,6 +269,9 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 		return EventType.fromString(str_type);
 	}
 	
+	/**
+	 * Função que remove do mapa o evento do tipo ADD. (e.g. quando cancela a adição)
+	 */
 	private void removeAddEventItem() {
 		App.instance().getEventOverlayManager()
 			.getEventOverlay(EventType.ADD, mInfoCityMap).setFocus(null);

@@ -19,6 +19,12 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import br.ufsm.brunodea.tcc.R;
 
+/**
+ * Classe auxiliar na criação e apresentação de certas caixas de diálogo.
+ * 
+ * @author bruno
+ *
+ */
 public class DialogHelper {
 	/**
      * Display a dialog that user has no internet connection
@@ -51,6 +57,15 @@ public class DialogHelper {
         builder.show();
     }
     
+    /**
+     * Diálogo do tipo sim/não.
+     * 
+     * @param c Contexto em que esse diálogo será apresentado.
+     * @param title Título para o diálogo.
+     * @param description Mensagem do diálogo.
+     * @param handler Handler que será chamado quando o usuário clicar em sim ou não
+     * 				  o valor da variável Message.what será 0 se for sim e 1 se for não.
+     */
     public static void yesNoDialog(Context c, String title, String description, 
     		final Handler handler) {
     	 AlertDialog.Builder builder = new AlertDialog.Builder(c);
@@ -127,6 +142,17 @@ public class DialogHelper {
     	return res;
     }
     
+    /**
+     * Diálogo utilizado na criação de eventos.
+     * Permite ao usuário adicionar e remover palavras-chaves do evento sendo criado,
+     * sendo limitado à max_keywords.
+     * 
+     * @param context Contexto em que será apresentado o diálogo.
+     * @param keywords Palavras-chave registradas anteriormente.
+     * @param max_keywords Número máximo de palavras-chave permitidas.
+     * @param handler Handler que será chamado quando o usuário terminar de editar.
+     * 				  Em Message.obj é passado o ArrayList<String> com as palavras-chave setadas.
+     */
     public static void addKeywordDialog(final Context context, final ArrayList<String> keywords, 
     		final int max_keywords, final Handler handler) {
     	final Dialog dialog = new Dialog(context);

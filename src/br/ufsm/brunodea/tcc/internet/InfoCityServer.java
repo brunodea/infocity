@@ -1,25 +1,7 @@
 package br.ufsm.brunodea.tcc.internet;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.List;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.ParseException;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,75 +13,21 @@ import br.ufsm.brunodea.tcc.R;
 import br.ufsm.brunodea.tcc.model.EventItem;
 import br.ufsm.brunodea.tcc.util.Util;
 
+/**
+ * Classe que serve de ponte entre o servidor e a aplicação.
+ * 
+ * @author bruno
+ *
+ */
 public class InfoCityServer {
-	private static String postRequest(String url, List<NameValuePair> nameValuePairs) {
-	    DefaultHttpClient httpclient = new DefaultHttpClient();
-	    HttpPost httppost = new HttpPost(url);
-	    HttpParams params = httppost.getParams();
-
-	    HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
-	    HttpProtocolParams.setHttpElementCharset(params, HTTP.UTF_8);
-	    
-	    httppost.setParams(params);
-	    HttpResponse response = null;
-        try {
-			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
-
-		    httppost.setHeader("Accept", "application/json");
-		    httppost.setHeader("Content-type", "application/json; charset=UTF-8");
-		    response = httpclient.execute(httppost);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	    
-	    return responseToString(response);
-	}
-	
-	private static String getRequest(String url) {
-		HttpResponse response = null;    
-        HttpClient client = new DefaultHttpClient();
-        
-        HttpGet request = new HttpGet();
-        HttpParams params = request.getParams();
-        
-        HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
-        HttpProtocolParams.setHttpElementCharset(params, HTTP.UTF_8);
-        
-        request.setParams(params);
-        try {
-			request.setURI(new URI(url));
-			response = client.execute(request);
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        
-		return responseToString(response);
-	}
-
-	private static String responseToString(HttpResponse response) {
-		if(response == null) {
-			return null;
-		}
-		String res = null;
-		try {
-			res = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
-			res = new String(res.getBytes("UTF-8"), "UTF-8");
-		} catch (ParseException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        return res;
-	}
-	
+	/**
+	 * Método que checa se a resposta do servidor é um JSON válido.
+	 * Apresenta uma mensagem Toast de erro se não deu certo.
+	 * 
+	 * @param c Contexto para pegar as strings de resources.
+	 * @param response String de resposta do servidor.
+	 * @return Retorna um JSON com a resposta do servidor ou com uma mensagem de erro.
+	 */
 	private static JSONObject checkResponse(Context c, String response) {
 		JSONObject ret = null;
 		try {
@@ -133,17 +61,35 @@ public class InfoCityServer {
 		return ret;
 	}
 
+	/**
+	 * Envia uma requisição de POST no servidor para salvar no banco de dados de lá
+	 * um novo Evento.
+	 * 
+	 * @param c Contexto para ser passado a outros métodos.
+	 * @param event Evento a ser adicionado no servidor.
+	 * @return JSON com a resposta do servidor.
+	 */
 	public static JSONObject saveEvent(Context c, EventItem event) {
-		return checkResponse(c, postRequest(Util.URL+"add/?", event.getListNameValuePair()));
+		return checkResponse(c, Internet.postRequest(Util.URL+"add/?", event.getListNameValuePair()));
 	}
 
+	/**
+	 * Evia uma requisição do tipo GET ao servidor para retornar todos os eventos
+	 * que estão em um determinado raio a partir da localização passada como parâmetro.
+	 * 
+	 * @param c Contexto a ser passado a outros métodos.
+	 * @param location Localização de onde se busca os Eventos ao redor.
+	 * @param radius Distância máxima em que o evento deve estar para ser retornado.
+	 * @param discardPks Chaves primárias a serem descartadas na resposta pelo servidor.
+	 * @return JSON com a resposta do servidor.
+	 */
 	public static JSONObject getEvents(Context c, Location location, float radius,
 			ArrayList<Integer> discardPks) {
 		String dpk = "";
 		for(int pk : discardPks) {
 			dpk += pk + "/";
 		}
-		return checkResponse(c, getRequest(Util.URL+"getWithin/"+location.getLatitude()+
+		return checkResponse(c, Internet.getRequest(Util.URL+"getWithin/"+location.getLatitude()+
 					"/"+location.getLongitude()+"/"+radius+"/"+dpk));
 	}
 }

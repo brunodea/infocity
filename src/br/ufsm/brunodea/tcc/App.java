@@ -9,6 +9,11 @@ import br.ufsm.brunodea.tcc.map.EventOverlayManager;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 
+/**
+ * Singleton que guarda a única instância de EventOverlayManager que deve existir.
+ * @author bruno
+ *
+ */
 public class App extends Application {
 	private static App sInstance = null;
 

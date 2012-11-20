@@ -14,6 +14,16 @@ import br.ufsm.brunodea.tcc.model.EventItem;
 import com.google.android.maps.OverlayItem;
 import com.readystatesoftware.mapviewballoons.BalloonOverlayView;
 
+/**
+ * Classe que monta a forma como os dados dos eventos serão apresentados no balão
+ * do tipo INFO.
+ * Isso é feito simplesmente inflando o layout infoevent_balloon e setando os
+ * valores dos TextViews.
+ * 
+ * @author bruno
+ *
+ * @param <Item>
+ */
 public class InfoEventBalloonOverlayView <Item extends OverlayItem>
 	extends BalloonOverlayView<EventItem> {
 

@@ -13,12 +13,30 @@ import org.json.JSONObject;
 import br.ufsm.brunodea.tcc.util.Util;
 
 import com.google.android.maps.GeoPoint;
+import com.google.android.maps.OverlayItem;
 
-public class EventItem extends Model {
+/**
+ * Classe que herda de Model (um OverlayItem) e que guarda os dados básicos
+ * de um evento.
+ * 
+ * @author bruno
+ *
+ */
+public class EventItem extends OverlayItem implements Model {
 	
+	/**
+	 * Tipos de eventos que determina diversas outras coisas.
+	 */
 	public enum EventType {
 		NONE, ADD, UNKNOWN;
 		
+		/**
+		 * A partir de uma string, determina e retorna qual o Tipo de Evento
+		 * relacionado.
+		 * 
+		 * @param str_type String com um nome que representa determinado tipo.
+		 * @return EventType relacionado à string str_type.
+		 */
 		public static EventType fromString(String str_type) {
 			EventType type = EventType.NONE;
 			if(str_type.equalsIgnoreCase("desconhecido") ||
@@ -86,6 +104,12 @@ public class EventItem extends Model {
 		return mPrimaryKey;
 	}
 	
+	/**
+	 * Classe criada apenas para ser passada para um Gson para ser transformada
+	 * em um JSON. Foi criada pois deve haver uma correlação entre os nomes das
+	 * variáveis aqui e no servidor. E também para evitar enviar informações
+	 * que não serão aproveitadas.
+	 */
 	private class EventJSON {
 		private String title;
 		private String description;
@@ -100,6 +124,9 @@ public class EventItem extends Model {
 		}
 	}
 
+	/**
+	 * Método que constrói um JSONObject a partir deste EventItem e retorna ele.
+	 */
 	@Override
 	public JSONObject toJSON() {
 		double latitude = getPoint().getLatitudeE6() / 1E6;
@@ -118,6 +145,9 @@ public class EventItem extends Model {
 		return json;
 	}
 
+	/**
+	 * Método que retorna uma lista com os dados deste evento.
+	 */
 	@Override
 	public List<NameValuePair> getListNameValuePair() {
 		JSONObject json = toJSON();

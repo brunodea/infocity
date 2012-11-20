@@ -20,9 +20,20 @@ import com.google.android.maps.MapView;
 import com.readystatesoftware.mapviewballoons.BalloonItemizedOverlay;
 import com.readystatesoftware.mapviewballoons.BalloonOverlayView;
 
+/**
+ * Classe que gerencia/determina o comportamento dos markers dos eventos no mapa.
+ * Por exemplo, se mDraggable for true, os markers deste EventsItemizedOverlay
+ * serão arrastáveis.
+ * 
+ * @author bruno
+ *
+ */
 public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 	private ArrayList<EventItem> mEventOverlays;
 	
+	/**
+	 * Enum  que determina os tipos de balões.
+	 */
 	public enum BalloonType {
 		INFO, ADD
 	}
@@ -66,11 +77,22 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 		populate();
 	}
 	
+	/**
+	 * Adiciona um Evento à este EventsItemizedOverlay.
+	 * 
+	 * @param eventitem evento a ser adicionado.
+	 */
 	public void addEventItem(EventItem eventitem) {
 		mEventOverlays.add(eventitem);
 		populate();
 	}
 
+	/**
+	 * Remove um Evento deste EventsItemizedOverlay a partir de sua
+	 * chave primária.
+	 * 
+	 * @param pk
+	 */
 	public void removeEventItemByPk(int pk) {
 		boolean removed = false;
 		Iterator<EventItem> it = mEventOverlays.iterator();
@@ -87,6 +109,10 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 		}
 	}
 	
+	/**
+	 * Remove todos os Eventos deste EventsItemizedOverlay cuja chave primária
+	 * seja < 0.
+	 */
 	public void removeInvalidEventItemsPk() {
 		boolean removed = false;
 		Iterator<EventItem> it = mEventOverlays.iterator();
@@ -102,6 +128,13 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 		}
 	}
 	
+	/**
+	 * Verifica se este EventsItemizedOverlay contém um evento a partir de sua chave
+	 * primária.
+	 * 
+	 * @param eventitem Evento que contém ou não neste EventsItemizedOverlay.
+	 * @return true se este EventsItemizedOverlay contém o evento eventitem.
+	 */
 	public boolean containsEventItem(EventItem eventitem) {
 		boolean contains = false;
 		for(EventItem e : mEventOverlays) {
@@ -114,12 +147,17 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 		return contains;
 	}
 	
+	/**
+	 * Remove todos os eventos deste EventsItemizedOverlay.
+	 */
 	public void clearOverlays() {
 		mEventOverlays.clear();
 		populate();
 	}
 	
 	/**
+	 * Pega a lista com todas as chaves primárias dos eventos deste 
+	 * EventsItemizedOverlay exceto as que são < 0.
 	 * 
 	 * @return Lista com todas primary keys maiores que -1.
 	 */
@@ -149,6 +187,10 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 		return true;
 	}
 	
+	/**
+	 * Cria um balão para os Eventos deste EventsItemizedOverlay de acordo com
+	 * o BalloonType setado.
+	 */
 	@Override
 	protected BalloonOverlayView<EventItem> createBalloonOverlayView() {
 		BalloonOverlayView<EventItem> res = null;
@@ -168,10 +210,18 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 		return res;
 	}
 
+	/**
+	 * Determina se os markers deste EventsItemizedOverlay são arrastáveis ou não.
+	 * @param draggable true para ser possível arrastar os markers deste EventsItemizedOverlay.
+	 */
 	public void setDraggable(boolean draggable) {
 		mDraggable = draggable;
 	}
 
+	/**
+	 * Faz as ações necessárias para a arrastabilidade dos markers funcionar
+	 * corretamente.
+	 */
     @Override
     public boolean onTouchEvent(MotionEvent event, MapView mapView) {
     	if(mDraggable == false) {
@@ -184,6 +234,7 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
         
         boolean result = false;
     	
+        //Se o usuário só clicou no marker, abre o balão.
         if(action == MotionEvent.ACTION_DOWN) {
         	for(final EventItem item : mEventOverlays) {
                 Point p = mapView.getProjection().toPixels(item.getPoint(), null);
@@ -192,7 +243,7 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
                 	result = true;
                 	
                 	mDragItem = item;
-                	setFocus(item);
+                	setFocus(item); //ação para abrir o balão.
                 	
                 	mEventOverlays.remove(item);
                 	populate();
@@ -227,7 +278,7 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
             mDragItem = null;
             result = false;
         } else if(action == MotionEvent.ACTION_MOVE && mDragImage != null) {
-        	setFocus(null);
+        	setFocus(null); //ao arrastar o marker, seu balão é fechado.
         	
         	setDragImagePosition(x, y);
             result = true;
@@ -240,6 +291,12 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
         return result || super.onTouchEvent(event, mapView);
     }
 
+    /**
+     * Método que determina a posição da imagem de arrasto na tela.
+     * 
+     * @param x
+     * @param y
+     */
     private void setDragImagePosition(int x, int y) {
     	RelativeLayout.LayoutParams lp=
     			(RelativeLayout.LayoutParams)mDragImage.getLayoutParams();

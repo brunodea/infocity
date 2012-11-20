@@ -4,8 +4,19 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 
+/**
+ * Classe chamada toda vez que se quer receber a localização atual do usuário.
+ * A ação tomada em onLocationChanged é determinada pelo LocationAction setado.
+ * 
+ * @author bruno
+ *
+ */
 public class InfoCityLocationListener implements LocationListener {
 
+	/**
+	 * Determina que ação será tomada no onLocationChanged.
+	 * (e em outras partes do código se vir ao caso)
+	 */
 	public enum LocationAction {
 		ADD_EVENT, GET_EVENTS
 	}

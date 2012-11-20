@@ -35,6 +35,14 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 
+/**
+ * Activity principal da aplicação que tem um mapa onde é possível
+ * visualizar e interagir com os eventos, além de adicionar novos e buscar
+ * por outros, etc.
+ * 
+ * @author bruno
+ *
+ */
 public class InfoCityMap extends MapActivity implements OnClickListener {
 
 	private MapView mMapView;
@@ -107,6 +115,10 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		return false;
 	}
 	
+	/**
+	 * Inicializa a requisição de localização do usuário, através de
+	 * InfoCityLocationListener utilizando GPS e a Rede. 
+	 */
 	public void startRequestLocationUpdates() {
 		mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
 				0, 5, mLocationListener);
@@ -114,10 +126,17 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 				0, 5, mLocationListener);
 	}
 	
+	/**
+	 * Termina com a requisição de atualização da localização atual do usuário.
+	 */
 	public void stopRequestLocationUpdates() {
 		mLocationManager.removeUpdates(mLocationListener);
 	}
 	
+	/**
+	 * Centraliza o mapa na última localização conhecida (conseguida pelo
+	 * listener).
+	 */
 	public void centerMapInLastKnownLocation() {
 		if(mLastKnownLocation != null) {
 			mMapController.setCenter(
@@ -128,6 +147,10 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		}
 	}
 
+	/**
+	 * Se tem algum balão aberto, ele é fechado.
+	 * Se não, fecha a aplicação.
+	 */
 	@Override
 	public void onBackPressed() {
 		boolean closed_balloons = false;
@@ -204,6 +227,11 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		}
 	}
 	
+	/**
+	 * Cria a thread que vai buscar no servidor os eventos dentro de um raio
+	 * pré-determinado (no caso, 50km) e os mostra na tela, mas apenas aquelas
+	 * que ainda não estão carregados no aplicativo.
+	 */
 	public void fetchEvents() {
 		final Handler done_handler = new Handler() {
 			@Override
@@ -211,7 +239,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 				toggleRefreshAnimation();
 				if(msg.what == 0) {
 					//good
-					mMapView.invalidate();
+					mMapView.invalidate(); //força o mapa se redesenhar para mostrar os markers.
 				} else if(msg.what == 1) {
 					Toast.makeText(InfoCityMap.this, getResources()
 							.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
@@ -223,6 +251,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 			@Override
 			public void handleMessage(Message msg) {
 				EventItem event = (EventItem) msg.obj;
+				//só adiciona evento que ainda não exista no aplicativo.
 				if(!App.instance().getEventOverlayManager()
 					.getEventOverlay(event.getType(), InfoCityMap.this)
 					.containsEventItem(event)) {
@@ -236,11 +265,11 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 			@Override
 			public void run() {
 				boolean fine = false;
+				//faz a busca no servidor pelos eventos.
 				JSONObject res = InfoCityServer.getEvents(InfoCityMap.this, mLastKnownLocation, 50000f,
 						App.instance().getEventOverlayManager().getAllPks());
 				if(res != null && res.has("size")) {
 					try {
-						//App.instance().getEventOverlayManager().clearItemizedOverlays();
 						int size = res.getInt("size");
 						for(int i = 0; i < size; i++) {
 							if(res.has("event_"+i)) {
