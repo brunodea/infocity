@@ -278,5 +278,6 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 		App.instance().getEventOverlayManager()
 			.getEventOverlay(EventType.ADD, mInfoCityMap).removeInvalidEventItemsPk();
 		mInfoCityMap.toggleWindowTitleAddEventCenterOn();
+		mEventItem = null;
 	}
 }
