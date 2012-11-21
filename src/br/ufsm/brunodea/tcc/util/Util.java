@@ -2,6 +2,7 @@ package br.ufsm.brunodea.tcc.util;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -90,7 +91,11 @@ public class Util {
 					title, descr, EventType.fromString(type));
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-			eventitem.setPubDate(sdf.parse(date.replace("T", " ").replace("Z", "")));
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(sdf.parse(date.replace("T", " ").replace("Z", "")));
+			cal.add(Calendar.HOUR_OF_DAY, -2); //bug do servidor que retorna duas horas adiantado.
+			
+			eventitem.setPubDate(cal.getTime());
 			eventitem.setKeywords(keywords);
 			
 			eventitem.setPrimaryKey(pk);
