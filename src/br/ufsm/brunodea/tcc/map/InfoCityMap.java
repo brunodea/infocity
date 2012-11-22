@@ -54,10 +54,11 @@ import com.google.android.maps.Overlay;
  *
  */
 public class InfoCityMap extends MapActivity implements OnClickListener {
-
 	private MapView mMapView;
 	private MapController mMapController;
 	private List<Overlay> mMapOverlays;
+	
+	private final int DEFAULT_MAP_ZOOM = 20;
 	
 	private MyLocationOverlay mMyLocationOverlay;
 	
@@ -89,7 +90,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	
 	private void init() {
 		mMapView = (MapView) findViewById(R.id.mapview);
-		mMapView.getController().setZoom(20);
+		mMapView.getController().setZoom(DEFAULT_MAP_ZOOM);
 		mMapView.setSatellite(true);
 		
 		mMapController = mMapView.getController();
@@ -239,6 +240,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 			GeoPoint p = App.instance().getEventOverlayManager().
 					getEventOverlay(EventType.ADD, this).getItem(0).getPoint();
 			mMapController.setCenter(p);
+			mMapView.getController().setZoom(DEFAULT_MAP_ZOOM);
 		} else if(v == mWindowTitleButtonRefresh) {
 			toggleRefreshAnimation();
 			mLocationListener.setCurrAction(LocationAction.GET_EVENTS);
