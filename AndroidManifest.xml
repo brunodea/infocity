@@ -30,7 +30,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+        <activity android:name=".util.InfoCityPreferenceActivity"
+                  android:configChanges="orientation"/>
         <!-- services -->
 		<service android:enabled="true" android:name="com.alohar.core.ALCoreService" />
 		<service android:enabled="true" android:name="com.alohar.core.ALMasterService" />
