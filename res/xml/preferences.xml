@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory 
+        android:title="@string/pref_events"
+        android:summary="@string/pref_events_summary">
+        <EditTextPreference 
+            android:key="event_radius"
+            android:summary="@string/pref_event_radius_summary"
+            android:title="@string/pref_event_radius_title"
+            android:defaultValue="50000"
+            android:numeric="decimal"/>
+    </PreferenceCategory>
+</PreferenceScreen>
