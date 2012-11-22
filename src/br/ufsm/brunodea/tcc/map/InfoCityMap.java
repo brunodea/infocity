@@ -22,6 +22,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import br.ufsm.brunodea.tcc.App;
 import br.ufsm.brunodea.tcc.R;
+import br.ufsm.brunodea.tcc.context.ContextData;
+import br.ufsm.brunodea.tcc.context.ContextSupplier;
+import br.ufsm.brunodea.tcc.context.alohar.InfoCityAlohar;
 import br.ufsm.brunodea.tcc.internet.InfoCityServer;
 import br.ufsm.brunodea.tcc.internet.Internet;
 import br.ufsm.brunodea.tcc.map.InfoCityLocationListener.LocationAction;
@@ -52,6 +55,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	private LocationManager mLocationManager;
 	private InfoCityLocationListener mLocationListener;
 	
+	private ContextSupplier mCurrContextSupplier;
 	private Location mLastKnownLocation;
 	
 	private ImageButton mWindowTitleButtonRefresh;
@@ -93,6 +97,8 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 			mLastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 		}
 	
+		mCurrContextSupplier = new InfoCityAlohar(getApplication());
+		mCurrContextSupplier.start();
 		centerMapInLastKnownLocation();
 	}
 	
@@ -177,10 +183,20 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 					getEventOverlay(EventType.ADD, this).getItem(0).getPoint();
 			mMapController.setCenter(p);
 		} else if(v == mWindowTitleButtonRefresh) {
+			mCurrContextSupplier.getContextData();
+			
+			
+			
 			toggleRefreshAnimation();
 			mLocationListener.setCurrAction(LocationAction.GET_EVENTS);
 			startRequestLocationUpdates();
 		}
+	}
+	
+	@Override
+	public void onDestroy() {
+		mCurrContextSupplier.stop();
+		super.onDestroy();
 	}
 	
 	public void setLastKnownLocation(Location location) {
