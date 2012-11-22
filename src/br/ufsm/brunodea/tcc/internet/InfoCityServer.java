@@ -11,7 +11,7 @@ import android.location.Location;
 import android.util.Log;
 import br.ufsm.brunodea.tcc.R;
 import br.ufsm.brunodea.tcc.model.EventItem;
-import br.ufsm.brunodea.tcc.util.Util;
+import br.ufsm.brunodea.tcc.util.InfoCityPreferences;
 
 /**
  * Classe que serve de ponte entre o servidor e a aplicação.
@@ -70,7 +70,8 @@ public class InfoCityServer {
 	 * @return JSON com a resposta do servidor.
 	 */
 	public static JSONObject saveEvent(Context c, EventItem event) {
-		return checkResponse(c, Internet.postRequest(Util.URL+"add/?", event.getListNameValuePair()));
+		return checkResponse(c, Internet.postRequest(InfoCityPreferences.getServerBaseURI(c)
+				+"add/?", event.getListNameValuePair()));
 	}
 
 	/**
@@ -86,10 +87,12 @@ public class InfoCityServer {
 	public static JSONObject getEvents(Context c, Location location, float radius,
 			ArrayList<Integer> discardPks) {
 		String dpk = "";
-		for(int pk : discardPks) {
-			dpk += pk + "/";
+		if(discardPks != null) {
+			for(int pk : discardPks) {
+				dpk += pk + "/";
+			}
 		}
-		return checkResponse(c, Internet.getRequest(Util.URL+"getWithin/"+location.getLatitude()+
-					"/"+location.getLongitude()+"/"+radius+"/"+dpk));
+		return checkResponse(c, Internet.getRequest(InfoCityPreferences.getServerBaseURI(c)
+				+"getWithin/"+location.getLatitude()+"/"+location.getLongitude()+"/"+radius+"/"+dpk));
 	}
 }

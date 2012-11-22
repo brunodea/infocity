@@ -68,7 +68,7 @@ public class EventOverlayManager {
 			eio.setDraggable(draggable);
 			
 			mEIOMap.put(type, eio);
-			mMapOverlays.add(eio);
+			mMapOverlays.add(0, eio);
 		}
 		
 		return eio;
