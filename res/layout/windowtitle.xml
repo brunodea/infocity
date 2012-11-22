@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:text="@string/getting_pos"
         android:textSize="@dimen/default_text_size"
+        android:textColor="@color/text_color"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="10dp"
         android:visibility="gone"/>   
