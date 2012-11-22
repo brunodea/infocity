@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory 
+    <PreferenceCategory
+        android:title="@string/pref_server"
+        android:summary="@string/pref_server_summary">
+        <EditTextPreference 
+            android:key="server_ip"
+            android:summary="@string/pref_server_ip_summary"
+            android:title="@string/pref_server_ip_title"
+            android:defaultValue="192.168.1.5"/>
+        <EditTextPreference 
+            android:key="server_port"
+            android:summary="@string/pref_server_port_summary"
+            android:title="@string/pref_server_port_title"
+            android:defaultValue="8000"
+            android:numeric="integer"/>
+    </PreferenceCategory>
+    <PreferenceCategory
         android:title="@string/pref_events"
         android:summary="@string/pref_events_summary">
         <EditTextPreference 
@@ -9,5 +24,21 @@
             android:title="@string/pref_event_radius_title"
             android:defaultValue="50000"
             android:numeric="decimal"/>
+    </PreferenceCategory>
+    <PreferenceCategory 
+        android:title="@string/map"
+        android:summary="@string/pref_map_summary">
+        <CheckBoxPreference
+            android:key="enable_mylocation"
+            android:title="@string/curr_location"
+            android:summaryOn="@string/active_mylocation"
+            android:summaryOff="@string/inactive_mylocation"
+            android:checked="true"/>
+        <CheckBoxPreference
+            android:key="enable_compass"
+            android:title="@string/enable_compass"
+            android:summaryOn="@string/active_compass"
+            android:summaryOff="@string/inactive_compass"
+            android:checked="false"/>
     </PreferenceCategory>
 </PreferenceScreen>
