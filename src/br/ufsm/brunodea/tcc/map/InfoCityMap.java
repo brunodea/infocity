@@ -6,11 +6,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -22,7 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import br.ufsm.brunodea.tcc.App;
 import br.ufsm.brunodea.tcc.R;
-import br.ufsm.brunodea.tcc.context.ContextData;
 import br.ufsm.brunodea.tcc.context.ContextSupplier;
 import br.ufsm.brunodea.tcc.context.alohar.InfoCityAlohar;
 import br.ufsm.brunodea.tcc.internet.InfoCityServer;
@@ -30,6 +33,8 @@ import br.ufsm.brunodea.tcc.internet.Internet;
 import br.ufsm.brunodea.tcc.map.InfoCityLocationListener.LocationAction;
 import br.ufsm.brunodea.tcc.model.EventItem;
 import br.ufsm.brunodea.tcc.model.EventItem.EventType;
+import br.ufsm.brunodea.tcc.util.InfoCityPreferenceActivity;
+import br.ufsm.brunodea.tcc.util.InfoCityPreferences;
 import br.ufsm.brunodea.tcc.util.Util;
 
 import com.google.android.maps.GeoPoint;
@@ -120,7 +125,25 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	protected boolean isRouteDisplayed() {
 		return false;
 	}
-	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.map_menu, menu);
+	    return true;
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	    case R.id.menu_map_settings:
+	    	Intent prefs = new Intent(this, InfoCityPreferenceActivity.class);
+	    	startActivity(prefs);
+	    	break;
+	    default:
+	    	return super.onOptionsItemSelected(item);
+	    }
+	    return true;
+	}
 	/**
 	 * Inicializa a requisição de localização do usuário, através de
 	 * InfoCityLocationListener utilizando GPS e a Rede. 
@@ -282,7 +305,8 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 			public void run() {
 				boolean fine = false;
 				//faz a busca no servidor pelos eventos.
-				JSONObject res = InfoCityServer.getEvents(InfoCityMap.this, mLastKnownLocation, 50000f,
+				JSONObject res = InfoCityServer.getEvents(InfoCityMap.this, mLastKnownLocation, 
+						InfoCityPreferences.getEventMaxRadius(InfoCityMap.this),
 						App.instance().getEventOverlayManager().getAllPks());
 				if(res != null && res.has("size")) {
 					try {
