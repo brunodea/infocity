@@ -29,11 +29,29 @@
     <string name="drag_image">Imagem para arrasto.</string>
     <string name="close">Fechar</string>
     <string name="refresh">Recarregar</string>
-    <string name="pref_events">Detalhes de Eventos</string>
+    <string name="pref_events">Eventos</string>
     <string name="pref_events_summary">Detalhes extras para a filtragem de eventos.</string>
     <string name="pref_event_radius_summary">Distância máxima (em metros) de um evento a partir da localização atual.</string>
     <string name="pref_event_radius_title">Distância máxima</string>
     <string name="only_numbers">Apenas números são aceitos.</string>
     <string name="preferences">Preferências</string>
     <string name="not_empty">Campo não pode ser vazio.</string>
+    <string name="pref_server">Servidor</string>
+    <string name="pref_server_summary">Informações sobre o endereço IP e porta do servidor.</string>
+    <string name="pref_server_ip_title">Endereço IP</string>
+    <string name="pref_server_ip_summary">Endereço IP do servidor.</string>
+    <string name="pref_server_port_title">Porta</string>
+    <string name="pref_server_port_summary">Porta do servidor.</string>
+    <string name="invalid_ip">Endereço IP inválido.</string>
+    <string name="invalid_port">Porta inválida.</string>
+    <string name="map">Mapa</string>
+    <string name="pref_map_summary">Configurações referentes ao mapa.</string>
+    <string name="compass">Bússula</string>
+    <string name="curr_location">Minha localização</string>
+    <string name="enable_compass">Bússula</string>
+    <string name="active_mylocation">Localização atual mostrada como um ponto azul no mapa.
+        \nObs.: Este ponto demora um pouco a aparecer.</string>
+    <string name="inactive_mylocation">Localização atual não mostrada.</string>
+    <string name="active_compass">Bússula visível.</string>
+    <string name="inactive_compass">Bússula não visível</string>
 </resources>
