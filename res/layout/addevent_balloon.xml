@@ -30,6 +30,7 @@
 	            style="?android:attr/progressBarStyle"/>
 	        <TextView 
 	            android:text="@string/saving_event"
+                android:textColor="@color/text_color"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"/>
 	    </LinearLayout>
@@ -64,6 +65,7 @@
 		        android:id="@+id/textivew_keywords_addevent_balloon"
 		        android:text="@string/no_keywords"
 		        android:textStyle="bold"
+                android:textColor="@color/text_color"
 		        android:layout_gravity="center"
 		        android:gravity="center"
 		        android:layout_width="wrap_content"

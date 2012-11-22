@@ -15,6 +15,7 @@
             android:id="@id/balloon_close"
             android:textStyle="bold"
             android:textSize="@dimen/big_text_size"
+            android:textColor="@color/text_color"
             android:drawableRight="@drawable/balloon_overlay_close"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -25,12 +26,14 @@
         <TextView
             android:id="@+id/textview_pubdate_infoballoon"
             android:textSize="@dimen/small_text_size"
+            android:textColor="@color/text_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"/>
             
         <TextView 
             android:id="@+id/textview_description_infoballoon"
+            android:textColor="@color/text_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"/>
@@ -41,6 +44,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/small_text_size"
             android:textStyle="italic"
+            android:textColor="@color/text_color"
             android:layout_gravity="center"/>
     </LinearLayout>
 </LinearLayout>
