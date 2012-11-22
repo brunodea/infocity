@@ -30,7 +30,6 @@ public class InfoCityPreferences {
 	}
 	
 	public static float getEventMaxRadius(Context c) {
-		return 50f;
-		//return getFloatDefaultPreference(c, "event_radius", 50000f);
+		return getFloatDefaultPreference(c, "event_radius", 50000f);
 	}
 }
