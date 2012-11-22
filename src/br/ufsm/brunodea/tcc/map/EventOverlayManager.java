@@ -94,6 +94,11 @@ public class EventOverlayManager {
 			pks.addAll(eio.getAllPks());
 		}
 		return pks;
+	}	
+	public void removeEventItemsNotIn(ArrayList<Integer> pk_list) {
+		for(EventsItemizedOverlay eio : mEIOMap.values()) {
+			eio.removeEventItemsNotIn(pk_list);
+		}
 	}
 
 	/**

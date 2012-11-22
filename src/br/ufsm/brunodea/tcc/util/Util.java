@@ -21,8 +21,6 @@ import com.google.gson.Gson;
  *
  */
 public class Util {
-	//URL básica do servidor.
-	public static String URL = "http://192.168.1.5:8000/events/";
 	
 	/**
 	 * Cria um JSONObject a partir de um objeto.

@@ -128,6 +128,21 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 		}
 	}
 	
+	public void removeEventItemsNotIn(ArrayList<Integer> pk_list) {
+		boolean removed = false;
+		Iterator<EventItem> it = mEventOverlays.iterator();
+		while(it.hasNext()) {
+			EventItem e = it.next();
+			if(!pk_list.contains(e.getPrimaryKey())) {
+				it.remove();
+				removed = true;
+			}
+		}
+		if(removed) {
+			populate();
+		}
+	}
+	
 	/**
 	 * Verifica se este EventsItemizedOverlay contém um evento a partir de sua chave
 	 * primária.

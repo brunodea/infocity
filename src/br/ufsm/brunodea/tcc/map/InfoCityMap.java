@@ -1,5 +1,6 @@
 package br.ufsm.brunodea.tcc.map;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
@@ -41,6 +42,7 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
+import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 
 /**
@@ -56,6 +58,8 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	private MapView mMapView;
 	private MapController mMapController;
 	private List<Overlay> mMapOverlays;
+	
+	private MyLocationOverlay mMyLocationOverlay;
 	
 	private LocationManager mLocationManager;
 	private InfoCityLocationListener mLocationListener;
@@ -104,7 +108,14 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	
 		mCurrContextSupplier = new InfoCityAlohar(getApplication());
 		mCurrContextSupplier.start();
+		
+		mMyLocationOverlay = new MyLocationOverlay(this, mMapView);
+		adjustMyLocationStuff();
+		mMapOverlays.add(mMyLocationOverlay);
+		
 		centerMapInLastKnownLocation();
+		
+		mMapView.invalidate();
 	}
 	
 	private void initGUIElements() {
@@ -137,12 +148,35 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	    switch (item.getItemId()) {
 	    case R.id.menu_map_settings:
 	    	Intent prefs = new Intent(this, InfoCityPreferenceActivity.class);
-	    	startActivity(prefs);
+	    	startActivityForResult(prefs, 1);
 	    	break;
 	    default:
 	    	return super.onOptionsItemSelected(item);
 	    }
 	    return true;
+	}
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		//alterou a preferência de distância máxima que um evento pode estar.
+		if(resultCode == 1) {
+			onClick(mWindowTitleButtonRefresh);
+		} else if(resultCode == 2) {
+			adjustMyLocationStuff();
+		}
+	}
+	
+	private void adjustMyLocationStuff() {
+		if(InfoCityPreferences.shouldEnableCompass(this)) {
+			mMyLocationOverlay.enableCompass();
+		} else {
+			mMyLocationOverlay.disableCompass();
+		}
+
+		if(InfoCityPreferences.shouldEnableMyLocation(this)) {
+			mMyLocationOverlay.enableMyLocation();
+		} else {
+			mMyLocationOverlay.disableMyLocation();
+		}
 	}
 	/**
 	 * Inicializa a requisição de localização do usuário, através de
@@ -206,10 +240,6 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 					getEventOverlay(EventType.ADD, this).getItem(0).getPoint();
 			mMapController.setCenter(p);
 		} else if(v == mWindowTitleButtonRefresh) {
-			mCurrContextSupplier.getContextData();
-			
-			
-			
 			toggleRefreshAnimation();
 			mLocationListener.setCurrAction(LocationAction.GET_EVENTS);
 			startRequestLocationUpdates();
@@ -272,6 +302,8 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	 * que ainda não estão carregados no aplicativo.
 	 */
 	public void fetchEvents() {
+		//lista de chaves primárias que o servidor não retornou.
+		final ArrayList<Integer> invalid_pks = new ArrayList<Integer>();
 		final Handler done_handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -283,6 +315,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 					Toast.makeText(InfoCityMap.this, getResources()
 							.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
 				}
+				App.instance().getEventOverlayManager().removeEventItemsNotIn(invalid_pks);
 			}
 		};
 		
@@ -297,6 +330,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 					
 					addEventItem(event);
 				}
+				invalid_pks.add(event.getPrimaryKey());
 			}
 		};
 		
@@ -306,8 +340,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 				boolean fine = false;
 				//faz a busca no servidor pelos eventos.
 				JSONObject res = InfoCityServer.getEvents(InfoCityMap.this, mLastKnownLocation, 
-						InfoCityPreferences.getEventMaxRadius(InfoCityMap.this),
-						App.instance().getEventOverlayManager().getAllPks());
+						InfoCityPreferences.getEventMaxRadius(InfoCityMap.this), null);
 				if(res != null && res.has("size")) {
 					try {
 						int size = res.getInt("size");
