@@ -44,6 +44,9 @@ public class InfoCityPreferenceActivity extends PreferenceActivity
         mServerIP.setSummary(InfoCityPreferences.getServerIP(this));
         mServerPort.setSummary(InfoCityPreferences.getServerPort(this)+"");
         
+        mEnableMyLocation.setChecked(InfoCityPreferences.shouldEnableMyLocation(this));
+        mEnableCompass.setChecked(InfoCityPreferences.shouldEnableCompass(this));
+        
         mEventRadius.setOnPreferenceChangeListener(this);
         mServerIP.setOnPreferenceChangeListener(this);
         mServerPort.setOnPreferenceChangeListener(this);
