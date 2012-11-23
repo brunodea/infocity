@@ -50,7 +50,7 @@
     <string name="curr_location">Minha localização</string>
     <string name="enable_compass">Bússula</string>
     <string name="active_mylocation">Localização atual mostrada como um ponto azul no mapa.
-        \nObs.: Este ponto demora um pouco a aparecer.</string>
+        \nObs.: Este ponto pode demorar um pouco a aparecer.</string>
     <string name="inactive_mylocation">Localização atual não mostrada.</string>
     <string name="active_compass">Bússula visível.</string>
     <string name="inactive_compass">Bússula não visível</string>
