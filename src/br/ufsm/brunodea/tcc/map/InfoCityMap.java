@@ -1,6 +1,5 @@
 package br.ufsm.brunodea.tcc.map;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
@@ -303,9 +302,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	 * pré-determinado (no caso, 50km) e os mostra na tela, mas apenas aquelas
 	 * que ainda não estão carregados no aplicativo.
 	 */
-	public void fetchEvents() {
-		//lista de chaves primárias que o servidor não retornou.
-		final ArrayList<Integer> invalid_pks = new ArrayList<Integer>();
+	public void fetchEvents() {		
 		final Handler done_handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -317,7 +314,6 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 					Toast.makeText(InfoCityMap.this, getResources()
 							.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
 				}
-				App.instance().getEventOverlayManager().removeEventItemsNotIn(invalid_pks);
 			}
 		};
 		
@@ -332,19 +328,19 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 					
 					addEventItem(event);
 				}
-				invalid_pks.add(event.getPrimaryKey());
 			}
 		};
 		
 		Thread t = new Thread() {
 			@Override
 			public void run() {
-				boolean fine = false;
+				boolean fine = false;				
 				//faz a busca no servidor pelos eventos.
 				JSONObject res = InfoCityServer.getEvents(InfoCityMap.this, mLastKnownLocation, 
 						InfoCityPreferences.getEventMaxRadius(InfoCityMap.this), null);
 				if(res != null && res.has("size")) {
 					try {
+						App.instance().getEventOverlayManager().clearItemizedOverlays();
 						int size = res.getInt("size");
 						for(int i = 0; i < size; i++) {
 							if(res.has("event_"+i)) {
