@@ -28,6 +28,7 @@ import br.ufsm.brunodea.tcc.App;
 import br.ufsm.brunodea.tcc.R;
 import br.ufsm.brunodea.tcc.context.ContextSupplier;
 import br.ufsm.brunodea.tcc.context.supplier.InfoCityAlohar;
+import br.ufsm.brunodea.tcc.context.supplier.InfoCityQrCode;
 import br.ufsm.brunodea.tcc.internet.InfoCityServer;
 import br.ufsm.brunodea.tcc.internet.Internet;
 import br.ufsm.brunodea.tcc.map.InfoCityLocationListener.LocationAction;
@@ -43,6 +44,8 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 /**
  * Activity principal da aplicação que tem um mapa onde é possível

@@ -21,7 +21,6 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import br.ufsm.brunodea.tcc.App;
 import br.ufsm.brunodea.tcc.R;
 import br.ufsm.brunodea.tcc.internet.InfoCityServer;
 import br.ufsm.brunodea.tcc.model.EventItem;
@@ -273,11 +272,7 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 	 * Função que remove do mapa o evento do tipo ADD. (e.g. quando cancela a adição)
 	 */
 	private void removeAddEventItem() {
-		App.instance().getEventOverlayManager()
-			.getEventOverlay(EventType.ADD, mInfoCityMap).setFocus(null);
-		App.instance().getEventOverlayManager()
-			.getEventOverlay(EventType.ADD, mInfoCityMap).removeInvalidEventItemsPk();
-		mInfoCityMap.toggleWindowTitleAddEventCenterOn();
+		mInfoCityMap.removeAddEventItem();
 		mEventItem = null;
 	}
 }
