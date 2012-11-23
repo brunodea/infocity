@@ -1,4 +1,4 @@
-package br.ufsm.brunodea.tcc.context.alohar;
+package br.ufsm.brunodea.tcc.context.supplier;
 
 import android.app.Application;
 import android.content.Context;
@@ -37,7 +37,7 @@ public class InfoCityAlohar implements ContextSupplier {
 		Alohar.init(app);
 		mContext = app.getApplicationContext();
 		mAlohar = Alohar.getInstance();
-		start();
+		init();
 
 		mIsAuthenticated = false;
 		String uid = InfoCityPreferences.getAloharUID(mContext);
@@ -122,7 +122,7 @@ public class InfoCityAlohar implements ContextSupplier {
 	}
 	
 	@Override
-	public void start() {
+	public void init() {
 		if(!mAlohar.isServiceRunning()) {
 			mAlohar.startServices();
 		}

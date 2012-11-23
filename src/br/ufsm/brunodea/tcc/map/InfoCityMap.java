@@ -27,7 +27,7 @@ import android.widget.Toast;
 import br.ufsm.brunodea.tcc.App;
 import br.ufsm.brunodea.tcc.R;
 import br.ufsm.brunodea.tcc.context.ContextSupplier;
-import br.ufsm.brunodea.tcc.context.alohar.InfoCityAlohar;
+import br.ufsm.brunodea.tcc.context.supplier.InfoCityAlohar;
 import br.ufsm.brunodea.tcc.internet.InfoCityServer;
 import br.ufsm.brunodea.tcc.internet.Internet;
 import br.ufsm.brunodea.tcc.map.InfoCityLocationListener.LocationAction;
@@ -107,7 +107,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		}
 	
 		mCurrContextSupplier = new InfoCityAlohar(getApplication());
-		mCurrContextSupplier.start();
+		mCurrContextSupplier.init();
 		
 		mMyLocationOverlay = new MyLocationOverlay(this, mMapView);
 		adjustMyLocationStuff();
@@ -241,6 +241,13 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 			mMapController.setCenter(p);
 			mMapView.getController().setZoom(DEFAULT_MAP_ZOOM);
 		} else if(v == mWindowTitleButtonRefresh) {
+			mCurrContextSupplier.getContextData();
+			
+			
+			
+			
+			
+			
 			toggleRefreshAnimation();
 			mLocationListener.setCurrAction(LocationAction.GET_EVENTS);
 			startRequestLocationUpdates();

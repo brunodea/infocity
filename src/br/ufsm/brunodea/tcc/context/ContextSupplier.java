@@ -11,7 +11,7 @@ public interface ContextSupplier {
 	public static final int ALOHAR_ON_DEPARTURE = 2;
 	public static final int ALOHAR_ON_MOVEMENT_CHANGED = 3;
 	
-	public void start();
+	public void init();
 	public void stop();
 	public ContextData getContextData();
 	public void setHandler(Handler handler);
