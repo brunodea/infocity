@@ -54,4 +54,7 @@
     <string name="inactive_mylocation">Localização atual não mostrada.</string>
     <string name="active_compass">Bússula visível.</string>
     <string name="inactive_compass">Bússula não visível</string>
+    <string name="install_barcodescanner">Instalar BarcodeScanner?</string>
+    <string name="requires_barcodescanner">Essa aplicação requer BarcodeScanner. Deseja instalar essa aplicação?</string>
+    <string name="fetch_with_qrcode">Buscar eventos via QrCode</string>
 </resources>
