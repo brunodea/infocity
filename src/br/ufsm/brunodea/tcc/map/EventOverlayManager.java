@@ -88,6 +88,13 @@ public class EventOverlayManager {
 			getEventOverlay(type, null).clearOverlays();
 		}
 	}
+	public void clearItemizedOverlaysExcept(EventType except_type) {
+		for(EventType type : mEIOMap.keySet()) {
+			if(type != except_type) {
+				getEventOverlay(type, null).clearOverlays();
+			}
+		}
+	}
 	public ArrayList<Integer> getAllPks() {
 		ArrayList<Integer> pks = new ArrayList<Integer>();
 		for(EventsItemizedOverlay eio : mEIOMap.values()) {
@@ -105,13 +112,21 @@ public class EventOverlayManager {
 		Drawable marker = null;
 
 		switch(type) {
+		case ADD:
+			marker = mContext.getResources().getDrawable(R.drawable.ic_addevent);
+			break;
 		case UNKNOWN:
-			marker = mContext.getResources().getDrawable(R.drawable.ic_launcher);
+			marker = mContext.getResources().getDrawable(R.drawable.ic_unknownevent);
 			break;
 		default:
 			marker = mContext.getResources().getDrawable(R.drawable.ic_launcher);
 			break;
 		}
+		
+		int w = marker.getIntrinsicWidth();
+		int h = marker.getIntrinsicHeight();
+		
+		marker.setBounds(0, 0, w-(w/4), h-(h/4));
 		
 		return marker;
 	}

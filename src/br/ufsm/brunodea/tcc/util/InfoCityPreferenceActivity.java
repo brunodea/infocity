@@ -12,6 +12,10 @@ import br.ufsm.brunodea.tcc.R;
 
 public class InfoCityPreferenceActivity extends PreferenceActivity 
 										implements OnPreferenceChangeListener{
+
+	public static final int REQUEST_CODE = 0;
+	public static final int RESULT_CODE_EVENT_RADIUS = 1;
+	public static final int RESULT_CODE_MYLOCATION = 2;
 	
 	private EditTextPreference mEventRadius;
 	private EditTextPreference mServerIP;
@@ -28,6 +32,12 @@ public class InfoCityPreferenceActivity extends PreferenceActivity
         setResult(0);
         addPreferencesFromResource(R.xml.preferences);
         
+        initGUI();
+        setListeners();
+        setPreValues();
+    }
+    
+    private void initGUI() {
         mEventRadius = (EditTextPreference)
         		getPreferenceScreen().findPreference("event_radius");
         mServerIP = (EditTextPreference)
@@ -39,20 +49,24 @@ public class InfoCityPreferenceActivity extends PreferenceActivity
         		getPreferenceScreen().findPreference("enable_mylocation");
         mEnableCompass = (CheckBoxPreference)
         		getPreferenceScreen().findPreference("enable_compass");
-        
-        mEventRadius.setSummary(InfoCityPreferences.getEventMaxRadius(this) + "m");
-        mServerIP.setSummary(InfoCityPreferences.getServerIP(this));
-        mServerPort.setSummary(InfoCityPreferences.getServerPort(this)+"");
-        
-        mEnableMyLocation.setChecked(InfoCityPreferences.shouldEnableMyLocation(this));
-        mEnableCompass.setChecked(InfoCityPreferences.shouldEnableCompass(this));
-        
+    }
+    
+    private void setListeners() {
         mEventRadius.setOnPreferenceChangeListener(this);
         mServerIP.setOnPreferenceChangeListener(this);
         mServerPort.setOnPreferenceChangeListener(this);
         
         mEnableCompass.setOnPreferenceChangeListener(this);
         mEnableMyLocation.setOnPreferenceChangeListener(this);
+    }
+    
+    private void setPreValues() {        
+        mEventRadius.setSummary(InfoCityPreferences.getEventMaxRadius(this) + "m");
+        mServerIP.setSummary(InfoCityPreferences.getServerIP(this));
+        mServerPort.setSummary(InfoCityPreferences.getServerPort(this)+"");
+        
+        mEnableMyLocation.setChecked(InfoCityPreferences.shouldEnableMyLocation(this));
+        mEnableCompass.setChecked(InfoCityPreferences.shouldEnableCompass(this));
     }
     
     private void showToastNotEmpty() {
@@ -68,7 +82,7 @@ public class InfoCityPreferenceActivity extends PreferenceActivity
 		} else {
 			if(preference == mEventRadius) {
 				ok = true;
-				setResult(1);
+				setResult(RESULT_CODE_EVENT_RADIUS);
 			} else if(preference == mServerIP) {
 				String ip = newValue.toString();
 				if(ip.matches("^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|" +
@@ -90,7 +104,11 @@ public class InfoCityPreferenceActivity extends PreferenceActivity
 				}
 			} else if(preference == mEnableCompass || preference == mEnableMyLocation) {
 				ok = true;
-				setResult(2);
+				setResult(RESULT_CODE_MYLOCATION);
+			}
+			
+			if(ok) {
+				setPreValues();
 			}
 		}
 		

@@ -67,7 +67,11 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	private LocationManager mLocationManager;
 	private InfoCityLocationListener mLocationListener;
 	
+	private InfoCityAlohar mAloharContextSupplier;
+	private InfoCityQrCode mQrCodeContextSupplier;
+	
 	private ContextSupplier mCurrContextSupplier;
+	
 	private Location mLastKnownLocation;
 	
 	private ImageButton mWindowTitleButtonRefresh;
@@ -87,7 +91,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		init();
 		
 		Internet.hasConnection(this, true);
-		onClick(mWindowTitleButtonRefresh);
+		//onClick(mWindowTitleButtonRefresh);
 	}
 	
 	private void init() {
@@ -109,8 +113,11 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 			mLastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 		}
 	
-		mCurrContextSupplier = new InfoCityAlohar(getApplication());
-		mCurrContextSupplier.init();
+		mAloharContextSupplier = new InfoCityAlohar(getApplication());
+		mAloharContextSupplier.init();
+		
+		mCurrContextSupplier = mAloharContextSupplier;
+		mQrCodeContextSupplier = new InfoCityQrCode(this);
 		
 		mMyLocationOverlay = new MyLocationOverlay(this, mMapView);
 		adjustMyLocationStuff();
@@ -119,6 +126,9 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		centerMapInLastKnownLocation();
 		
 		mMapView.invalidate();
+		
+		//para desenhar o marker de adição sempre na frente dos outros.
+		App.instance().getEventOverlayManager().getEventOverlay(EventType.ADD, this);
 	}
 	
 	private void initGUIElements() {
@@ -151,7 +161,10 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	    switch (item.getItemId()) {
 	    case R.id.menu_map_settings:
 	    	Intent prefs = new Intent(this, InfoCityPreferenceActivity.class);
-	    	startActivityForResult(prefs, 1);
+	    	startActivityForResult(prefs, InfoCityPreferenceActivity.REQUEST_CODE);
+	    	break;
+	    case R.id.menu_map_fetchevents_with_qrcode:
+	    	mQrCodeContextSupplier.init();
 	    	break;
 	    default:
 	    	return super.onOptionsItemSelected(item);
@@ -160,11 +173,22 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	}
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-		//alterou a preferência de distância máxima que um evento pode estar.
-		if(resultCode == 1) {
+		if(requestCode == InfoCityPreferenceActivity.REQUEST_CODE) {
+			//alterou a preferência de distância máxima que um evento pode estar.
+			if(resultCode == InfoCityPreferenceActivity.RESULT_CODE_EVENT_RADIUS) {
+				onClick(mWindowTitleButtonRefresh);
+			} else if(resultCode == InfoCityPreferenceActivity.RESULT_CODE_MYLOCATION) {
+				adjustMyLocationStuff();
+			}
+		} else if(requestCode == IntentIntegrator.REQUEST_CODE) {
+			IntentResult intent_result = IntentIntegrator.parseActivityResult(
+					requestCode, resultCode, intent);
+			mQrCodeContextSupplier.finishedScan(intent_result);
+
+			mCurrContextSupplier = mQrCodeContextSupplier;
 			onClick(mWindowTitleButtonRefresh);
-		} else if(resultCode == 2) {
-			adjustMyLocationStuff();
+
+			mCurrContextSupplier = mAloharContextSupplier;
 		}
 	}
 	
@@ -237,29 +261,32 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		if(v == mWindowTitleButtonAddEvent) {
 			toggleWindowTitleAddEventProgressBar();
 			mLocationListener.setCurrAction(LocationAction.ADD_EVENT);
-			startRequestLocationUpdates();
+			Location l = mMyLocationOverlay.getLastFix();
+			if(l != null) {
+				mLocationListener.onLocationChanged(l);
+			} else {
+				startRequestLocationUpdates();
+			}
 		} else if(v == mWindowTitleButtonCenterOn) {
 			GeoPoint p = App.instance().getEventOverlayManager().
 					getEventOverlay(EventType.ADD, this).getItem(0).getPoint();
 			mMapController.setCenter(p);
 			mMapView.getController().setZoom(DEFAULT_MAP_ZOOM);
 		} else if(v == mWindowTitleButtonRefresh) {
-			mCurrContextSupplier.getContextData();
-			
-			
-			
-			
-			
-			
 			toggleRefreshAnimation();
 			mLocationListener.setCurrAction(LocationAction.GET_EVENTS);
-			startRequestLocationUpdates();
+			Location l = mMyLocationOverlay.getLastFix();
+			if(l != null) {
+				mLocationListener.onLocationChanged(l);
+			} else {
+				startRequestLocationUpdates();
+			}
 		}
 	}
 	
 	@Override
 	public void onDestroy() {
-		mCurrContextSupplier.stop();
+		mAloharContextSupplier.stop();
 		super.onDestroy();
 	}
 	
@@ -307,6 +334,14 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		}
 	}
 	
+	public void removeAddEventItem() {
+		App.instance().getEventOverlayManager()
+			.getEventOverlay(EventType.ADD, this).setFocus(null);
+		App.instance().getEventOverlayManager()
+			.getEventOverlay(EventType.ADD, this).clearOverlays();
+		toggleWindowTitleAddEventCenterOn();
+	}
+	
 	/**
 	 * Cria a thread que vai buscar no servidor os eventos dentro de um raio
 	 * pré-determinado (no caso, 50km) e os mostra na tela, mas apenas aquelas
@@ -344,13 +379,15 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		Thread t = new Thread() {
 			@Override
 			public void run() {
-				boolean fine = false;				
+				boolean ok = false;
 				//faz a busca no servidor pelos eventos.
 				JSONObject res = InfoCityServer.getEvents(InfoCityMap.this, mLastKnownLocation, 
-						InfoCityPreferences.getEventMaxRadius(InfoCityMap.this), null);
+						InfoCityPreferences.getEventMaxRadius(InfoCityMap.this), 
+						mCurrContextSupplier.getContextData());
 				if(res != null && res.has("size")) {
 					try {
-						App.instance().getEventOverlayManager().clearItemizedOverlays();
+						App.instance().getEventOverlayManager()
+							.clearItemizedOverlaysExcept(EventType.ADD);
 						int size = res.getInt("size");
 						for(int i = 0; i < size; i++) {
 							if(res.has("event_"+i)) {
@@ -364,12 +401,12 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 								}
 							}
 						}
-						fine = true;
+						ok = true;
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
 				}
-				if(fine) {
+				if(ok) {
 					done_handler.sendEmptyMessage(0);
 				} else {
 					done_handler.sendEmptyMessage(1);
