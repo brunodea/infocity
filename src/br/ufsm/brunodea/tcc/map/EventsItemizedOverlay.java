@@ -247,15 +247,12 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
                 	
                 	mEventOverlays.remove(item);
                 	populate();
-                	
-                	mXDragTouchOffset = 0;
-                	mYDragTouchOffset = 0;
-            		
-                	setDragImagePosition(x, y);
-                	mDragImage.setVisibility(View.VISIBLE);
 
                 	mXDragTouchOffset = x-p.x;
                   	mYDragTouchOffset = y-p.y;
+                  	
+                	setDragImagePosition(x, y);
+                	mDragImage.setVisibility(View.VISIBLE);
 
                   	break;
                 }
