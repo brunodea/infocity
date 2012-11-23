@@ -94,7 +94,7 @@ public class InfoCityAlohar implements ContextSupplier {
 			@Override
 			public void handleEvent(ALEvents event, Object data) {
 				if(event == ALEvents.REGISTRATION_CALLBACK) {
-					if(data instanceof String) {
+					if(data instanceof String && !data.toString().equals("")) {
 						InfoCityPreferences.setAloharUID(mContext, (String)data);
 					}
 				} else if(event == ALEvents.GENERAL_ERROR_CALLBACK ||
@@ -111,7 +111,6 @@ public class InfoCityAlohar implements ContextSupplier {
 		    public void handleEvent(ALEvents event, Object data) {
 		        if (event == ALEvents.AUTHENTICATE_CALLBACK) {
 		            if (data instanceof String) {
-						InfoCityPreferences.setAloharUID(mContext, (String)data);
 						mIsAuthenticated = true;
 		            }
 		        } else if (event == ALEvents.GENERAL_ERROR_CALLBACK 
