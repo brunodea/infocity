@@ -1,7 +1,5 @@
 package br.ufsm.brunodea.tcc.internet;
 
-import java.util.ArrayList;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,6 +8,7 @@ import android.content.res.Resources.NotFoundException;
 import android.location.Location;
 import android.util.Log;
 import br.ufsm.brunodea.tcc.R;
+import br.ufsm.brunodea.tcc.context.ContextData;
 import br.ufsm.brunodea.tcc.model.EventItem;
 import br.ufsm.brunodea.tcc.util.InfoCityPreferences;
 
@@ -81,18 +80,12 @@ public class InfoCityServer {
 	 * @param c Contexto a ser passado a outros métodos.
 	 * @param location Localização de onde se busca os Eventos ao redor.
 	 * @param radius Distância máxima em que o evento deve estar para ser retornado.
-	 * @param discardPks Chaves primárias a serem descartadas na resposta pelo servidor.
+	 * @param context_data Dados relacionados ao contexto.
 	 * @return JSON com a resposta do servidor.
 	 */
 	public static JSONObject getEvents(Context c, Location location, float radius,
-			ArrayList<Integer> discardPks) {
-		String dpk = "";
-		if(discardPks != null) {
-			for(int pk : discardPks) {
-				dpk += pk + "/";
-			}
-		}
+			ContextData context_data) {
 		return checkResponse(c, Internet.getRequest(InfoCityPreferences.getServerBaseURI(c)
-				+"getWithin/"+location.getLatitude()+"/"+location.getLongitude()+"/"+radius+"/"+dpk));
+				+"getWithin/"+location.getLatitude()+"/"+location.getLongitude()+"/"+radius+"/"));
 	}
 }
