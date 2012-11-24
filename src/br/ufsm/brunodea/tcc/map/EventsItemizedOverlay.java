@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import br.ufsm.brunodea.tcc.App;
 import br.ufsm.brunodea.tcc.R;
 import br.ufsm.brunodea.tcc.model.EventItem;
-import br.ufsm.brunodea.tcc.model.EventItem.EventType;
+import br.ufsm.brunodea.tcc.model.EventType;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;

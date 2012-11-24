@@ -7,10 +7,9 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import br.ufsm.brunodea.tcc.R;
 import br.ufsm.brunodea.tcc.map.EventsItemizedOverlay.BalloonType;
 import br.ufsm.brunodea.tcc.model.EventItem;
-import br.ufsm.brunodea.tcc.model.EventItem.EventType;
+import br.ufsm.brunodea.tcc.model.EventType;
 
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
@@ -54,7 +53,7 @@ public class EventOverlayManager {
 		} else {
 			BalloonType balloon_type = null;
 			boolean draggable = false;
-			switch(type) {
+			switch(type.getName()) {
 			case ADD:
 				balloon_type = BalloonType.ADD;
 				draggable = true;
@@ -109,20 +108,8 @@ public class EventOverlayManager {
 	 * @return Drawable correspondente ao tipo de evento.
 	 */
 	public Drawable getEventTypeMarker(EventType type) {
-		Drawable marker = null;
-
-		switch(type) {
-		case ADD:
-			marker = mContext.getResources().getDrawable(R.drawable.ic_addevent);
-			break;
-		case UNKNOWN:
-			marker = mContext.getResources().getDrawable(R.drawable.ic_unknownevent);
-			break;
-		default:
-			marker = mContext.getResources().getDrawable(R.drawable.ic_launcher);
-			break;
-		}
 		
+		Drawable marker = type.getDrawable(mContext);
 		int w = marker.getIntrinsicWidth();
 		int h = marker.getIntrinsicHeight();
 		

@@ -23,33 +23,6 @@ import com.google.android.maps.OverlayItem;
  *
  */
 public class EventItem extends OverlayItem implements Model {
-	
-	/**
-	 * Tipos de eventos que determina diversas outras coisas.
-	 */
-	public enum EventType {
-		NONE, ADD, UNKNOWN;
-		
-		/**
-		 * A partir de uma string, determina e retorna qual o Tipo de Evento
-		 * relacionado.
-		 * 
-		 * @param str_type String com um nome que representa determinado tipo.
-		 * @return EventType relacionado à string str_type.
-		 */
-		public static EventType fromString(String str_type) {
-			EventType type = EventType.NONE;
-			if(str_type.equalsIgnoreCase("desconhecido") ||
-					str_type.equalsIgnoreCase("unknown")) {
-				type = EventType.UNKNOWN;
-			} else if(str_type.equalsIgnoreCase("adicionar")) {
-				type = EventType.ADD;
-			}
-			
-			return type;
-		}
-	}
-	
 	private EventType mType;
 	private ArrayList<String> mKeywords;
 	private Date mPubDate;

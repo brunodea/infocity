@@ -18,7 +18,11 @@ public class App extends Application {
 	private static App sInstance = null;
 
 	private EventOverlayManager mEOManager;
-		
+
+	private App() {
+		super();
+	}
+	
 	public void initEventOverlayManager(Context c, MapView mv, List<Overlay> overlays) {
 		mEOManager = new EventOverlayManager(c, mv, overlays);
 	}

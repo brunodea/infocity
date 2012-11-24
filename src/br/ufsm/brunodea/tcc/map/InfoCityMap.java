@@ -33,7 +33,7 @@ import br.ufsm.brunodea.tcc.internet.InfoCityServer;
 import br.ufsm.brunodea.tcc.internet.Internet;
 import br.ufsm.brunodea.tcc.map.InfoCityLocationListener.LocationAction;
 import br.ufsm.brunodea.tcc.model.EventItem;
-import br.ufsm.brunodea.tcc.model.EventItem.EventType;
+import br.ufsm.brunodea.tcc.model.EventTypeManager;
 import br.ufsm.brunodea.tcc.util.InfoCityPreferenceActivity;
 import br.ufsm.brunodea.tcc.util.InfoCityPreferences;
 import br.ufsm.brunodea.tcc.util.Util;
@@ -128,7 +128,8 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		mMapView.invalidate();
 		
 		//para desenhar o marker de adição sempre na frente dos outros.
-		App.instance().getEventOverlayManager().getEventOverlay(EventType.ADD, this);
+		App.instance().getEventOverlayManager().getEventOverlay(
+				EventTypeManager.instance().type_add(), this);
 	}
 	
 	private void initGUIElements() {
@@ -157,7 +158,6 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    // Handle item selection
 	    switch (item.getItemId()) {
 	    case R.id.menu_map_settings:
 	    	Intent prefs = new Intent(this, InfoCityPreferenceActivity.class);
@@ -269,7 +269,8 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 			}
 		} else if(v == mWindowTitleButtonCenterOn) {
 			GeoPoint p = App.instance().getEventOverlayManager().
-					getEventOverlay(EventType.ADD, this).getItem(0).getPoint();
+					getEventOverlay(EventTypeManager.instance().type_add(), this)
+					.getItem(0).getPoint();
 			mMapController.setCenter(p);
 			mMapView.getController().setZoom(DEFAULT_MAP_ZOOM);
 		} else if(v == mWindowTitleButtonRefresh) {
@@ -314,7 +315,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	
 	public void addAddEventItemMarker() {
 		EventItem new_event = Util.createEventItem(mLastKnownLocation.getLatitude(),
-				mLastKnownLocation.getLongitude(), "New Event", "New Event", EventType.ADD);
+				mLastKnownLocation.getLongitude(), "New Event", "New Event", EventTypeManager.instance().type_add());
 		App.instance().getEventOverlayManager().addEventItem(new_event, this);
 
 		toggleWindowTitleAddEventCenterOn();
@@ -336,9 +337,9 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	
 	public void removeAddEventItem() {
 		App.instance().getEventOverlayManager()
-			.getEventOverlay(EventType.ADD, this).setFocus(null);
+			.getEventOverlay(EventTypeManager.instance().type_add(), this).setFocus(null);
 		App.instance().getEventOverlayManager()
-			.getEventOverlay(EventType.ADD, this).clearOverlays();
+			.getEventOverlay(EventTypeManager.instance().type_add(), this).clearOverlays();
 		toggleWindowTitleAddEventCenterOn();
 	}
 	
@@ -387,7 +388,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 				if(res != null && res.has("size")) {
 					try {
 						App.instance().getEventOverlayManager()
-							.clearItemizedOverlaysExcept(EventType.ADD);
+							.clearItemizedOverlaysExcept(EventTypeManager.instance().type_add());
 						int size = res.getInt("size");
 						for(int i = 0; i < size; i++) {
 							if(res.has("event_"+i)) {

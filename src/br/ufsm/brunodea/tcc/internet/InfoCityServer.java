@@ -88,4 +88,9 @@ public class InfoCityServer {
 		return checkResponse(c, Internet.getRequest(InfoCityPreferences.getServerBaseURI(c)
 				+"getWithin/"+location.getLatitude()+"/"+location.getLongitude()+"/"+radius+"/"));
 	}
+	
+	public static JSONObject getEventTypes(Context c) {
+		return checkResponse(c, Internet.getRequest(InfoCityPreferences.getServerBaseURI(c)+
+				"eventTypes/"));
+	}
 }

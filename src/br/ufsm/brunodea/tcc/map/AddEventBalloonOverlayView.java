@@ -24,7 +24,8 @@ import android.widget.Toast;
 import br.ufsm.brunodea.tcc.R;
 import br.ufsm.brunodea.tcc.internet.InfoCityServer;
 import br.ufsm.brunodea.tcc.model.EventItem;
-import br.ufsm.brunodea.tcc.model.EventItem.EventType;
+import br.ufsm.brunodea.tcc.model.EventType;
+import br.ufsm.brunodea.tcc.model.EventTypeManager;
 import br.ufsm.brunodea.tcc.util.DialogHelper;
 
 import com.google.android.maps.GeoPoint;
@@ -74,8 +75,10 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 		bindGUIElements(v);
 		setGUIListeners();
 		
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context, 
-				R.array.event_types, android.R.layout.simple_spinner_item);
+		
+		EventType []types = (EventType [])EventTypeManager.instance().types().toArray();
+		ArrayAdapter<EventType> adapter = new ArrayAdapter<EventType>(mContext, 
+				android.R.layout.simple_spinner_item, types);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		
 		mSpinnerEventType.setAdapter(adapter);
@@ -264,8 +267,7 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 	}
 	
 	private EventType selectedEventType() {
-		String str_type = mSpinnerEventType.getSelectedItem().toString();
-		return EventType.fromString(str_type);
+		return (EventType) mSpinnerEventType.getSelectedItem();
 	}
 	
 	/**
@@ -275,4 +277,6 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 		mInfoCityMap.removeAddEventItem();
 		mEventItem = null;
 	}
+	
+	
 }

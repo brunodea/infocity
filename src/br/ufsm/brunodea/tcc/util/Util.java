@@ -9,7 +9,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import br.ufsm.brunodea.tcc.model.EventItem;
-import br.ufsm.brunodea.tcc.model.EventItem.EventType;
+import br.ufsm.brunodea.tcc.model.EventType;
+import br.ufsm.brunodea.tcc.model.EventTypeManager;
+import br.ufsm.brunodea.tcc.model.EventTypeManager.TypeName;
 
 import com.google.android.maps.GeoPoint;
 import com.google.gson.Gson;
@@ -86,7 +88,8 @@ public class Util {
 			String[] c = coord.replace("POINT", "").replace("(", "").replace(")", "")
 					.trim().split(" ");
 			eventitem = createEventItem(Double.parseDouble(c[1]), Double.parseDouble(c[0]), 
-					title, descr, EventType.fromString(type));
+					title, descr, EventTypeManager.instance()
+					.eventTypeFromTypeName(TypeName.fromValue(type)));
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			Calendar cal = Calendar.getInstance();
