@@ -10,6 +10,8 @@ public interface ContextSupplier {
 	public static final int ALOHAR_ON_ARRIVAL = 1;
 	public static final int ALOHAR_ON_DEPARTURE = 2;
 	public static final int ALOHAR_ON_MOVEMENT_CHANGED = 3;
+	public static final int ALOHAR_USER_REGISTERED = 4;
+	public static final int ALOHAR_USER_AUTHENTICATED = 5;
 	
 	public void init();
 	public void stop();

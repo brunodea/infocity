@@ -41,24 +41,21 @@ public class InfoCityAlohar implements ContextSupplier {
 
 		mIsAuthenticated = false;
 		String uid = InfoCityPreferences.getAloharUID(mContext);
+
+		mHandler = new Handler() {
+			//default:handler que não faz nada.
+		};
+
 		if(uid != null && !uid.equals("")) {
 			authenticateUser();
 		} else {
 			registerUser();
-			authenticateUser();
 		}
-		
+
 		mPlaceManager = mAlohar.getPlaceManager();
 		mMotionManager = mAlohar.getMotionManager();
 		mCurrContextData = new ContextData();
-		mHandler = new Handler() {
-			//default: handler que não faz nada.
-		};
-		
-		
-		if(mIsAuthenticated) {
-			initListeners();
-		}
+		initListeners();
 	}
 	
 	private void initListeners() {
@@ -96,6 +93,8 @@ public class InfoCityAlohar implements ContextSupplier {
 				if(event == ALEvents.REGISTRATION_CALLBACK) {
 					if(data instanceof String && !data.toString().equals("")) {
 						InfoCityPreferences.setAloharUID(mContext, (String)data);
+						authenticateUser();
+						mHandler.sendEmptyMessage(ContextSupplier.ALOHAR_USER_REGISTERED);
 					}
 				} else if(event == ALEvents.GENERAL_ERROR_CALLBACK ||
 						  event == ALEvents.SERVER_ERROR_CALLBACK) {
@@ -112,6 +111,7 @@ public class InfoCityAlohar implements ContextSupplier {
 		        if (event == ALEvents.AUTHENTICATE_CALLBACK) {
 		            if (data instanceof String) {
 						mIsAuthenticated = true;
+						mHandler.sendEmptyMessage(ContextSupplier.ALOHAR_USER_AUTHENTICATED);
 		            }
 		        } else if (event == ALEvents.GENERAL_ERROR_CALLBACK 
 		        		|| event == ALEvents.SERVER_ERROR_CALLBACK) {
