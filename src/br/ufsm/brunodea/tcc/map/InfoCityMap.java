@@ -129,7 +129,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		
 		//para desenhar o marker de adição sempre na frente dos outros.
 		App.instance().getEventOverlayManager().getEventOverlay(
-				EventTypeManager.instance().type_add(), this);
+				EventTypeManager.instance(this).type_add(), this);
 	}
 	
 	private void initGUIElements() {
@@ -211,9 +211,9 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	 */
 	public void startRequestLocationUpdates() {
 		mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-				0, 5, mLocationListener);
+				0, 0, mLocationListener);
 		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-				0, 5, mLocationListener);
+				0, 0, mLocationListener);
 	}
 	
 	/**
