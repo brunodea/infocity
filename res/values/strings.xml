@@ -57,4 +57,5 @@
     <string name="install_barcodescanner">Instalar BarcodeScanner?</string>
     <string name="requires_barcodescanner">Essa aplicação requer BarcodeScanner. Deseja instalar essa aplicação?</string>
     <string name="fetch_with_qrcode">Buscar eventos via QrCode</string>
+    <string name="type">Tipo</string>
 </resources>

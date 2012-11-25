@@ -258,7 +258,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	
 	@Override
 	public void onClick(View v) {
-		if(v == mWindowTitleButtonAddEvent) {
+		if(v == mWindowTitleButtonAddEvent) {			
 			toggleWindowTitleAddEventProgressBar();
 			mLocationListener.setCurrAction(LocationAction.ADD_EVENT);
 			Location l = mMyLocationOverlay.getLastFix();

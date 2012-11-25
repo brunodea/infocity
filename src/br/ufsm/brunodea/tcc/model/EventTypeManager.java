@@ -72,10 +72,10 @@ public class EventTypeManager {
 		return get_type(TypeName.ADD, "add");
 	}
 	public EventType type_none() {
-		return get_type(TypeName.NONE, "none");
+		return get_type(TypeName.NONE, mContext.getResources().getString(R.string.type));
 	}
 	public EventType type_unknown() {
-		return get_type(TypeName.UNKNOWN, "Desconhecido");//mContext.getResources().getString(R.string.unknown));
+		return get_type(TypeName.UNKNOWN, mContext.getResources().getString(R.string.unknown));
 	}
 	
 	private EventType get_type(TypeName type_name, String repr) {
@@ -97,6 +97,7 @@ public class EventTypeManager {
 	public ArrayList<EventType> types() {
 		ArrayList<EventType> t = new ArrayList<EventType>();
 		
+		t.add(type_none());
 		t.add(type_unknown());
 		
 		return t;

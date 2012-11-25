@@ -2,6 +2,7 @@ package br.ufsm.brunodea.tcc.map;
 
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 /**
@@ -61,6 +62,10 @@ public class InfoCityLocationListener implements LocationListener {
 	}
 
 	public void onStatusChanged(String provider, int status, Bundle extras) {
+		if(status == 0 || status == 1) {
+			mInfoCityMap.toggleWindowTitleAddEventProgressBar();
+			mInfoCityMap.stopRequestLocationUpdates();
+		}
 	}
 
 }
