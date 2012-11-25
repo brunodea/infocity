@@ -54,6 +54,13 @@ public class EventTypeManager {
 		
 		return sInstance;
 	}
+	public static EventTypeManager instance(Context c) {
+		if(sInstance == null) {
+			sInstance = new EventTypeManager(c);
+		}
+		
+		return sInstance;
+	}
 
 	private void init() {
 		type_add();
@@ -68,7 +75,7 @@ public class EventTypeManager {
 		return get_type(TypeName.NONE, "none");
 	}
 	public EventType type_unknown() {
-		return get_type(TypeName.ADD, mContext.getResources().getString(R.string.unknown));
+		return get_type(TypeName.UNKNOWN, "Desconhecido");//mContext.getResources().getString(R.string.unknown));
 	}
 	
 	private EventType get_type(TypeName type_name, String repr) {
