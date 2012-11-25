@@ -75,9 +75,10 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 		bindGUIElements(v);
 		setGUIListeners();
 		
-		
-		EventType []types = (EventType [])EventTypeManager.instance().types().toArray();
-		ArrayAdapter<EventType> adapter = new ArrayAdapter<EventType>(mContext, 
+		ArrayList<EventType> types_list = EventTypeManager.instance(context).types();
+		EventType []types = new EventType[types_list.size()];
+		types = types_list.toArray(types);
+		ArrayAdapter<EventType> adapter = new ArrayAdapter<EventType>(context, 
 				android.R.layout.simple_spinner_item, types);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		
