@@ -52,10 +52,12 @@ public class EventOverlayManager {
 		} else {
 			BalloonType balloon_type = null;
 			boolean draggable = false;
+			int position = 0;
 			switch(type.getName()) {
 			case ADD:
 				balloon_type = BalloonType.ADD;
 				draggable = true;
+				position = mEIOMap.size();
 				break;
 			default:
 				balloon_type = BalloonType.INFO;
@@ -66,7 +68,7 @@ public class EventOverlayManager {
 			eio.setDraggable(draggable);
 			
 			mEIOMap.put(type, eio);
-			mMapOverlays.add(0, eio);
+			mMapOverlays.add(position, eio);
 		}
 		
 		return eio;
