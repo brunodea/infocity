@@ -83,7 +83,7 @@ public class EventOverlayManager {
 	}
 	public void clearItemizedOverlays() {
 		for(EventType type : mEIOMap.keySet()) {
-			getEventOverlay(type, null).clearOverlays();
+			clearItemizedOverlaysOfType(type);
 		}
 	}
 	public void clearItemizedOverlaysOfType(EventType type) {
@@ -96,7 +96,7 @@ public class EventOverlayManager {
 	public void clearItemizedOverlaysExcept(EventType except_type) {
 		for(EventType type : mEIOMap.keySet()) {
 			if(type != except_type) {
-				getEventOverlay(type, null).clearOverlays();
+				clearItemizedOverlaysOfType(type);
 			}
 		}
 	}
