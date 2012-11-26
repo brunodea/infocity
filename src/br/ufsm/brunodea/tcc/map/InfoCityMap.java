@@ -338,8 +338,9 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	public void removeAddEventItem() {
 		App.instance().getEventOverlayManager()
 			.getEventOverlay(EventTypeManager.instance().type_add(), this).setFocus(null);
-		App.instance().getEventOverlayManager().clearItemizedOverlaysOfType(
-				EventTypeManager.instance().type_add());
+		App.instance().getEventOverlayManager()
+			.clearItemizedOverlaysOfType(EventTypeManager.instance().type_add());
+
 		toggleWindowTitleAddEventCenterOn();
 	}
 	

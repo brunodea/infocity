@@ -88,8 +88,9 @@ public class EventOverlayManager {
 	}
 	public void clearItemizedOverlaysOfType(EventType type) {
 		if(mEIOMap.containsKey(type)) {
+			mEIOMap.get(type).setFocus(null);
 			mEIOMap.get(type).clearOverlays();
-			if(mMapOverlays.contains(type)) {
+			if(mMapOverlays.contains(mEIOMap.get(type))) {
 				mMapOverlays.remove(mEIOMap.get(type));
 			}
 			mEIOMap.remove(type);
