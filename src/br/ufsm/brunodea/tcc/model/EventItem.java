@@ -128,7 +128,7 @@ public class EventItem extends OverlayItem implements Model {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("event", "["+json.toString()+"]"));
 		params.add(new BasicNameValuePair("event_keywords", mKeywords.toString()));
-		params.add(new BasicNameValuePair("event_type", mType.toString()));
+		params.add(new BasicNameValuePair("event_type", mType.getName().toString()));
 		
 		return params;
 	}

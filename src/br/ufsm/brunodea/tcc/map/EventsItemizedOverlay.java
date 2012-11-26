@@ -10,7 +10,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import br.ufsm.brunodea.tcc.App;
 import br.ufsm.brunodea.tcc.R;
 import br.ufsm.brunodea.tcc.model.EventItem;
 import br.ufsm.brunodea.tcc.model.EventType;
@@ -42,36 +41,37 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 
 	private boolean mDraggable;
 	
-	private Drawable mMarker;
 	private BalloonType mBalloonType;
 	
 	private EventItem mDragItem;
+	private EventType mEventType;
 	private ImageView mDragImage;
+	private Drawable mDragDrawable;
 
     private int mXDragImageOffset = 0;
     private int mYDragImageOffset = 0;
     private int mXDragTouchOffset = 0;
     private int mYDragTouchOffset = 0;
 	
-	public EventsItemizedOverlay(Context c, Drawable marker, MapView mapView, 
+	public EventsItemizedOverlay(Context c, MapView mapView, 
 			BalloonType balloon_type, EventType event_type, InfoCityMap infocitymap) {
-		super(boundCenterBottom(marker), mapView);
+		super(boundCenterBottom(event_type.getDrawable(c)), mapView);
 		mInfoCityMap = infocitymap;
 		
 		mEventOverlays = new ArrayList<EventItem>();
 		
+		mDragDrawable = event_type.createDrawable(c);
 		mDragImage = (ImageView) ((View)mapView.getParent()).findViewById(R.id.imageview_map_drag);
-		Drawable dragimg_drawable = App.instance().getEventOverlayManager().
-				getEventTypeMarker(event_type);
-		mDragImage.setImageDrawable(dragimg_drawable);
+		mDragImage.setImageDrawable(mDragDrawable);
 
 		mDragItem = null;
 		mDraggable = false;
 
-		mXDragImageOffset = marker.getIntrinsicWidth()/2;
-		mYDragImageOffset = marker.getIntrinsicHeight();
+		Drawable eventtype_marker = event_type.getDrawable(c);
+		mXDragImageOffset = eventtype_marker.getIntrinsicWidth()/2;
+		mYDragImageOffset = eventtype_marker.getIntrinsicHeight();
 
-		mMarker = marker;
+		mEventType = event_type;
 		mBalloonType = balloon_type;
 		
 		populate();
@@ -194,14 +194,15 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
 	@Override
 	protected BalloonOverlayView<EventItem> createBalloonOverlayView() {
 		BalloonOverlayView<EventItem> res = null;
+		Context c = getMapView().getContext();
 		switch(mBalloonType) {
 		case INFO:
 			res = new InfoEventBalloonOverlayView<EventItem>(
-					getMapView().getContext(),  mMarker.getIntrinsicHeight());
+					c,  mEventType.getDrawable(c).getIntrinsicHeight());
 			break;
 		case ADD:
 			res = new AddEventBalloonOverlayView<EventItem>(
-					getMapView().getContext(), mMarker.getIntrinsicHeight(), mInfoCityMap);
+					c,  mEventType.getDrawable(c).getIntrinsicHeight(), mInfoCityMap);
 			break;
 		default:
 			res = super.createBalloonOverlayView();
@@ -233,13 +234,14 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
         final int y = (int)event.getY();
         
         boolean result = false;
-    	
+        
+		mDragImage.setImageDrawable(mDragDrawable);
         //Se o usuário só clicou no marker, abre o balão.
         if(action == MotionEvent.ACTION_DOWN) {
         	for(final EventItem item : mEventOverlays) {
                 Point p = mapView.getProjection().toPixels(item.getPoint(), null);
 
-                if(hitTest(item, mMarker, x-p.x, y-p.y)) {
+                if(hitTest(item, mEventType.getDrawable(mapView.getContext()), x-p.x, y-p.y)) {
                 	result = true;
                 	
                 	mDragItem = item;

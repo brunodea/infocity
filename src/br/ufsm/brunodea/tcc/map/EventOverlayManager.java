@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import br.ufsm.brunodea.tcc.map.EventsItemizedOverlay.BalloonType;
 import br.ufsm.brunodea.tcc.model.EventItem;
 import br.ufsm.brunodea.tcc.model.EventType;
@@ -62,7 +61,7 @@ public class EventOverlayManager {
 				balloon_type = BalloonType.INFO;
 				break;
 			}
-			eio = new EventsItemizedOverlay(mContext, getEventTypeMarker(type),
+			eio = new EventsItemizedOverlay(mContext,
 					mMapView, balloon_type, type, infocitymap);
 			eio.setDraggable(draggable);
 			
@@ -87,6 +86,13 @@ public class EventOverlayManager {
 			getEventOverlay(type, null).clearOverlays();
 		}
 	}
+	public void clearItemizedOverlaysOfType(EventType type) {
+		if(mEIOMap.containsKey(type)) {
+			mEIOMap.get(type).clearOverlays();
+			mMapOverlays.remove(mEIOMap.get(type));
+			mEIOMap.remove(type);
+		}
+	}
 	public void clearItemizedOverlaysExcept(EventType except_type) {
 		for(EventType type : mEIOMap.keySet()) {
 			if(type != except_type) {
@@ -100,22 +106,6 @@ public class EventOverlayManager {
 			pks.addAll(eio.getAllPks());
 		}
 		return pks;
-	}
-	/**
-	 * Retorna o Drawable correspondente ao tipo de evento.
-	 * 
-	 * @param type Tipo de evento que determina o drawable.
-	 * @return Drawable correspondente ao tipo de evento.
-	 */
-	public Drawable getEventTypeMarker(EventType type) {
-		
-		Drawable marker = type.getDrawable(mContext);
-		int w = marker.getIntrinsicWidth();
-		int h = marker.getIntrinsicHeight();
-		
-		marker.setBounds(0, 0, w-(w/4), h-(h/4));
-		
-		return marker;
 	}
 	
 	public Collection<EventsItemizedOverlay> getItemizedOverlays() {
