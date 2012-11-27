@@ -3,6 +3,19 @@ package br.ufsm.brunodea.tcc.context;
 import android.os.Handler;
 
 public interface ContextSupplier {
+	public enum ContextAction {
+		NONE(-1), ADD_EVENT(0), FETCH_EVENTS(1);
+		
+		private int value;
+		private ContextAction(int value) {
+			this.value = value;
+		}
+		
+		public int getValue() {
+			return this.value;
+		}
+	}
+	
 	/**
 	 * Valores possíveis para o handler.what;
 	 */
@@ -13,8 +26,6 @@ public interface ContextSupplier {
 	public static final int ALOHAR_USER_REGISTERED = 4;
 	public static final int ALOHAR_USER_AUTHENTICATED = 5;
 	
-	public void init();
-	public void stop();
 	public ContextData getContextData();
 	public void setHandler(Handler handler);
 }
