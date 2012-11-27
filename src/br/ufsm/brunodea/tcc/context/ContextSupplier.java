@@ -16,16 +16,9 @@ public interface ContextSupplier {
 		}
 	}
 	
-	/**
-	 * Valores possíveis para o handler.what;
-	 */
-	public static final int ALOHAR_USERSTAY_CHANGED = 0;
-	public static final int ALOHAR_ON_ARRIVAL = 1;
-	public static final int ALOHAR_ON_DEPARTURE = 2;
-	public static final int ALOHAR_ON_MOVEMENT_CHANGED = 3;
-	public static final int ALOHAR_USER_REGISTERED = 4;
-	public static final int ALOHAR_USER_AUTHENTICATED = 5;
-	
 	public ContextData getContextData();
 	public void setHandler(Handler handler);
+	public String toString();
+	//true se está pronto para pegar o contexto.
+	public boolean isReady();
 }

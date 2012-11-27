@@ -59,5 +59,15 @@ public class InfoCityQrCode implements ContextSupplier {
 	public void setHandler(Handler handler) {
 		mHandler = handler;
 	}
+	
+	@Override
+	public String toString() {
+		return "Qr-Code";
+	}
+
+	@Override
+	public boolean isReady() {
+		return true;
+	}
 
 }

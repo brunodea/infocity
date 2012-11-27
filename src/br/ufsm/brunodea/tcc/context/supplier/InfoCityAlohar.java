@@ -22,6 +22,16 @@ public class InfoCityAlohar implements ContextSupplier {
 	private final int APP_ID = 239;
 	private final String API_KEY = "5a470a7e524a5959dea5620cd6a593c10b60eb56";
 	
+	/**
+	 * Valores possíveis para o handler.what;
+	 */
+	public static final int ALOHAR_USERSTAY_CHANGED = 0;
+	public static final int ALOHAR_ON_ARRIVAL = 1;
+	public static final int ALOHAR_ON_DEPARTURE = 2;
+	public static final int ALOHAR_ON_MOVEMENT_CHANGED = 3;
+	public static final int ALOHAR_USER_REGISTERED = 4;
+	public static final int ALOHAR_USER_AUTHENTICATED = 5;
+	
 	private Alohar mAlohar;
 	private ALPlaceManager mPlaceManager;
 	private ALMotionManager mMotionManager;
@@ -29,7 +39,7 @@ public class InfoCityAlohar implements ContextSupplier {
 	private ContextData mCurrContextData;
 	private Handler mHandler;
 	
-	private boolean mIsAuthenticated;
+	private boolean mIsReady;
 	
 	private Context mContext;
 	
@@ -39,7 +49,7 @@ public class InfoCityAlohar implements ContextSupplier {
 		mAlohar = Alohar.getInstance();
 		init();
 
-		mIsAuthenticated = false;
+		mIsReady = false;
 		String uid = InfoCityPreferences.getAloharUID(mContext);
 
 		mHandler = new Handler() {
@@ -63,25 +73,26 @@ public class InfoCityAlohar implements ContextSupplier {
 			@Override
 			public void onUserStayChanged(UserStay newUserStay) {
 				if(userStayToContextData(newUserStay)) {
-					mHandler.sendEmptyMessage(ContextSupplier.ALOHAR_USERSTAY_CHANGED);
+					mIsReady = true;
+					mHandler.sendEmptyMessage(ALOHAR_USERSTAY_CHANGED);
 				}
 			}
 			
 			@Override
 			public void onDeparture(double latitude, double longitude) {
-				mHandler.sendEmptyMessage(ContextSupplier.ALOHAR_ON_DEPARTURE);
+				mHandler.sendEmptyMessage(ALOHAR_ON_DEPARTURE);
 			}
 			
 			@Override
 			public void onArrival(double latitude, double longitude) {
-				mHandler.sendEmptyMessage(ContextSupplier.ALOHAR_ON_ARRIVAL);
+				mHandler.sendEmptyMessage(ALOHAR_ON_ARRIVAL);
 			}
 		});
 
 		mMotionManager.registerMovementListener(new ALMovementListener() {
 			@Override
 			public void onMovementChanged(MovementState oldState, MovementState newState) {
-				mHandler.sendEmptyMessage(ContextSupplier.ALOHAR_ON_MOVEMENT_CHANGED);
+				mHandler.sendEmptyMessage(ALOHAR_ON_MOVEMENT_CHANGED);
 			}
 		});
 	}
@@ -94,7 +105,7 @@ public class InfoCityAlohar implements ContextSupplier {
 					if(data instanceof String && !data.toString().equals("")) {
 						InfoCityPreferences.setAloharUID(mContext, (String)data);
 						authenticateUser();
-						mHandler.sendEmptyMessage(ContextSupplier.ALOHAR_USER_REGISTERED);
+						mHandler.sendEmptyMessage(ALOHAR_USER_REGISTERED);
 					}
 				} else if(event == ALEvents.GENERAL_ERROR_CALLBACK ||
 						  event == ALEvents.SERVER_ERROR_CALLBACK) {
@@ -110,8 +121,7 @@ public class InfoCityAlohar implements ContextSupplier {
 		    public void handleEvent(ALEvents event, Object data) {
 		        if (event == ALEvents.AUTHENTICATE_CALLBACK) {
 		            if (data instanceof String) {
-						mIsAuthenticated = true;
-						mHandler.sendEmptyMessage(ContextSupplier.ALOHAR_USER_AUTHENTICATED);
+						mHandler.sendEmptyMessage(ALOHAR_USER_AUTHENTICATED);
 		            }
 		        } else if (event == ALEvents.GENERAL_ERROR_CALLBACK 
 		        		|| event == ALEvents.SERVER_ERROR_CALLBACK) {
@@ -162,5 +172,15 @@ public class InfoCityAlohar implements ContextSupplier {
 	@Override
 	public void setHandler(Handler handler) {
 		mHandler = handler;
+	}
+
+	@Override
+	public String toString() {
+		return "Alohar";
+	}
+
+	@Override
+	public boolean isReady() {
+		return mIsReady;
 	}
 }

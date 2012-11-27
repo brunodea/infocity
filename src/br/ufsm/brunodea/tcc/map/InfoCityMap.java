@@ -266,7 +266,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 				}
 			};
 			
-			DialogHelper.selectContextProviderDialog(this, handler);
+			showSelectContextSupplierDialog(handler);
 		} else if(v == mWindowTitleButtonCenterOn) {
 			GeoPoint p = App.instance().getEventOverlayManager().
 					getEventOverlay(EventTypeManager.instance().type_add(), this)
@@ -284,8 +284,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 					}
 				}
 			};
-			
-			DialogHelper.selectContextProviderDialog(this, handler);
+			showSelectContextSupplierDialog(handler);
 		}
 	}
 	
@@ -293,6 +292,13 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	public void onDestroy() {
 		mAloharContextSupplier.stop();
 		super.onDestroy();
+	}
+	
+	private void showSelectContextSupplierDialog(Handler handler) {
+		ContextSupplier[] suppliers = 
+			{mAloharContextSupplier, mQrCodeContextSupplier};
+		
+		DialogHelper.selectContextProviderDialog(this, suppliers, handler);
 	}
 	
 	public void setLastKnownLocation(Location location) {
