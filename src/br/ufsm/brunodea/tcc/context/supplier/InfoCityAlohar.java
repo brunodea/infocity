@@ -121,13 +121,12 @@ public class InfoCityAlohar implements ContextSupplier {
 		});
 	}
 	
-	@Override
 	public void init() {
 		if(!mAlohar.isServiceRunning()) {
 			mAlohar.startServices();
 		}
 	}
-	@Override
+	
 	public void stop() {
 		if(mAlohar.isServiceRunning()) {
 			mAlohar.stopServices();

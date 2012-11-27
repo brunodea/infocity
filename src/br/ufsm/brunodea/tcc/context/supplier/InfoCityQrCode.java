@@ -14,12 +14,16 @@ import com.google.zxing.integration.android.IntentResult;
 public class InfoCityQrCode implements ContextSupplier {
 	private IntentIntegrator mZxingIntentIntegrator;
 	private ContextData mContextData;
+	private Handler mHandler;
+	
+	private ContextAction mContextAction;
 	
 	public InfoCityQrCode(Activity parent) {
 		mZxingIntentIntegrator = new IntentIntegrator(parent);
 		mZxingIntentIntegrator.setTitleByID(R.string.install_barcodescanner);
 		mZxingIntentIntegrator.setMessageByID(R.string.requires_barcodescanner);
-		
+
+		mHandler = null;
 		mContextData = new ContextData();
 	}
 	
@@ -29,19 +33,22 @@ public class InfoCityQrCode implements ContextSupplier {
 			try {
 				Gson gson = new Gson();
 				mContextData = gson.fromJson(qrcode_json, ContextData.class);
+
+				if(mHandler != null) {
+					mHandler.sendEmptyMessage(mContextAction.getValue());
+				}
 			} catch(JsonSyntaxException e) {
 				e.printStackTrace();
+				if(mHandler != null) {
+					mHandler.sendEmptyMessage(ContextAction.NONE.getValue());
+				}
 			}
 		}
 	}
 	
-	@Override
-	public void init() {
+	public void beginScan(ContextAction context_action) {
+		mContextAction = context_action;
 		mZxingIntentIntegrator.initiateScan();
-	}
-
-	@Override
-	public void stop() {
 	}
 
 	@Override
@@ -50,6 +57,7 @@ public class InfoCityQrCode implements ContextSupplier {
 	}
 	@Override
 	public void setHandler(Handler handler) {
+		mHandler = handler;
 	}
 
 }
