@@ -254,30 +254,46 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	
 	@Override
 	public void onClick(View v) {
-		if(v == mWindowTitleButtonAddEvent) {			
-			toggleWindowTitleAddEventProgressBar();
-			mLocationListener.setCurrAction(LocationAction.ADD_EVENT);
-			Location l = mMyLocationOverlay.getLastFix();
-			if(l != null) {
-				mLocationListener.onLocationChanged(l);
-			} else {
-				startRequestLocationUpdates();
-			}
+		if(v == mWindowTitleButtonAddEvent) {
+			Handler handler = new Handler() {
+				@Override
+				public void handleMessage(Message msg) {
+					if(msg.what == 0) {
+						addEvent();
+					} else if(msg.what == 1) {
+						mQrCodeContextSupplier.beginScan(ContextAction.ADD_EVENT);
+					}
+				}
+			};
+			
+			DialogHelper.selectContextProviderDialog(this, handler);
 		} else if(v == mWindowTitleButtonCenterOn) {
 			GeoPoint p = App.instance().getEventOverlayManager().
 					getEventOverlay(EventTypeManager.instance().type_add(), this)
 					.getItem(0).getPoint();
-			mMapController.setCenter(p);
+			mMapController.animateTo(p);
 			mMapView.getController().setZoom(DEFAULT_MAP_ZOOM);
 		} else if(v == mWindowTitleButtonRefresh) {
-			toggleRefreshAnimation();
-			mLocationListener.setCurrAction(LocationAction.GET_EVENTS);
-			Location l = mMyLocationOverlay.getLastFix();
-			if(l != null) {
-				mLocationListener.onLocationChanged(l);
-			} else {
-				startRequestLocationUpdates();
-			}
+			Handler handler = new Handler() {
+				@Override
+				public void handleMessage(Message msg) {
+					if(msg.what == 0) {
+						mCurrContextSupplier = mAloharContextSupplier;
+						toggleRefreshAnimation();
+						mLocationListener.setCurrAction(LocationAction.GET_EVENTS);
+						Location l = mMyLocationOverlay.getLastFix();
+						if(l != null) {
+							mLocationListener.onLocationChanged(l);
+						} else {
+							startRequestLocationUpdates();
+						}
+					} else if(msg.what == 1) {
+						mQrCodeContextSupplier.beginScan(ContextAction.FETCH_EVENTS);
+					}
+				}
+			};
+			
+			DialogHelper.selectContextProviderDialog(this, handler);
 		}
 	}
 	

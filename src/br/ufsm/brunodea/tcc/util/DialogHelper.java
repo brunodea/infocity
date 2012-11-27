@@ -13,10 +13,14 @@ import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import br.ufsm.brunodea.tcc.R;
 
 /**
@@ -187,6 +191,39 @@ public class DialogHelper {
 			}
 		});
     	
+    	dialog.show();
+    }
+    
+    public static void selectContextProviderDialog(final Context context,
+    		final Handler handler) {
+    	final Dialog dialog = new Dialog(context);
+    	dialog.setTitle("Selecione a Fonte");
+    	LayoutInflater inflater = (LayoutInflater) context.getSystemService(
+    			Context.LAYOUT_INFLATER_SERVICE);
+    	View v = inflater.inflate(R.layout.selectcontextprovider_dialog, null, false);
+    	
+    	final ListView listview = (ListView)v.findViewById(R.id.listview_select_contextprovider);
+    	String[] providers = {"Alohar", "Qr-Code"};
+    	
+
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
+		  android.R.layout.simple_list_item_1, android.R.id.text1, providers);
+    	
+    	listview.setAdapter(adapter);
+    	listview.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				String providername = (String)listview.getItemAtPosition(arg2);
+				if(providername.equals("Alohar")) {
+					handler.sendEmptyMessage(0);
+				} else if(providername.equals("Qr-Code")) {
+					handler.sendEmptyMessage(1);
+				}
+				dialog.dismiss();				
+			}
+		});
+
+    	dialog.setContentView(v);
     	dialog.show();
     }
 }
