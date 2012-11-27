@@ -177,7 +177,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		if(requestCode == InfoCityPreferenceActivity.REQUEST_CODE) {
 			//alterou a preferência de distância máxima que um evento pode estar.
 			if(resultCode == InfoCityPreferenceActivity.RESULT_CODE_EVENT_RADIUS) {
-				onClick(mWindowTitleButtonRefresh);
+				startFetchEvents();
 			} else if(resultCode == InfoCityPreferenceActivity.RESULT_CODE_MYLOCATION) {
 				adjustMyLocationStuff();
 			}
@@ -278,15 +278,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 				@Override
 				public void handleMessage(Message msg) {
 					if(msg.what == 0) {
-						mCurrContextSupplier = mAloharContextSupplier;
-						toggleRefreshAnimation();
-						mLocationListener.setCurrAction(LocationAction.GET_EVENTS);
-						Location l = mMyLocationOverlay.getLastFix();
-						if(l != null) {
-							mLocationListener.onLocationChanged(l);
-						} else {
-							startRequestLocationUpdates();
-						}
+						startFetchEvents();
 					} else if(msg.what == 1) {
 						mQrCodeContextSupplier.beginScan(ContextAction.FETCH_EVENTS);
 					}
@@ -355,13 +347,25 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 
 		toggleWindowTitleAddEventCenterOn();
 	}
+
+	public void startFetchEvents() {
+		mCurrContextSupplier = mAloharContextSupplier;
+		toggleRefreshAnimation();
+		mLocationListener.setCurrAction(LocationAction.GET_EVENTS);
+		Location l = mMyLocationOverlay.getLastFix();
+		if(l != null) {
+			mLocationListener.onLocationChanged(l);
+		} else {
+			startRequestLocationUpdates();
+		}
+	}
 	
 	/**
 	 * Cria a thread que vai buscar no servidor os eventos dentro de um raio
 	 * pré-determinado (no caso, 50km) e os mostra na tela, mas apenas aquelas
 	 * que ainda não estão carregados no aplicativo.
 	 */
-	public void fetchEvents() {		
+	public void fetchEvents() {
 		final Handler done_handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {

@@ -204,7 +204,6 @@ public class DialogHelper {
     	
     	final ListView listview = (ListView)v.findViewById(R.id.listview_select_contextprovider);
     	String[] providers = {"Alohar", "Qr-Code"};
-    	
 
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
 		  android.R.layout.simple_list_item_1, android.R.id.text1, providers);
