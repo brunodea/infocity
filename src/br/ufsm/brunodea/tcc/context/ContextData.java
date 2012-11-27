@@ -11,6 +11,8 @@ public class ContextData {
 	private String movement_state; //parado, caminhando, andando de carro, etc.
 	private boolean on_commute; //esta indo de um lugar a outro.
 	private String address;
+	private double longitude;
+	private double latitude;
 	
 	public ContextData() {
 		place_name = "";
@@ -18,6 +20,8 @@ public class ContextData {
 		movement_state = "";
 		address = "";
 		on_commute = false;
+		longitude = -1;
+		latitude = -1;
 	}
 	
 	public void setPlaceName(String place_name) {
@@ -34,6 +38,19 @@ public class ContextData {
 	}
 	public void setAddress(String address) {
 		this.address = address;
+	}
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+	
+	public double getLongitude() {
+		return this.longitude;
+	}
+	public double getLatitude() {
+		return this.latitude;
 	}
 	
 	public JSONObject toJSON() {
