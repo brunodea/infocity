@@ -40,8 +40,10 @@ public class InfoCityLocationListener implements LocationListener {
 
 		switch(mCurrAction) {
 		case ADD_EVENT:
-			mInfoCityMap.toggleWindowTitleAddEventProgressBar();
-			mInfoCityMap.centerMapInLastKnownLocation();
+			if(!location.getProvider().equals("QrCode")) {
+				mInfoCityMap.toggleWindowTitleAddEventProgressBar();
+				mInfoCityMap.centerMapInLastKnownLocation();
+			}
 			mInfoCityMap.addAddEventItemMarker();
 			break;
 		case GET_EVENTS:
