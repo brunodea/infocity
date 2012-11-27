@@ -52,6 +52,9 @@ public class EventType {
 		case UNKNOWN:
 			marker = c.getResources().getDrawable(R.drawable.ic_unknownevent);
 			break;
+		case BUS:
+			marker = c.getResources().getDrawable(R.drawable.ic_bus);
+			break;
 		default:
 			marker = c.getResources().getDrawable(R.drawable.ic_unknownevent);
 			break;
