@@ -26,7 +26,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import br.ufsm.brunodea.tcc.App;
 import br.ufsm.brunodea.tcc.R;
+import br.ufsm.brunodea.tcc.context.ContextData;
 import br.ufsm.brunodea.tcc.context.ContextSupplier;
+import br.ufsm.brunodea.tcc.context.ContextSupplier.ContextAction;
 import br.ufsm.brunodea.tcc.context.supplier.InfoCityAlohar;
 import br.ufsm.brunodea.tcc.context.supplier.InfoCityQrCode;
 import br.ufsm.brunodea.tcc.internet.InfoCityServer;
@@ -34,6 +36,7 @@ import br.ufsm.brunodea.tcc.internet.Internet;
 import br.ufsm.brunodea.tcc.map.InfoCityLocationListener.LocationAction;
 import br.ufsm.brunodea.tcc.model.EventItem;
 import br.ufsm.brunodea.tcc.model.EventTypeManager;
+import br.ufsm.brunodea.tcc.util.DialogHelper;
 import br.ufsm.brunodea.tcc.util.InfoCityPreferenceActivity;
 import br.ufsm.brunodea.tcc.util.InfoCityPreferences;
 import br.ufsm.brunodea.tcc.util.Util;
@@ -118,6 +121,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		
 		mCurrContextSupplier = mAloharContextSupplier;
 		mQrCodeContextSupplier = new InfoCityQrCode(this);
+		mQrCodeContextSupplier.setHandler(mQrCodeHandler);
 		
 		mMyLocationOverlay = new MyLocationOverlay(this, mMapView);
 		adjustMyLocationStuff();
@@ -163,9 +167,6 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	    	Intent prefs = new Intent(this, InfoCityPreferenceActivity.class);
 	    	startActivityForResult(prefs, InfoCityPreferenceActivity.REQUEST_CODE);
 	    	break;
-	    case R.id.menu_map_fetchevents_with_qrcode:
-	    	mQrCodeContextSupplier.init();
-	    	break;
 	    default:
 	    	return super.onOptionsItemSelected(item);
 	    }
@@ -184,11 +185,6 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 			IntentResult intent_result = IntentIntegrator.parseActivityResult(
 					requestCode, resultCode, intent);
 			mQrCodeContextSupplier.finishedScan(intent_result);
-
-			mCurrContextSupplier = mQrCodeContextSupplier;
-			onClick(mWindowTitleButtonRefresh);
-
-			mCurrContextSupplier = mAloharContextSupplier;
 		}
 	}
 	
@@ -418,4 +414,40 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		
 		t.start();
 	}
+	
+	//TODO: adicionar contextData ao evento.
+	private void addEvent() {
+		toggleWindowTitleAddEventProgressBar();
+		mLocationListener.setCurrAction(LocationAction.ADD_EVENT);
+		Location l = mMyLocationOverlay.getLastFix();
+		if(l != null) {
+			mLocationListener.onLocationChanged(l);
+		} else {
+			startRequestLocationUpdates();
+		}
+	}
+	
+	private Handler mQrCodeHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			if(msg.what == ContextAction.NONE.getValue()) {
+				Toast.makeText(InfoCityMap.this, InfoCityMap.this.getResources()
+						.getString(R.string.qrcode_error), Toast.LENGTH_SHORT).show();
+			} else if(msg.what == ContextAction.ADD_EVENT.getValue()) {
+				mLocationListener.setCurrAction(LocationAction.ADD_EVENT);
+				ContextData cd = mQrCodeContextSupplier.getContextData();
+
+				Location l = new Location("QrCode");
+				l.setLatitude(cd.getLatitude());
+				l.setLongitude(cd.getLongitude());
+
+				mLocationListener.onLocationChanged(l);
+				onClick(mWindowTitleButtonCenterOn);
+			} else if(msg.what == ContextAction.FETCH_EVENTS.getValue()) {
+				mCurrContextSupplier = mQrCodeContextSupplier;
+				onClick(mWindowTitleButtonRefresh);
+				mCurrContextSupplier = mAloharContextSupplier;
+			}
+		}
+	};
 }
