@@ -264,10 +264,7 @@ public class EventsItemizedOverlay extends BalloonItemizedOverlay<EventItem> {
             		                                         y-mYDragTouchOffset);
 
         	mDragImage.setVisibility(View.GONE);
-            EventItem toDrop = new EventItem(pt, mDragItem.getTitle(), 
-            		mDragItem.getSnippet(), mDragItem.getType());
-            toDrop.setKeywords(mDragItem.getKeywords());
-            toDrop.setPubDate(mDragItem.getPubDate());
+            EventItem toDrop = new EventItem(pt, mDragItem);
 
             mEventOverlays.add(toDrop);
             populate();
