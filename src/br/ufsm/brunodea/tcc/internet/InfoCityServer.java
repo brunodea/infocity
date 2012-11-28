@@ -1,5 +1,8 @@
 package br.ufsm.brunodea.tcc.internet;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -85,9 +88,15 @@ public class InfoCityServer {
 	 */
 	public static JSONObject getEvents(Context c, Location location, float radius,
 			ContextData context_data) {
-		return checkResponse(c, Internet.getRequest(InfoCityPreferences.getServerBaseURI(c)
-				+"getWithin/"+location.getLatitude()+"/"+location.getLongitude()+"/"+radius+"/"+
-				context_data.toString()));
+		try {
+			return checkResponse(c, Internet.getRequest(InfoCityPreferences.getServerBaseURI(c)
+					+"getWithin/"+location.getLatitude()+"/"+location.getLongitude()+"/"+radius+"/"+
+					URLEncoder.encode(context_data.toString(),"UTF-8")));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	
 	public static JSONObject getEventTypes(Context c) {

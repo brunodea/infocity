@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -116,7 +115,7 @@ public class Internet {
         
         request.setParams(params);
         try {
-			request.setURI(new URI(URLEncoder.encode(url,"UTF-8")));
+			request.setURI(new URI(url));
 			response = client.execute(request);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();

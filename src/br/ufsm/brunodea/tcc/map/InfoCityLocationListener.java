@@ -47,7 +47,7 @@ public class InfoCityLocationListener implements LocationListener {
 			mInfoCityMap.addAddEventItemMarker();
 			break;
 		case GET_EVENTS:
-			mInfoCityMap.fetchEvents();
+			mInfoCityMap.fetchEventsRequest();
 			break;
 		default:
 			break;

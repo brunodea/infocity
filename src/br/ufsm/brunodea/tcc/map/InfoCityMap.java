@@ -277,7 +277,8 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 				@Override
 				public void handleMessage(Message msg) {
 					if(msg.what == 0) {
-						aloharFetchEvents();
+						mCurrContextSupplier = mAloharContextSupplier;
+						fetchEvents();
 					} else if(msg.what == 1) {
 						mQrCodeContextSupplier.beginScan(ContextAction.FETCH_EVENTS);
 					}
@@ -354,11 +355,13 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		toggleWindowTitleAddEventCenterOn();
 	}
 
-	public void aloharFetchEvents() {
-		mCurrContextSupplier = mAloharContextSupplier;
+	public void fetchEvents() {
+		fetchEvents(null);
+	}
+	public void fetchEvents(Location location) {
 		toggleRefreshAnimation();
 		mLocationListener.setCurrAction(LocationAction.GET_EVENTS);
-		Location l = mMyLocationOverlay.getLastFix();
+		Location l = location == null ? mMyLocationOverlay.getLastFix() : location;
 		if(l != null) {
 			mLocationListener.onLocationChanged(l);
 		} else {
@@ -371,7 +374,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	 * pré-determinado (no caso, 50km) e os mostra na tela, mas apenas aquelas
 	 * que ainda não estão carregados no aplicativo.
 	 */
-	public void fetchEvents() {
+	public void fetchEventsRequest() {
 		App.instance().getEventOverlayManager()
 			.clearItemizedOverlaysExcept(EventTypeManager.instance().type_add());
 		final Handler done_handler = new Handler() {
@@ -441,7 +444,6 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		t.start();
 	}
 	
-	//TODO: adicionar contextData ao evento.
 	private void aloharAddEvent() {
 		mCurrContextSupplier = mAloharContextSupplier;
 		toggleWindowTitleAddEventProgressBar();
@@ -453,7 +455,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 			startRequestLocationUpdates();
 		}
 	}
-	
+//TODO:FETCH EVENTS NOT WORKING
 	private Handler mQrCodeHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -474,7 +476,14 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 				mCurrContextSupplier = mAloharContextSupplier;
 			} else if(msg.what == ContextAction.FETCH_EVENTS.getValue()) {
 				mCurrContextSupplier = mQrCodeContextSupplier;
-				onClick(mWindowTitleButtonRefresh);
+				ContextData cd = mQrCodeContextSupplier.getContextData();
+
+				Location l = new Location("QrCode");
+				l.setLatitude(cd.getLatitude());
+				l.setLongitude(cd.getLongitude());
+
+				fetchEvents(l);
+				
 				mCurrContextSupplier = mAloharContextSupplier;
 			}
 		}
