@@ -33,6 +33,7 @@ public class InfoCityQrCode implements ContextSupplier {
 			try {
 				Gson gson = new Gson();
 				mContextData = gson.fromJson(qrcode_json, ContextData.class);
+				mContextData.setFrom(toString());
 
 				if(mHandler != null) {
 					mHandler.sendEmptyMessage(mContextAction.getValue());
