@@ -86,7 +86,8 @@ public class InfoCityServer {
 	public static JSONObject getEvents(Context c, Location location, float radius,
 			ContextData context_data) {
 		return checkResponse(c, Internet.getRequest(InfoCityPreferences.getServerBaseURI(c)
-				+"getWithin/"+location.getLatitude()+"/"+location.getLongitude()+"/"+radius+"/"));
+				+"getWithin/"+location.getLatitude()+"/"+location.getLongitude()+"/"+radius+"/"+
+				context_data.toString()));
 	}
 	
 	public static JSONObject getEventTypes(Context c) {
