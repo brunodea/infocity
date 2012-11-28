@@ -67,6 +67,6 @@ public class ContextData {
 
 	@Override
 	public String toString() {
-		return toJSON().toString();
+		return toJSON().toString().replace("false", "False").replace("true", "True");
 	}
 }
