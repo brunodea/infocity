@@ -326,6 +326,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	public void addAddEventItemMarker() {
 		EventItem new_event = Util.createEventItem(mLastKnownLocation.getLatitude(),
 				mLastKnownLocation.getLongitude(), "New Event", "New Event", EventTypeManager.instance().type_add());
+		new_event.setContextData(mCurrContextSupplier.getContextData());
 		App.instance().getEventOverlayManager().addEventItem(new_event, this);
 
 		toggleWindowTitleAddEventCenterOn();
