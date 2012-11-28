@@ -177,7 +177,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		if(requestCode == InfoCityPreferenceActivity.REQUEST_CODE) {
 			//alterou a preferência de distância máxima que um evento pode estar.
 			if(resultCode == InfoCityPreferenceActivity.RESULT_CODE_EVENT_RADIUS) {
-				startFetchEvents();
+				aloharFetchEvents();
 			} else if(resultCode == InfoCityPreferenceActivity.RESULT_CODE_MYLOCATION) {
 				adjustMyLocationStuff();
 			}
@@ -259,7 +259,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 				@Override
 				public void handleMessage(Message msg) {
 					if(msg.what == 0) {
-						addEvent();
+						aloharAddEvent();
 					} else if(msg.what == 1) {
 						mQrCodeContextSupplier.beginScan(ContextAction.ADD_EVENT);
 					}
@@ -278,7 +278,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 				@Override
 				public void handleMessage(Message msg) {
 					if(msg.what == 0) {
-						startFetchEvents();
+						aloharFetchEvents();
 					} else if(msg.what == 1) {
 						mQrCodeContextSupplier.beginScan(ContextAction.FETCH_EVENTS);
 					}
@@ -354,7 +354,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		toggleWindowTitleAddEventCenterOn();
 	}
 
-	public void startFetchEvents() {
+	public void aloharFetchEvents() {
 		mCurrContextSupplier = mAloharContextSupplier;
 		toggleRefreshAnimation();
 		mLocationListener.setCurrAction(LocationAction.GET_EVENTS);
@@ -442,7 +442,8 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	}
 	
 	//TODO: adicionar contextData ao evento.
-	private void addEvent() {
+	private void aloharAddEvent() {
+		mCurrContextSupplier = mAloharContextSupplier;
 		toggleWindowTitleAddEventProgressBar();
 		mLocationListener.setCurrAction(LocationAction.ADD_EVENT);
 		Location l = mMyLocationOverlay.getLastFix();
