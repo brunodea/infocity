@@ -372,6 +372,8 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	 * que ainda não estão carregados no aplicativo.
 	 */
 	public void fetchEvents() {
+		App.instance().getEventOverlayManager()
+			.clearItemizedOverlaysExcept(EventTypeManager.instance().type_add());
 		final Handler done_handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -410,8 +412,6 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 						mCurrContextSupplier.getContextData());
 				if(res != null && res.has("size")) {
 					try {
-						App.instance().getEventOverlayManager()
-							.clearItemizedOverlaysExcept(EventTypeManager.instance().type_add());
 						int size = res.getInt("size");
 						for(int i = 0; i < size; i++) {
 							if(res.has("event_"+i)) {
