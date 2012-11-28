@@ -177,7 +177,6 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		if(requestCode == InfoCityPreferenceActivity.REQUEST_CODE) {
 			//alterou a preferência de distância máxima que um evento pode estar.
 			if(resultCode == InfoCityPreferenceActivity.RESULT_CODE_EVENT_RADIUS) {
-				aloharFetchEvents();
 			} else if(resultCode == InfoCityPreferenceActivity.RESULT_CODE_MYLOCATION) {
 				adjustMyLocationStuff();
 			}
