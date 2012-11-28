@@ -165,7 +165,7 @@ public class InfoCityAlohar implements ContextSupplier {
 		userStayToContextData(lastKnownStay);
 		mCurrContextData.setMovementState(mMotionManager.getCurrentMovementState().name());
 		mCurrContextData.setOnCommute(mMotionManager.isOnCommute());
-		mCurrContextData.setFrom(toString());
+		mCurrContextData.setFromSupplier(toString());
 		
 		return mCurrContextData;
 	}

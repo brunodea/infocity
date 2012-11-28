@@ -11,7 +11,7 @@ public class ContextData {
 	private String movement_state; //parado, caminhando, andando de carro, etc.
 	private boolean on_commute; //esta indo de um lugar a outro.
 	private String address;
-	private String from; //de onde este contexto foi retirado;
+	private String from_supplier; //de onde este contexto foi retirado;
 	private double longitude;
 	private double latitude;
 	
@@ -23,7 +23,7 @@ public class ContextData {
 		on_commute = false;
 		longitude = -1;
 		latitude = -1;
-		from = "";
+		from_supplier = "";
 	}
 	
 	public void setPlaceName(String place_name) {
@@ -41,8 +41,8 @@ public class ContextData {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public void setFrom(String from) {
-		this.from = from;
+	public void setFromSupplier(String from) {
+		this.from_supplier = from;
 	}
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
