@@ -10,6 +10,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import br.ufsm.brunodea.tcc.context.ContextData;
 import br.ufsm.brunodea.tcc.util.Util;
 
 import com.google.android.maps.GeoPoint;
@@ -27,6 +28,7 @@ public class EventItem extends OverlayItem implements Model {
 	private ArrayList<String> mKeywords;
 	private Date mPubDate;
 	private int mPrimaryKey;
+	private ContextData mContextData;
 	
 	public EventItem(GeoPoint pos, String title, String snippet, EventType type) {
 		super(pos, title, snippet);
@@ -34,6 +36,7 @@ public class EventItem extends OverlayItem implements Model {
 		mKeywords = new ArrayList<String>();
 		mPubDate = new Date();
 		mPrimaryKey = -1;
+		mContextData = null;
 	}
 	
 	public EventItem(int primarykey, GeoPoint pos, String title, String snippet, EventType type) {
@@ -77,6 +80,12 @@ public class EventItem extends OverlayItem implements Model {
 		return mPrimaryKey;
 	}
 	
+	public void setContextData(ContextData context_data) {
+		mContextData = context_data;
+	}
+	public ContextData getContextData() {
+		return mContextData;
+	}
 	/**
 	 * Classe criada apenas para ser passada para um Gson para ser transformada
 	 * em um JSON. Foi criada pois deve haver uma correlação entre os nomes das
@@ -129,6 +138,9 @@ public class EventItem extends OverlayItem implements Model {
 		params.add(new BasicNameValuePair("event", "["+json.toString()+"]"));
 		params.add(new BasicNameValuePair("event_keywords", mKeywords.toString()));
 		params.add(new BasicNameValuePair("event_type", mType.getName().toString()));
+		if(mContextData != null) {
+			params.add(new BasicNameValuePair("context_data", mContextData.toString()));
+		}
 		
 		return params;
 	}
