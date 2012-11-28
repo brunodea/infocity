@@ -461,6 +461,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 				Toast.makeText(InfoCityMap.this, InfoCityMap.this.getResources()
 						.getString(R.string.qrcode_error), Toast.LENGTH_SHORT).show();
 			} else if(msg.what == ContextAction.ADD_EVENT.getValue()) {
+				mCurrContextSupplier = mQrCodeContextSupplier;
 				mLocationListener.setCurrAction(LocationAction.ADD_EVENT);
 				ContextData cd = mQrCodeContextSupplier.getContextData();
 
@@ -470,6 +471,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 
 				mLocationListener.onLocationChanged(l);
 				onClick(mWindowTitleButtonCenterOn);
+				mCurrContextSupplier = mAloharContextSupplier;
 			} else if(msg.what == ContextAction.FETCH_EVENTS.getValue()) {
 				mCurrContextSupplier = mQrCodeContextSupplier;
 				onClick(mWindowTitleButtonRefresh);
