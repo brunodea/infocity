@@ -73,21 +73,24 @@ public class InfoCityPreferenceActivity extends PreferenceActivity
 		Toast.makeText(InfoCityPreferenceActivity.this, 
 				getResources().getString(R.string.not_empty), Toast.LENGTH_SHORT).show();
     }
-
+    
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
 		boolean ok = false;
+		int result = 0;
 		if(newValue.toString().equals("")) {
 			showToastNotEmpty();
 		} else {
 			if(preference == mEventRadius) {
 				ok = true;
-				setResult(RESULT_CODE_EVENT_RADIUS);
+				result = RESULT_CODE_EVENT_RADIUS;
+				preference.setSummary(newValue.toString()+"m");
 			} else if(preference == mServerIP) {
 				String ip = newValue.toString();
 				if(ip.matches("^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|" +
 						"2[0-4]\\d|[0-1]?\\d?\\d)){3}$")) {
 					ok = true;
+					preference.setSummary(newValue.toString());
 				} else {
 					Toast.makeText(InfoCityPreferenceActivity.this, 
 							getResources().getString(R.string.invalid_ip), 
@@ -97,6 +100,7 @@ public class InfoCityPreferenceActivity extends PreferenceActivity
 				String port = newValue.toString();
 				if(port.matches("\\d\\d\\d\\d(\\d)?")) {
 					ok = true;
+					preference.setSummary(newValue.toString());
 				} else {
 					Toast.makeText(InfoCityPreferenceActivity.this, 
 							getResources().getString(R.string.invalid_port), 
@@ -104,13 +108,11 @@ public class InfoCityPreferenceActivity extends PreferenceActivity
 				}
 			} else if(preference == mEnableCompass || preference == mEnableMyLocation) {
 				ok = true;
-				setResult(RESULT_CODE_MYLOCATION);
-			}
-			
-			if(ok) {
-				setPreValues();
+				result = RESULT_CODE_MYLOCATION;
 			}
 		}
+		
+		setResult(result);
 		
 		return ok;
 	}
