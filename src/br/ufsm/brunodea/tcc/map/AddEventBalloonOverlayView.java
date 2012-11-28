@@ -259,12 +259,12 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 			p = mEventItem.getPoint();
 		}
 		//pois no server é ao contrário: POINT(<lon> <lat>).
-		EventItem event = new EventItem(p, title, descr, 
-				selectedEventType());
-		event.setKeywords(mEventItem.getKeywords());
-		event.setPubDate(mEventItem.getPubDate());
+		EventItem n = new EventItem(p, title, descr, selectedEventType());
+		n.setContextData(mEventItem.getContextData());
+		n.setKeywords(mEventItem.getKeywords());
+		n.setPubDate(mEventItem.getPubDate());
 		
-		return event;
+		return n;
 	}
 	
 	private EventType selectedEventType() {
