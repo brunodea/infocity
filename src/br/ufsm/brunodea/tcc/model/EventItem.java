@@ -45,8 +45,21 @@ public class EventItem extends OverlayItem implements Model {
 		mKeywords = new ArrayList<String>();
 		mPubDate = new Date();
 		mPrimaryKey = primarykey;
+		mContextData = null;
 	}
 	
+	public EventItem(GeoPoint pos, EventItem event_item) {
+		super(pos, event_item.getTitle(), event_item.getSnippet());
+		mType = event_item.getType();
+		mKeywords = event_item.getKeywords();
+		mPubDate = event_item.getPubDate();
+		mPrimaryKey = event_item.getPrimaryKey();
+		mContextData = event_item.getContextData();
+	}
+	
+	public void setType(EventType type) {
+		mType = type;
+	}
 	public EventType getType() {
 		return mType;
 	}
