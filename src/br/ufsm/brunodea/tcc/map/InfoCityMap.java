@@ -270,8 +270,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 			GeoPoint p = App.instance().getEventOverlayManager().
 					getEventOverlay(EventTypeManager.instance().type_add(), this)
 					.getItem(0).getPoint();
-			mMapController.animateTo(p);
-			mMapView.getController().setZoom(DEFAULT_MAP_ZOOM);
+			centerOn(p, true);
 		} else if(v == mWindowTitleButtonRefresh) {
 			Handler handler = new Handler() {
 				@Override
