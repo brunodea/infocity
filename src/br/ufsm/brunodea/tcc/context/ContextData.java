@@ -3,6 +3,8 @@ package br.ufsm.brunodea.tcc.context;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.location.Location;
+
 import com.google.gson.Gson;
 
 public class ContextData {
@@ -56,6 +58,14 @@ public class ContextData {
 	}
 	public double getLatitude() {
 		return this.latitude;
+	}
+	
+	public Location getLocation() {
+		Location location = new Location(from_supplier);
+		location.setLatitude(latitude);
+		location.setLongitude(longitude);
+		
+		return location;
 	}
 	
 	public JSONObject toJSON() {
