@@ -8,7 +8,6 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.res.Resources.NotFoundException;
-import android.location.Location;
 import android.util.Log;
 import br.ufsm.brunodea.tcc.R;
 import br.ufsm.brunodea.tcc.context.ContextData;
@@ -86,11 +85,11 @@ public class InfoCityServer {
 	 * @param context_data Dados relacionados ao contexto.
 	 * @return JSON com a resposta do servidor.
 	 */
-	public static JSONObject getEvents(Context c, Location location, float radius,
+	public static JSONObject getEvents(Context c, float radius,
 			ContextData context_data) {
 		try {
 			return checkResponse(c, Internet.getRequest(InfoCityPreferences.getServerBaseURI(c)
-					+"getWithin/"+location.getLatitude()+"/"+location.getLongitude()+"/"+radius+"/"+
+					+"getWithin/"+context_data.getLatitude()+"/"+context_data.getLongitude()+"/"+radius+"/"+
 					URLEncoder.encode(context_data.toString(),"UTF-8")));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
