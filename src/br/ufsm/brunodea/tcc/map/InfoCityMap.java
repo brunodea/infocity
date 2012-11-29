@@ -5,10 +5,8 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,7 +20,6 @@ import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 import br.ufsm.brunodea.tcc.App;
 import br.ufsm.brunodea.tcc.R;
@@ -33,7 +30,6 @@ import br.ufsm.brunodea.tcc.context.supplier.InfoCityAlohar;
 import br.ufsm.brunodea.tcc.context.supplier.InfoCityQrCode;
 import br.ufsm.brunodea.tcc.internet.InfoCityServer;
 import br.ufsm.brunodea.tcc.internet.Internet;
-import br.ufsm.brunodea.tcc.map.InfoCityLocationListener.LocationAction;
 import br.ufsm.brunodea.tcc.model.EventItem;
 import br.ufsm.brunodea.tcc.model.EventTypeManager;
 import br.ufsm.brunodea.tcc.util.DialogHelper;
@@ -66,16 +62,11 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	private final int DEFAULT_MAP_ZOOM = 20;
 	
 	private MyLocationOverlay mMyLocationOverlay;
-	
-	private LocationManager mLocationManager;
-	private InfoCityLocationListener mLocationListener;
-	
+
 	private InfoCityAlohar mAloharContextSupplier;
 	private InfoCityQrCode mQrCodeContextSupplier;
 	
 	private ContextSupplier mCurrContextSupplier;
-	
-	private Location mLastKnownLocation;
 	
 	private ImageButton mWindowTitleButtonRefresh;
 	private ImageButton mWindowTitleButtonCenterOn;
@@ -94,7 +85,6 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		init();
 		
 		Internet.hasConnection(this, true);
-		//onClick(mWindowTitleButtonRefresh);
 	}
 	
 	private void init() {
@@ -107,14 +97,6 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		mMapOverlays = mMapView.getOverlays();
 		
 		App.instance().initEventOverlayManager(this, mMapView, mMapOverlays);
-		
-		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		mLocationListener = new InfoCityLocationListener(this);
-
-		mLastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		if(mLastKnownLocation == null) {
-			mLastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-		}
 	
 		mAloharContextSupplier = new InfoCityAlohar(getApplication());
 		mAloharContextSupplier.init();
@@ -126,8 +108,6 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		mMyLocationOverlay = new MyLocationOverlay(this, mMapView);
 		adjustMyLocationStuff();
 		mMapOverlays.add(mMyLocationOverlay);
-		
-		centerMapInLastKnownLocation();
 		
 		mMapView.invalidate();
 		
@@ -201,38 +181,6 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		}
 	}
 	/**
-	 * Inicializa a requisição de localização do usuário, através de
-	 * InfoCityLocationListener utilizando GPS e a Rede. 
-	 */
-	public void startRequestLocationUpdates() {
-		mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-				0, 0, mLocationListener);
-		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-				0, 0, mLocationListener);
-	}
-	
-	/**
-	 * Termina com a requisição de atualização da localização atual do usuário.
-	 */
-	public void stopRequestLocationUpdates() {
-		mLocationManager.removeUpdates(mLocationListener);
-	}
-	
-	/**
-	 * Centraliza o mapa na última localização conhecida (conseguida pelo
-	 * listener).
-	 */
-	public void centerMapInLastKnownLocation() {
-		if(mLastKnownLocation != null) {
-			mMapController.setCenter(
-					new GeoPoint(
-						(int)(mLastKnownLocation.getLatitude()*1E6), 
-						(int)(mLastKnownLocation.getLongitude()*1E6)
-				    ));
-		}
-	}
-
-	/**
 	 * Se tem algum balão aberto, ele é fechado.
 	 * Se não, fecha a aplicação.
 	 */
@@ -258,14 +206,15 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 				@Override
 				public void handleMessage(Message msg) {
 					if(msg.what == 0) {
-						aloharAddEvent();
+						mCurrContextSupplier = mAloharContextSupplier;
+						doContextAction(ContextAction.ADD_EVENT);
 					} else if(msg.what == 1) {
 						mQrCodeContextSupplier.beginScan(ContextAction.ADD_EVENT);
 					}
 				}
 			};
 			
-			showSelectContextSupplierDialog(handler);
+			showSelectContextSupplierDialog(handler, getResources().getString(R.string.add)+" "+getResources().getString(R.string.event));
 		} else if(v == mWindowTitleButtonCenterOn) {
 			GeoPoint p = App.instance().getEventOverlayManager().
 					getEventOverlay(EventTypeManager.instance().type_add(), this)
@@ -277,13 +226,13 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 				public void handleMessage(Message msg) {
 					if(msg.what == 0) {
 						mCurrContextSupplier = mAloharContextSupplier;
-						fetchEvents();
+						doContextAction(ContextAction.FETCH_EVENTS);
 					} else if(msg.what == 1) {
 						mQrCodeContextSupplier.beginScan(ContextAction.FETCH_EVENTS);
 					}
 				}
 			};
-			showSelectContextSupplierDialog(handler);
+			showSelectContextSupplierDialog(handler, getResources().getString(R.string.refresh_events));
 		}
 	}
 	
@@ -305,26 +254,11 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 				 			  (int)(location.getLongitude()*1E6)), zoom_in);
 	}
 	
-	private void showSelectContextSupplierDialog(Handler handler) {
+	private void showSelectContextSupplierDialog(Handler handler, String action_name) {
 		ContextSupplier[] suppliers = 
 			{mAloharContextSupplier, mQrCodeContextSupplier};
 		
-		DialogHelper.selectContextProviderDialog(this, suppliers, handler);
-	}
-	
-	public void setLastKnownLocation(Location location) {
-		mLastKnownLocation = location;
-	}	
-	
-	public void toggleWindowTitleAddEventProgressBar() {
-		int pb_vis = mWindowTitleProgressBar.getVisibility();
-		mWindowTitleProgressBar.setVisibility(
-				pb_vis == View.VISIBLE ? View.GONE : View.VISIBLE);
-		TextView tv = (TextView)findViewById(R.id.textview_gettingpos_window_title);
-		int tv_vis = tv.getVisibility();
-		tv.setVisibility(tv_vis == View.VISIBLE ? View.GONE : View.VISIBLE);
-		
-		mWindowTitleButtonAddEvent.setEnabled(!mWindowTitleButtonAddEvent.isEnabled());
+		DialogHelper.selectContextProviderDialog(this, action_name, suppliers, handler);
 	}
 	
 	public void toggleWindowTitleAddEventCenterOn() {
@@ -335,12 +269,13 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	}
 	
 	public void addAddEventItemMarker() {
-		EventItem new_event = Util.createEventItem(mLastKnownLocation.getLatitude(),
-				mLastKnownLocation.getLongitude(), "New Event", "New Event", EventTypeManager.instance().type_add());
-		new_event.setContextData(mCurrContextSupplier.getContextData());
-		App.instance().getEventOverlayManager().addEventItem(new_event, this);
-
+		ContextData cd = mCurrContextSupplier.getContextData();
+		EventItem new_event = Util.createEventItem(cd.getLatitude(),
+				cd.getLongitude(), "New Event", "New Event", EventTypeManager.instance().type_add());
+		new_event.setContextData(cd);
+		
 		toggleWindowTitleAddEventCenterOn();
+		addEventItem(new_event);
 	}
 	
 	public void addEventItem(EventItem event_item) {
@@ -366,26 +301,13 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		toggleWindowTitleAddEventCenterOn();
 	}
 
-	public void fetchEvents() {
-		fetchEvents(null);
-	}
-	public void fetchEvents(Location location) {
-		toggleRefreshAnimation();
-		mLocationListener.setCurrAction(LocationAction.GET_EVENTS);
-		Location l = location == null ? mMyLocationOverlay.getLastFix() : location;
-		if(l != null) {
-			mLocationListener.onLocationChanged(l);
-		} else {
-			startRequestLocationUpdates();
-		}
-	}
-	
 	/**
 	 * Cria a thread que vai buscar no servidor os eventos dentro de um raio
 	 * pré-determinado (no caso, 50km) e os mostra na tela, mas apenas aquelas
 	 * que ainda não estão carregados no aplicativo.
 	 */
-	public void fetchEventsRequest() {
+	public synchronized void fetchEventsRequest() {
+		toggleRefreshAnimation();
 		App.instance().getEventOverlayManager()
 			.clearItemizedOverlaysExcept(EventTypeManager.instance().type_add());
 		final Handler done_handler = new Handler() {
@@ -406,22 +328,16 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 			@Override
 			public void handleMessage(Message msg) {
 				EventItem event = (EventItem) msg.obj;
-				//só adiciona evento que ainda não exista no aplicativo.
-				if(!App.instance().getEventOverlayManager()
-					.getEventOverlay(event.getType(), InfoCityMap.this)
-					.containsEventItem(event)) {
-					
-					addEventItem(event);
-				}
+				addEventItem(event);
 			}
 		};
-		
+
 		Thread t = new Thread() {
 			@Override
 			public void run() {
 				boolean ok = false;
 				//faz a busca no servidor pelos eventos.
-				JSONObject res = InfoCityServer.getEvents(InfoCityMap.this, mLastKnownLocation, 
+				JSONObject res = InfoCityServer.getEvents(InfoCityMap.this, 
 						InfoCityPreferences.getEventMaxRadius(InfoCityMap.this), 
 						mCurrContextSupplier.getContextData());
 				if(res != null && res.has("size")) {
@@ -454,17 +370,22 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		
 		t.start();
 	}
-	
-	private void aloharAddEvent() {
-		mCurrContextSupplier = mAloharContextSupplier;
-		toggleWindowTitleAddEventProgressBar();
-		mLocationListener.setCurrAction(LocationAction.ADD_EVENT);
-		Location l = mMyLocationOverlay.getLastFix();
-		if(l != null) {
-			mLocationListener.onLocationChanged(l);
-		} else {
-			startRequestLocationUpdates();
-		}
+
+	private void doContextAction(ContextAction context_action) {
+		ContextData cd = mCurrContextSupplier.getContextData();
+		centerOn(cd.getLocation(), true);
+		
+		switch(context_action) {
+		case ADD_EVENT:
+			addAddEventItemMarker();
+			break;
+		case FETCH_EVENTS:
+			fetchEventsRequest();
+			break;
+		case NONE:
+			break;
+		default:
+		}	
 	}
 
 	private Handler mQrCodeHandler = new Handler() {
@@ -475,19 +396,13 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 						.getString(R.string.qrcode_error), Toast.LENGTH_SHORT).show();
 			} else {
 				mCurrContextSupplier = mQrCodeContextSupplier;
-				ContextData cd = mQrCodeContextSupplier.getContextData();
-				Location newLocation = new Location("QrCode");
-				newLocation.setLatitude(cd.getLatitude());
-				newLocation.setLongitude(cd.getLongitude());
-				
-				centerOn(newLocation, true);
-				
+				ContextAction ca = null;
 				if(msg.what == ContextAction.ADD_EVENT.getValue()) {
-					mLocationListener.setCurrAction(LocationAction.ADD_EVENT);
-					mLocationListener.onLocationChanged(newLocation);
+					ca = ContextAction.ADD_EVENT;
 				} else if(msg.what == ContextAction.FETCH_EVENTS.getValue()) {
-					fetchEvents(newLocation);
+					ca = ContextAction.FETCH_EVENTS;
 				}
+				doContextAction(ca);
 			}
 		}
 	};
