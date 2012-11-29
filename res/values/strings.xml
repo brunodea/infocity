@@ -60,4 +60,7 @@
     <string name="type">Tipo</string>
     <string name="qrcode_error">Erro de leitura do Qr-Code.</string>
     <string name="bus">Ônibus</string>
+    <string name="event">Evento</string>
+    <string name="refresh_events">Recarregar Eventos</string>
+    <string name="select_source">Selecione a Fonte</string>
 </resources>
