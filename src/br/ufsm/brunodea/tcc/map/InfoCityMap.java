@@ -466,36 +466,28 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 			startRequestLocationUpdates();
 		}
 	}
-//TODO:FETCH EVENTS NOT WORKING
+
 	private Handler mQrCodeHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			if(msg.what == ContextAction.NONE.getValue()) {
 				Toast.makeText(InfoCityMap.this, InfoCityMap.this.getResources()
 						.getString(R.string.qrcode_error), Toast.LENGTH_SHORT).show();
-			} else if(msg.what == ContextAction.ADD_EVENT.getValue()) {
-				mCurrContextSupplier = mQrCodeContextSupplier;
-				mLocationListener.setCurrAction(LocationAction.ADD_EVENT);
-				ContextData cd = mQrCodeContextSupplier.getContextData();
-
-				Location l = new Location("QrCode");
-				l.setLatitude(cd.getLatitude());
-				l.setLongitude(cd.getLongitude());
-
-				mLocationListener.onLocationChanged(l);
-				onClick(mWindowTitleButtonCenterOn);
-				mCurrContextSupplier = mAloharContextSupplier;
-			} else if(msg.what == ContextAction.FETCH_EVENTS.getValue()) {
+			} else {
 				mCurrContextSupplier = mQrCodeContextSupplier;
 				ContextData cd = mQrCodeContextSupplier.getContextData();
-
-				Location l = new Location("QrCode");
-				l.setLatitude(cd.getLatitude());
-				l.setLongitude(cd.getLongitude());
-
-				fetchEvents(l);
+				Location newLocation = new Location("QrCode");
+				newLocation.setLatitude(cd.getLatitude());
+				newLocation.setLongitude(cd.getLongitude());
 				
-				mCurrContextSupplier = mAloharContextSupplier;
+				centerOn(newLocation, true);
+				
+				if(msg.what == ContextAction.ADD_EVENT.getValue()) {
+					mLocationListener.setCurrAction(LocationAction.ADD_EVENT);
+					mLocationListener.onLocationChanged(newLocation);
+				} else if(msg.what == ContextAction.FETCH_EVENTS.getValue()) {
+					fetchEvents(newLocation);
+				}
 			}
 		}
 	};
