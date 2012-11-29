@@ -3,6 +3,7 @@ package br.ufsm.brunodea.tcc.map;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import android.content.Context;
@@ -84,9 +85,7 @@ public class EventOverlayManager {
 		getEventOverlay(item.getType(), null).removeEventItemByPk(item.getPrimaryKey());
 	}
 	public void clearItemizedOverlays() {
-		for(EventType type : mEIOMap.keySet()) {
-			clearItemizedOverlaysOfType(type);
-		}
+		clearItemizedOverlaysExcept(null);
 	}
 	public void clearItemizedOverlaysOfType(EventType type) {
 		if(mEIOMap.containsKey(type)) {
@@ -99,10 +98,16 @@ public class EventOverlayManager {
 		}
 	}
 	public void clearItemizedOverlaysExcept(EventType except_type) {
-		for(EventType type : mEIOMap.keySet()) {
+		Iterator<EventType> it = mEIOMap.keySet().iterator();
+		ArrayList<EventType> list_to_remove = new ArrayList<EventType>();
+		while(it.hasNext()) {
+			EventType type = it.next();
 			if(type != except_type) {
-				clearItemizedOverlaysOfType(type);
+				list_to_remove.add(type);
 			}
+		}
+		for(EventType type : list_to_remove) {
+			clearItemizedOverlaysOfType(type);
 		}
 	}
 	public ArrayList<Integer> getAllPks() {
