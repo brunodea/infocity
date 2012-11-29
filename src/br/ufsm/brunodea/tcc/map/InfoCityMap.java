@@ -294,6 +294,18 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		super.onDestroy();
 	}
 	
+	public void centerOn(GeoPoint gp, boolean zoom_in) {
+		mMapController.animateTo(gp);
+		if(zoom_in) {
+			mMapController.setZoom(DEFAULT_MAP_ZOOM);
+		}
+	}
+	
+	public void centerOn(Location location, boolean zoom_in) {
+		centerOn(new GeoPoint((int)(location.getLatitude()*1E6),
+				 			  (int)(location.getLongitude()*1E6)), zoom_in);
+	}
+	
 	private void showSelectContextSupplierDialog(Handler handler) {
 		ContextSupplier[] suppliers = 
 			{mAloharContextSupplier, mQrCodeContextSupplier};
