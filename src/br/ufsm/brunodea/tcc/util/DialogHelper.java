@@ -194,10 +194,10 @@ public class DialogHelper {
     	dialog.show();
     }
     
-    public static void selectContextProviderDialog(final Context context, 
+    public static void selectContextProviderDialog(final Context context, String action_name, 
     		ContextSupplier[] suppliers, final Handler handler) {
     	final Dialog dialog = new Dialog(context);
-    	dialog.setTitle("Selecione a Fonte");
+    	dialog.setTitle(action_name);
     	LayoutInflater inflater = (LayoutInflater) context.getSystemService(
     			Context.LAYOUT_INFLATER_SERVICE);
     	View v = inflater.inflate(R.layout.selectcontextprovider_dialog, null, false);
