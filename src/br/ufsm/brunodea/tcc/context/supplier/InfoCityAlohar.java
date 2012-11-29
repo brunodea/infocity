@@ -151,8 +151,8 @@ public class InfoCityAlohar implements ContextSupplier {
 				mCurrContextData.setAddress(place.getAddress());
 				mCurrContextData.setPlaceName(place.getName());
 				mCurrContextData.setPlaceType(place.getCategory()+","+place.getSubCategory());
-				mCurrContextData.setLatitude(place.getLatE6());
-				mCurrContextData.setLongitude(place.getLngE6());
+				mCurrContextData.setLatitude(place.getLatE6()/1E6);
+				mCurrContextData.setLongitude(place.getLngE6()/1E6);
 				
 				ret = true;
 			}
