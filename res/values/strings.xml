@@ -63,4 +63,6 @@
     <string name="event">Evento</string>
     <string name="refresh_events">Recarregar Eventos</string>
     <string name="select_source">Selecione a Fonte</string>
+    <string name="other">Outro</string>
+    <string name="health">Saúde</string>
 </resources>
