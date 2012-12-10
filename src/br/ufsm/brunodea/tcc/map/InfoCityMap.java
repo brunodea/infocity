@@ -106,6 +106,8 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		mQrCodeContextSupplier.setHandler(mQrCodeHandler);
 		
 		mMyLocationOverlay = new MyLocationOverlay(this, mMapView);
+		centerOn(mMyLocationOverlay.getMyLocation(), true);
+
 		adjustMyLocationStuff();
 		mMapOverlays.add(mMyLocationOverlay);
 		
@@ -243,6 +245,8 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	}
 	
 	public void centerOn(GeoPoint gp, boolean zoom_in) {
+		if(gp == null) return;
+
 		mMapController.animateTo(gp);
 		if(zoom_in) {
 			mMapController.setZoom(DEFAULT_MAP_ZOOM);
