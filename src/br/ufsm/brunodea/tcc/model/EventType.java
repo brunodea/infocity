@@ -55,6 +55,9 @@ public class EventType {
 		case BUS:
 			marker = c.getResources().getDrawable(R.drawable.ic_bus);
 			break;
+		case HEALTH:
+			marker = c.getResources().getDrawable(R.drawable.ic_health);
+			break;
 		default:
 			marker = c.getResources().getDrawable(R.drawable.ic_unknownevent);
 			break;
