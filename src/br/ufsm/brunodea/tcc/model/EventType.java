@@ -58,6 +58,9 @@ public class EventType {
 		case HEALTH:
 			marker = c.getResources().getDrawable(R.drawable.ic_health);
 			break;
+		case REPORT:
+			marker = c.getResources().getDrawable(R.drawable.ic_report);
+			break;
 		default:
 			marker = c.getResources().getDrawable(R.drawable.ic_unknownevent);
 			break;

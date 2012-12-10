@@ -11,7 +11,7 @@ import br.ufsm.brunodea.tcc.R;
 public class EventTypeManager {
 	public enum TypeName {
 		NONE("none"), ADD("add"), UNKNOWN("unknown"),
-		BUS("bus"), HEALTH("health");
+		BUS("bus"), HEALTH("health"), REPORT("report");
 		
 		private final String value;
 		private TypeName(String val) {
@@ -69,6 +69,7 @@ public class EventTypeManager {
 		type_unknown();
 		type_bus();
 		type_health();
+		type_report();
 	}
 	
 	public EventType type_add() {
@@ -85,6 +86,9 @@ public class EventTypeManager {
 	}
 	public EventType type_health() {
 		return get_type(TypeName.HEALTH, mContext.getResources().getString(R.string.health));
+	}
+	public EventType type_report() {
+		return get_type(TypeName.REPORT, mContext.getResources().getString(R.string.report));
 	}
 	
 	private EventType get_type(TypeName type_name, String repr) {
@@ -109,6 +113,7 @@ public class EventTypeManager {
 		t.add(type_none());
 		t.add(type_bus());
 		t.add(type_health());
+		t.add(type_report());
 		t.add(type_unknown());
 		
 		return t;
