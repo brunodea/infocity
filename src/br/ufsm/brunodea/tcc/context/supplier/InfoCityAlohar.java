@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.Handler;
 import br.ufsm.brunodea.tcc.context.ContextData;
 import br.ufsm.brunodea.tcc.context.ContextSupplier;
+import br.ufsm.brunodea.tcc.model.EventType;
+import br.ufsm.brunodea.tcc.model.EventTypeManager;
 import br.ufsm.brunodea.tcc.util.InfoCityPreferences;
 
 import com.alohar.core.Alohar;
@@ -168,6 +170,11 @@ public class InfoCityAlohar implements ContextSupplier {
 		mCurrContextData.setMovementState(mMotionManager.getCurrentMovementState().name());
 		mCurrContextData.setOnCommute(mMotionManager.isOnCommute());
 		mCurrContextData.setFromSupplier(toString());
+		
+		EventType eventtype = InfoCityPreferences.eventTypeFilter(mContext);
+		if(eventtype.getName() != EventTypeManager.instance().type_all().getName()) {
+			mCurrContextData.setFilterEventType(eventtype.getName().toString());
+		}
 		
 		return mCurrContextData;
 	}

@@ -211,13 +211,7 @@ public class DialogHelper {
     	listview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				ContextSupplier supplier = (ContextSupplier)listview.getItemAtPosition(arg2);
-				String name = supplier.toString();
-				if(name.equals("Alohar")) {
-					handler.sendEmptyMessage(0);
-				} else if(name.equals("Qr-Code")) {
-					handler.sendEmptyMessage(1);
-				}
+				handler.sendEmptyMessage(arg2);
 				dialog.dismiss();				
 			}
 		});

@@ -1,14 +1,20 @@
 package br.ufsm.brunodea.tcc.util;
 
+import java.util.ArrayList;
+
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.view.Window;
 import android.widget.Toast;
 import br.ufsm.brunodea.tcc.R;
+import br.ufsm.brunodea.tcc.model.EventType;
+import br.ufsm.brunodea.tcc.model.EventTypeManager;
+import br.ufsm.brunodea.tcc.model.EventTypeManager.TypeName;
 
 public class InfoCityPreferenceActivity extends PreferenceActivity 
 										implements OnPreferenceChangeListener{
@@ -16,6 +22,8 @@ public class InfoCityPreferenceActivity extends PreferenceActivity
 	public static final int REQUEST_CODE = 0;
 	public static final int RESULT_CODE_EVENT_RADIUS = 1;
 	public static final int RESULT_CODE_MYLOCATION = 2;
+	
+	private ListPreference mFiltersEventType;
 	
 	private EditTextPreference mEventRadius;
 	private EditTextPreference mServerIP;
@@ -38,20 +46,38 @@ public class InfoCityPreferenceActivity extends PreferenceActivity
     }
     
     private void initGUI() {
+    	mFiltersEventType = (ListPreference)
+    			getPreferenceScreen().findPreference("filters_eventtype");
         mEventRadius = (EditTextPreference)
         		getPreferenceScreen().findPreference("event_radius");
         mServerIP = (EditTextPreference)
         		getPreferenceScreen().findPreference("server_ip");
         mServerPort = (EditTextPreference)
         		getPreferenceScreen().findPreference("server_port");
-
         mEnableMyLocation = (CheckBoxPreference)
         		getPreferenceScreen().findPreference("enable_mylocation");
         mEnableCompass = (CheckBoxPreference)
         		getPreferenceScreen().findPreference("enable_compass");
+
+        ArrayList<EventType> types = EventTypeManager.instance().types();
+        types.add(0, EventTypeManager.instance().type_all());
+        
+        String []entries = new String[types.size()];
+        String []values = new String[types.size()];
+        for(int i = 0; i < types.size(); i++) {
+        	EventType type = types.get(i);
+        	String key = type.toString();
+        	String value = type.getName().toString();
+        	entries[i] = key;
+        	values[i] = value;
+        }
+        mFiltersEventType.setEntries(entries);
+        mFiltersEventType.setEntryValues(values);
     }
     
     private void setListeners() {
+    	mFiltersEventType.setOnPreferenceChangeListener(this);
+    	
         mEventRadius.setOnPreferenceChangeListener(this);
         mServerIP.setOnPreferenceChangeListener(this);
         mServerPort.setOnPreferenceChangeListener(this);
@@ -60,7 +86,9 @@ public class InfoCityPreferenceActivity extends PreferenceActivity
         mEnableMyLocation.setOnPreferenceChangeListener(this);
     }
     
-    private void setPreValues() {        
+    private void setPreValues() {
+    	mFiltersEventType.setSummary(InfoCityPreferences.eventTypeFilter(this).toString());
+    	
         mEventRadius.setSummary(InfoCityPreferences.getEventMaxRadius(this) + "m");
         mServerIP.setSummary(InfoCityPreferences.getServerIP(this));
         mServerPort.setSummary(InfoCityPreferences.getServerPort(this)+"");
@@ -109,6 +137,10 @@ public class InfoCityPreferenceActivity extends PreferenceActivity
 			} else if(preference == mEnableCompass || preference == mEnableMyLocation) {
 				ok = true;
 				result = RESULT_CODE_MYLOCATION;
+			} else if(preference == mFiltersEventType) {
+				ok = true;
+				preference.setSummary(EventTypeManager.instance().eventTypeFromTypeName(
+						TypeName.fromValue(newValue.toString())).toString());
 			}
 		}
 		

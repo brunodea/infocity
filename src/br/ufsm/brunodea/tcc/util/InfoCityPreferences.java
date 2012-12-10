@@ -3,6 +3,9 @@ package br.ufsm.brunodea.tcc.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import br.ufsm.brunodea.tcc.model.EventType;
+import br.ufsm.brunodea.tcc.model.EventTypeManager;
+import br.ufsm.brunodea.tcc.model.EventTypeManager.TypeName;
 
 public class InfoCityPreferences {
 	private static final String ALOHAR_UID = "alohar_uid";
@@ -53,5 +56,11 @@ public class InfoCityPreferences {
 	}
 	public static boolean shouldEnableCompass(Context c) {
 		return getBooleanDefaultPreference(c, "enable_compass", false);
+	}
+	
+	public static EventType eventTypeFilter(Context c) {
+		String filter_eventtype = getStringDefaultPreference(c, "filters_eventtype", null);
+		return filter_eventtype == null ? EventTypeManager.instance().type_all() : 
+			EventTypeManager.instance().eventTypeFromTypeName(TypeName.fromValue(filter_eventtype));
 	}
 }

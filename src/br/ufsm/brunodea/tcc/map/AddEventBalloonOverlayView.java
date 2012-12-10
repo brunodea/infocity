@@ -76,6 +76,7 @@ public class AddEventBalloonOverlayView <Item extends OverlayItem>
 		setGUIListeners();
 		
 		ArrayList<EventType> types_list = EventTypeManager.instance(context).types();
+		types_list.add(0, EventTypeManager.instance(context).type_none());
 		EventType []types = new EventType[types_list.size()];
 		types = types_list.toArray(types);
 		ArrayAdapter<EventType> adapter = new ArrayAdapter<EventType>(context, 

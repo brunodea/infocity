@@ -16,6 +16,7 @@ public class ContextData {
 	private String from_supplier; //de onde este contexto foi retirado;
 	private double longitude;
 	private double latitude;
+	private String filter_eventtype;
 	
 	public ContextData() {
 		place_name = "";
@@ -26,6 +27,7 @@ public class ContextData {
 		longitude = -1;
 		latitude = -1;
 		from_supplier = "";
+		filter_eventtype = "";
 	}
 	
 	public void setPlaceName(String place_name) {
@@ -58,6 +60,10 @@ public class ContextData {
 	}
 	public double getLatitude() {
 		return this.latitude;
+	}
+	
+	public void setFilterEventType(String eventtype) {
+		filter_eventtype = eventtype;
 	}
 	
 	public Location getLocation() {

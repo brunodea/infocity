@@ -10,7 +10,7 @@ import br.ufsm.brunodea.tcc.R;
 
 public class EventTypeManager {
 	public enum TypeName {
-		NONE("none"), ADD("add"), UNKNOWN("unknown"),
+		NONE("none"), ALL("all"), ADD("add"), UNKNOWN("unknown"),
 		BUS("bus"), HEALTH("health"), REPORT("report");
 		
 		private final String value;
@@ -66,6 +66,7 @@ public class EventTypeManager {
 	private void init() {
 		type_add();
 		type_none();
+		type_all();
 		type_unknown();
 		type_bus();
 		type_health();
@@ -77,6 +78,9 @@ public class EventTypeManager {
 	}
 	public EventType type_none() {
 		return get_type(TypeName.NONE, mContext.getResources().getString(R.string.type));
+	}
+	public EventType type_all() {
+		return get_type(TypeName.ALL, mContext.getResources().getString(R.string.all));
 	}
 	public EventType type_unknown() {
 		return get_type(TypeName.UNKNOWN, mContext.getResources().getString(R.string.other));
@@ -109,8 +113,7 @@ public class EventTypeManager {
 	
 	public ArrayList<EventType> types() {
 		ArrayList<EventType> t = new ArrayList<EventType>();
-		
-		t.add(type_none());
+
 		t.add(type_bus());
 		t.add(type_health());
 		t.add(type_report());

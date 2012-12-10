@@ -66,4 +66,9 @@
     <string name="other">Outro</string>
     <string name="health">Saúde</string>
     <string name="report">Denúncia</string>
+    <string name="filters">Filtros</string>
+    <string name="filters_summary">Filtragem na busca de eventos pelo seu tipo.</string>
+    <string name="pref_filters_types_list">Selecione o tipo de evento que você deseja usar como filtro.</string>
+    <string name="pref_filters_types_title">Filtrar eventos</string>
+    <string name="all">Todos</string>
 </resources>

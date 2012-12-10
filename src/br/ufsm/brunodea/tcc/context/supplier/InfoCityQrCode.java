@@ -1,10 +1,14 @@
 package br.ufsm.brunodea.tcc.context.supplier;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Handler;
 import br.ufsm.brunodea.tcc.R;
 import br.ufsm.brunodea.tcc.context.ContextData;
 import br.ufsm.brunodea.tcc.context.ContextSupplier;
+import br.ufsm.brunodea.tcc.model.EventType;
+import br.ufsm.brunodea.tcc.model.EventTypeManager;
+import br.ufsm.brunodea.tcc.util.InfoCityPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -17,6 +21,7 @@ public class InfoCityQrCode implements ContextSupplier {
 	private Handler mHandler;
 	
 	private ContextAction mContextAction;
+	private Context mContext;
 	
 	public InfoCityQrCode(Activity parent) {
 		mZxingIntentIntegrator = new IntentIntegrator(parent);
@@ -25,6 +30,7 @@ public class InfoCityQrCode implements ContextSupplier {
 
 		mHandler = null;
 		mContextData = new ContextData();
+		mContext = parent;
 	}
 	
 	public void finishedScan(IntentResult intentresult) {
@@ -54,6 +60,10 @@ public class InfoCityQrCode implements ContextSupplier {
 
 	@Override
 	public ContextData getContextData() {
+		EventType eventtype = InfoCityPreferences.eventTypeFilter(mContext);
+		if(eventtype.getName() != EventTypeManager.instance().type_all().getName()) {
+			mContextData.setFilterEventType(eventtype.getName().toString());
+		}
 		return mContextData;
 	}
 	@Override

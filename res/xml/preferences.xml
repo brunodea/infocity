@@ -1,21 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        android:title="@string/pref_server"
-        android:summary="@string/pref_server_summary">
-        <EditTextPreference 
-            android:key="server_ip"
-            android:summary="@string/pref_server_ip_summary"
-            android:title="@string/pref_server_ip_title"
-            android:defaultValue="192.168.1.5"/>
-        <EditTextPreference 
-            android:key="server_port"
-            android:summary="@string/pref_server_port_summary"
-            android:title="@string/pref_server_port_title"
-            android:defaultValue="8000"
-            android:numeric="integer"/>
-    </PreferenceCategory>
-    <PreferenceCategory
         android:title="@string/pref_events"
         android:summary="@string/pref_events_summary">
         <EditTextPreference 
@@ -24,6 +9,10 @@
             android:title="@string/pref_event_radius_title"
             android:defaultValue="50000"
             android:numeric="decimal"/>
+        <ListPreference 
+            android:key="filters_eventtype"
+            android:title="@string/pref_filters_types_title"
+            android:summary="@string/pref_filters_types_list"/>
     </PreferenceCategory>
     <PreferenceCategory 
         android:title="@string/map"
@@ -40,5 +29,20 @@
             android:summaryOn="@string/active_compass"
             android:summaryOff="@string/inactive_compass"
             android:checked="false"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_server"
+        android:summary="@string/pref_server_summary">
+        <EditTextPreference 
+            android:key="server_ip"
+            android:summary="@string/pref_server_ip_summary"
+            android:title="@string/pref_server_ip_title"
+            android:defaultValue="192.168.1.5"/>
+        <EditTextPreference 
+            android:key="server_port"
+            android:summary="@string/pref_server_port_summary"
+            android:title="@string/pref_server_port_title"
+            android:defaultValue="8000"
+            android:numeric="integer"/>
     </PreferenceCategory>
 </PreferenceScreen>

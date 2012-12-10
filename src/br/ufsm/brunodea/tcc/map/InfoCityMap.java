@@ -27,6 +27,7 @@ import br.ufsm.brunodea.tcc.context.ContextData;
 import br.ufsm.brunodea.tcc.context.ContextSupplier;
 import br.ufsm.brunodea.tcc.context.ContextSupplier.ContextAction;
 import br.ufsm.brunodea.tcc.context.supplier.InfoCityAlohar;
+import br.ufsm.brunodea.tcc.context.supplier.InfoCityFilterContext;
 import br.ufsm.brunodea.tcc.context.supplier.InfoCityQrCode;
 import br.ufsm.brunodea.tcc.internet.InfoCityServer;
 import br.ufsm.brunodea.tcc.internet.Internet;
@@ -65,6 +66,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 
 	private InfoCityAlohar mAloharContextSupplier;
 	private InfoCityQrCode mQrCodeContextSupplier;
+	private InfoCityFilterContext mFilterContextSupplier;
 	
 	private ContextSupplier mCurrContextSupplier;
 	
@@ -104,6 +106,8 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		mCurrContextSupplier = mAloharContextSupplier;
 		mQrCodeContextSupplier = new InfoCityQrCode(this);
 		mQrCodeContextSupplier.setHandler(mQrCodeHandler);
+		
+		mFilterContextSupplier = new InfoCityFilterContext(InfoCityMap.this);
 		
 		mMyLocationOverlay = new MyLocationOverlay(this, mMapView);
 		centerOn(mMyLocationOverlay.getMyLocation(), true);
@@ -231,10 +235,16 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 						doContextAction(ContextAction.FETCH_EVENTS);
 					} else if(msg.what == 1) {
 						mQrCodeContextSupplier.beginScan(ContextAction.FETCH_EVENTS);
+					} else if(msg.what == 2) {
+						mFilterContextSupplier.setLocation(mMyLocationOverlay.getLastFix());
+						mCurrContextSupplier = mFilterContextSupplier;
+						doContextAction(ContextAction.FETCH_EVENTS);					
 					}
 				}
 			};
-			showSelectContextSupplierDialog(handler, getResources().getString(R.string.refresh_events));
+			mFilterContextSupplier.setLocation(mMyLocationOverlay.getLastFix());
+			ContextSupplier []suppliers = {mAloharContextSupplier, mQrCodeContextSupplier, mFilterContextSupplier};
+			showSelectContextSupplierDialog(handler, getResources().getString(R.string.refresh_events), suppliers);
 		}
 	}
 	
@@ -262,6 +272,10 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		ContextSupplier[] suppliers = 
 			{mAloharContextSupplier, mQrCodeContextSupplier};
 		
+		DialogHelper.selectContextProviderDialog(this, action_name, suppliers, handler);
+	}
+	
+	private void showSelectContextSupplierDialog(Handler handler, String action_name, ContextSupplier[] suppliers) {
 		DialogHelper.selectContextProviderDialog(this, action_name, suppliers, handler);
 	}
 	
