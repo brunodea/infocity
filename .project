@@ -4,6 +4,7 @@
 	<comment></comment>
 	<projects>
 		<project>android-mapviewballoons</project>
+		<project>FacebookSDK</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
