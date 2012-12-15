@@ -219,4 +219,19 @@ public class DialogHelper {
     	dialog.setContentView(v);
     	dialog.show();
     }
+    
+    public static void facebookNoPermission(Context context, final Handler handler) {    	
+    	new AlertDialog.Builder(context)
+    		.setTitle(context.getResources().getString(R.string.cancelled))
+    		.setMessage(context.getString(R.string.facebook_permission_not_granted))
+    		.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					if(handler != null) {
+						handler.sendEmptyMessage(0);
+					}
+				}
+			})
+    		.show();
+    }
 }
