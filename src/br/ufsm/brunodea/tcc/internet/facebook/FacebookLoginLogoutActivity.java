@@ -37,6 +37,8 @@ public class FacebookLoginLogoutActivity extends FragmentActivity {
 							InfoCityFacebook.setUser(user);
 						}
 					});
+            	} else {
+            		InfoCityFacebook.setUser(null);
             	}
             }
         });
