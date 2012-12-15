@@ -29,6 +29,8 @@ public class EventItem extends OverlayItem implements Model {
 	private Date mPubDate;
 	private int mPrimaryKey;
 	private ContextData mContextData;
+	private int mLikes;
+	private int mDislikes;
 	
 	public EventItem(GeoPoint pos, String title, String snippet, EventType type) {
 		super(pos, title, snippet);
@@ -37,6 +39,8 @@ public class EventItem extends OverlayItem implements Model {
 		mPubDate = new Date();
 		mPrimaryKey = -1;
 		mContextData = null;
+		mLikes = 0;
+		mDislikes = 0;
 	}
 	
 	public EventItem(int primarykey, GeoPoint pos, String title, String snippet, EventType type) {
@@ -46,6 +50,8 @@ public class EventItem extends OverlayItem implements Model {
 		mPubDate = new Date();
 		mPrimaryKey = primarykey;
 		mContextData = null;
+		mLikes = 0;
+		mDislikes = 0;
 	}
 	
 	public EventItem(GeoPoint pos, EventItem event_item) {
@@ -91,6 +97,18 @@ public class EventItem extends OverlayItem implements Model {
 	}
 	public int getPrimaryKey() {
 		return mPrimaryKey;
+	}
+	public void setLikes(int likes) {
+		mLikes = likes;
+	}
+	public int getLikes() {
+		return mLikes;
+	}
+	public void setDislikes(int dislikes) {
+		mDislikes = dislikes;
+	}
+	public int getDislikes() {
+		return mDislikes;
 	}
 	
 	public void setContextData(ContextData context_data) {

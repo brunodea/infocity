@@ -76,6 +76,13 @@ public class Util {
 			String coord = model.getString("geo_coord");
 			String date  = model.getString("pub_date");
 			String type  = model.getString("event_type");
+			int likes = 0;
+			int dislikes = 0;
+			try {
+				likes = model.getInt("likes");
+				dislikes = model.getInt("dislikes");
+			} catch(Exception e) {
+			}
 			
 			ArrayList<String> keywords = new ArrayList<String>();
 			JSONArray jsonArray = model.getJSONArray("keywords"); 
@@ -98,6 +105,9 @@ public class Util {
 			
 			eventitem.setPubDate(cal.getTime());
 			eventitem.setKeywords(keywords);
+			
+			eventitem.setLikes(likes);
+			eventitem.setDislikes(dislikes);
 			
 			eventitem.setPrimaryKey(pk);
 		}

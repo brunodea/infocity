@@ -77,4 +77,6 @@
     <string name="cancelled">Cancelado</string>
     <string name="facebook_permission_not_granted">Permissão não concedida.</string>
     <string name="app_id">509896059044144</string>
+    <string name="like">Gostar</string>
+    <string name="dislike">Desgostar</string>
 </resources>
