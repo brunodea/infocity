@@ -32,7 +32,7 @@
         </activity>
         <activity android:name=".util.InfoCityPreferenceActivity"
                   android:configChanges="orientation"/>
-        <activity android:name=".internet.facebook.FacebookLoginActivity"
+        <activity android:name=".internet.facebook.FacebookLoginLogoutActivity"
                   android:configChanges="orientation"/>
         
         

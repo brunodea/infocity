@@ -31,6 +31,7 @@ import br.ufsm.brunodea.tcc.context.supplier.InfoCityFilterContext;
 import br.ufsm.brunodea.tcc.context.supplier.InfoCityQrCode;
 import br.ufsm.brunodea.tcc.internet.InfoCityServer;
 import br.ufsm.brunodea.tcc.internet.Internet;
+import br.ufsm.brunodea.tcc.internet.facebook.FacebookLoginLogoutActivity;
 import br.ufsm.brunodea.tcc.internet.facebook.InfoCityFacebook;
 import br.ufsm.brunodea.tcc.model.EventItem;
 import br.ufsm.brunodea.tcc.model.EventTypeManager;
@@ -39,13 +40,6 @@ import br.ufsm.brunodea.tcc.util.InfoCityPreferenceActivity;
 import br.ufsm.brunodea.tcc.util.InfoCityPreferences;
 import br.ufsm.brunodea.tcc.util.Util;
 
-import com.facebook.Request;
-import com.facebook.Request.GraphUserCallback;
-import com.facebook.Response;
-import com.facebook.Session;
-import com.facebook.Session.StatusCallback;
-import com.facebook.SessionState;
-import com.facebook.model.GraphUser;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
@@ -69,6 +63,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	private List<Overlay> mMapOverlays;
 	
 	private final int DEFAULT_MAP_ZOOM = 20;
+	private final int FACEBOOK_LOGIN_LOGOUT_REQUEST = 3000;
 	
 	private MyLocationOverlay mMyLocationOverlay;
 
@@ -189,8 +184,8 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 			IntentResult intent_result = IntentIntegrator.parseActivityResult(
 					requestCode, resultCode, intent);
 			mQrCodeContextSupplier.finishedScan(intent_result);
-		} else {
-			Session.getActiveSession().onActivityResult(this, requestCode, resultCode, intent);
+		} else if(requestCode == FACEBOOK_LOGIN_LOGOUT_REQUEST){
+			adjustWindowTitleFacebookIcon();
 		}
 	}
 	
@@ -267,27 +262,8 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 			ContextSupplier []suppliers = {mAloharContextSupplier, mQrCodeContextSupplier, mFilterContextSupplier};
 			showSelectContextSupplierDialog(handler, getResources().getString(R.string.refresh_events), suppliers);
 		} else if(v == mWindowTitleButtonLogin) {
-			if(InfoCityFacebook.getUser() == null) {
-				Session.openActiveSession(this, true, new StatusCallback() {
-					@Override
-					public void call(Session session, SessionState state, Exception exception) {
-						if(session.isOpened()) {
-							Request.executeMeRequestAsync(session, new GraphUserCallback() {
-								@Override
-								public void onCompleted(GraphUser user, Response response) {
-									InfoCityFacebook.setUser(user);
-									if(user != null) {
-										Toast.makeText(InfoCityMap.this, "Olá " + user.getName(), Toast.LENGTH_LONG).show();
-									} else {
-										Toast.makeText(InfoCityMap.this, "user null", Toast.LENGTH_LONG).show();
-									}
-									adjustWindowTitleFacebookIcon();
-								}
-							});
-						}
-					}
-				});
-			}
+			Intent intent = new Intent(this, FacebookLoginLogoutActivity.class);
+			startActivityForResult(intent, FACEBOOK_LOGIN_LOGOUT_REQUEST);
 		}
 	}
 	
