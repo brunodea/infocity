@@ -1,62 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp"
-    android:orientation="horizontal"
-    android:background="@drawable/window_title_bg"
-    android:gravity="right">
+    android:background="@drawable/window_title_bg">
     
-    <ImageButton 
-        android:id="@+id/button_refresh_events"
-        android:src="@drawable/ic_menu_refresh"
+    <ImageButton
+        android:id="@+id/button_login"
+        android:src="@drawable/ic_infocity_launcher"
         android:background="@null"
+        android:contentDescription="@string/login_descr"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
         android:layout_marginRight="10dp"
-        android:contentDescription="@string/refresh"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_gravity="center_vertical"/>
-    
-    <TextView
-        android:id="@+id/textview_gettingpos_window_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/getting_pos"
-        android:textSize="@dimen/default_text_size"
-        android:textColor="@color/text_color"
-        android:layout_gravity="center_vertical"
-        android:layout_marginRight="10dp"
-        android:visibility="gone"/>   
-        
-    <ProgressBar 
-        android:id="@+id/progressbar_window_title"
-        android:indeterminate="true"
-        android:layout_width="@dimen/window_title_progressbar_size"
-        android:layout_height="@dimen/window_title_progressbar_size"
-        android:visibility="gone"
-        android:layout_marginRight="5dp"
         android:layout_marginLeft="5dp"
-        android:layout_gravity="center_vertical"
-        style="?android:attr/progressBarStyle"/>
-
-    <ImageButton 
-        android:id="@+id/button_add_event"
-        android:src="@drawable/addevent_selector"
-        android:background="@null"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:scaleType="fitXY"
-        android:contentDescription="@string/add"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_gravity="center_vertical"/>
-
-    <ImageButton 
-        android:id="@+id/button_centeron_marker"
-        android:src="@drawable/centeron_selector"
-        android:background="@null"
-        android:scaleType="fitXY"
-        android:contentDescription="@string/add"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_gravity="center_vertical"
-        android:visibility="gone"/>
-</LinearLayout>
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"/>
+    
+	<LinearLayout
+	    android:layout_width="wrap_content"
+	    android:layout_height="fill_parent"
+	    android:padding="5dp"
+	    android:orientation="horizontal"
+	    android:layout_alignParentRight="true">
+	    
+	    <ImageButton 
+	        android:id="@+id/button_refresh_events"
+	        android:src="@drawable/ic_menu_refresh"
+	        android:background="@null"
+	        android:layout_marginRight="10dp"
+	        android:contentDescription="@string/refresh"
+	        android:layout_width="32dp"
+	        android:layout_height="32dp"
+	        android:layout_gravity="center_vertical"/>
+	    
+	    <TextView
+	        android:id="@+id/textview_gettingpos_window_title"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/getting_pos"
+	        android:textSize="@dimen/default_text_size"
+	        android:textColor="@color/text_color"
+	        android:layout_gravity="center_vertical"
+	        android:layout_marginRight="10dp"
+	        android:visibility="gone"/>   
+	        
+	    <ProgressBar 
+	        android:id="@+id/progressbar_window_title"
+	        android:indeterminate="true"
+	        android:layout_width="@dimen/window_title_progressbar_size"
+	        android:layout_height="@dimen/window_title_progressbar_size"
+	        android:visibility="gone"
+	        android:layout_marginRight="5dp"
+	        android:layout_marginLeft="5dp"
+	        android:layout_gravity="center_vertical"
+	        style="?android:attr/progressBarStyle"/>
+	
+	    <ImageButton 
+	        android:id="@+id/button_add_event"
+	        android:src="@drawable/addevent_selector"
+	        android:background="@null"
+	        android:scaleType="fitXY"
+	        android:contentDescription="@string/add"
+	        android:layout_width="32dp"
+	        android:layout_height="32dp"
+	        android:layout_gravity="center_vertical"/>
+	
+	    <ImageButton 
+	        android:id="@+id/button_centeron_marker"
+	        android:src="@drawable/centeron_selector"
+	        android:background="@null"
+	        android:scaleType="fitXY"
+	        android:contentDescription="@string/add"
+	        android:layout_width="32dp"
+	        android:layout_height="32dp"
+	        android:layout_gravity="center_vertical"
+	        android:visibility="gone"/>
+	</LinearLayout>
+</RelativeLayout>

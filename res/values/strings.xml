@@ -72,4 +72,6 @@
     <string name="pref_filters_types_title">Filtrar eventos</string>
     <string name="all">Todos</string>
     <string name="shopping">Compras</string>
+    <string name="login">Log In</string>
+    <string name="login_descr">Fazer login.</string>
 </resources>

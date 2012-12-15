@@ -70,6 +70,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	
 	private ContextSupplier mCurrContextSupplier;
 	
+	private ImageButton mWindowTitleButtonLogin;
 	private ImageButton mWindowTitleButtonRefresh;
 	private ImageButton mWindowTitleButtonCenterOn;
 	private ImageButton mWindowTitleButtonAddEvent;
@@ -140,6 +141,9 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		
 		mWindowTitleButtonRefresh = (ImageButton)findViewById(R.id.button_refresh_events);
 		mWindowTitleButtonRefresh.setOnClickListener(this);
+		
+		mWindowTitleButtonLogin = (ImageButton)findViewById(R.id.button_login);
+		mWindowTitleButtonLogin.setOnClickListener(this);
 	}
 	
 	@Override
@@ -251,6 +255,8 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 			mFilterContextSupplier.setLocation(mMyLocationOverlay.getLastFix());
 			ContextSupplier []suppliers = {mAloharContextSupplier, mQrCodeContextSupplier, mFilterContextSupplier};
 			showSelectContextSupplierDialog(handler, getResources().getString(R.string.refresh_events), suppliers);
+		} else if(v == mWindowTitleButtonLogin) {
+			
 		}
 	}
 	
