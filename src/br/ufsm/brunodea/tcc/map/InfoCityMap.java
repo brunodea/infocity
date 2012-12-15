@@ -31,7 +31,7 @@ import br.ufsm.brunodea.tcc.context.supplier.InfoCityFilterContext;
 import br.ufsm.brunodea.tcc.context.supplier.InfoCityQrCode;
 import br.ufsm.brunodea.tcc.internet.InfoCityServer;
 import br.ufsm.brunodea.tcc.internet.Internet;
-import br.ufsm.brunodea.tcc.internet.facebook.Facebook;
+import br.ufsm.brunodea.tcc.internet.facebook.InfoCityFacebook;
 import br.ufsm.brunodea.tcc.model.EventItem;
 import br.ufsm.brunodea.tcc.model.EventTypeManager;
 import br.ufsm.brunodea.tcc.util.DialogHelper;
@@ -267,7 +267,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 			ContextSupplier []suppliers = {mAloharContextSupplier, mQrCodeContextSupplier, mFilterContextSupplier};
 			showSelectContextSupplierDialog(handler, getResources().getString(R.string.refresh_events), suppliers);
 		} else if(v == mWindowTitleButtonLogin) {
-			if(Facebook.getUser() == null) {
+			if(InfoCityFacebook.getUser() == null) {
 				Session.openActiveSession(this, true, new StatusCallback() {
 					@Override
 					public void call(Session session, SessionState state, Exception exception) {
@@ -275,7 +275,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 							Request.executeMeRequestAsync(session, new GraphUserCallback() {
 								@Override
 								public void onCompleted(GraphUser user, Response response) {
-									Facebook.setUser(user);
+									InfoCityFacebook.setUser(user);
 									if(user != null) {
 										Toast.makeText(InfoCityMap.this, "Olá " + user.getName(), Toast.LENGTH_LONG).show();
 									} else {
@@ -292,7 +292,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	}
 	
 	private void adjustWindowTitleFacebookIcon() {
-		int drawable_id = Facebook.getUser() == null ? R.drawable.ic_facebook_off :
+		int drawable_id = InfoCityFacebook.getUser() == null ? R.drawable.ic_facebook_off :
 			R.drawable.ic_facebook_on;
 		mWindowTitleButtonLogin.setImageResource(drawable_id);
 	}
