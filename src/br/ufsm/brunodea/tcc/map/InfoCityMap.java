@@ -111,12 +111,18 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		
 		mMyLocationOverlay = new MyLocationOverlay(this, mMapView);
 		centerOn(mMyLocationOverlay.getMyLocation(), true);
+		mMyLocationOverlay.runOnFirstFix(new Runnable() {
+			@Override
+			public void run() {
+				centerOn(mMyLocationOverlay.getMyLocation(), true);
+			}
+		});
 
 		adjustMyLocationStuff();
 		mMapOverlays.add(mMyLocationOverlay);
-		
+
 		mMapView.invalidate();
-		
+
 		//para desenhar o marker de adição sempre na frente dos outros.
 		App.instance().getEventOverlayManager().getEventOverlay(
 				EventTypeManager.instance(this).type_add(), this);

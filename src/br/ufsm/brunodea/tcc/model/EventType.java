@@ -61,6 +61,9 @@ public class EventType {
 		case REPORT:
 			marker = c.getResources().getDrawable(R.drawable.ic_report);
 			break;
+		case SHOPPING:
+			marker = c.getResources().getDrawable(R.drawable.ic_shopping);
+			break;
 		default:
 			marker = c.getResources().getDrawable(R.drawable.ic_unknownevent);
 			break;
