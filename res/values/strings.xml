@@ -74,4 +74,7 @@
     <string name="shopping">Compras</string>
     <string name="login">Log In</string>
     <string name="login_descr">Fazer login.</string>
+    <string name="cancelled">Cancelado</string>
+    <string name="facebook_permission_not_granted">Permissão não concedida.</string>
+    <string name="app_id">509896059044144</string>
 </resources>

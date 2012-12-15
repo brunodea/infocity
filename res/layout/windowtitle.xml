@@ -6,7 +6,7 @@
     
     <ImageButton
         android:id="@+id/button_login"
-        android:src="@drawable/ic_infocity_launcher"
+        android:src="@drawable/ic_facebook_off"
         android:background="@null"
         android:contentDescription="@string/login_descr"
         android:layout_marginTop="2dp"
