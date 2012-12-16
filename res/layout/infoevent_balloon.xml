@@ -69,11 +69,21 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_gravity="center"/>
-            
-            <TextView 
+            <ProgressBar 
+	            android:id="@+id/progressbar_like_dislike"
+	            android:indeterminate="true"
+	            android:layout_width="@dimen/window_title_progressbar_size"
+	            android:layout_height="@dimen/window_title_progressbar_size"
+	            android:visibility="gone"
+	            android:layout_marginRight="5dp"
+	            android:layout_marginLeft="5dp"
+	            android:layout_gravity="center_vertical"
+	            style="?android:attr/progressBarStyle"/>
+            <TextView
                 android:id="@+id/textview_dislikes"
                 android:text="0"
                 android:textSize="@dimen/default_text_size"
@@ -88,8 +98,9 @@
                 android:contentDescription="@string/dislike"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_gravity="center"/>
         </LinearLayout>
     </LinearLayout>

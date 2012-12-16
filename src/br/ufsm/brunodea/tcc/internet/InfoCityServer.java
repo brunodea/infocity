@@ -11,6 +11,7 @@ import android.content.res.Resources.NotFoundException;
 import android.util.Log;
 import br.ufsm.brunodea.tcc.R;
 import br.ufsm.brunodea.tcc.context.ContextData;
+import br.ufsm.brunodea.tcc.internet.facebook.InfoCityFacebook;
 import br.ufsm.brunodea.tcc.model.EventItem;
 import br.ufsm.brunodea.tcc.util.InfoCityPreferences;
 
@@ -101,5 +102,16 @@ public class InfoCityServer {
 	public static JSONObject getEventTypes(Context c) {
 		return checkResponse(c, Internet.getRequest(InfoCityPreferences.getServerBaseURI(c)+
 				"eventTypes/"));
+	}
+	
+	public static JSONObject likeEvent(Context c, EventItem event) {
+		return checkResponse(c, Internet.getRequest(InfoCityPreferences.getServerBaseURI(c)
+				+"likeEvent/"+event.getPrimaryKey()+"/"+InfoCityFacebook.getUser().getId()+"/"
+				+event.getLikeAction()));
+	}
+	
+	public static JSONObject getLikeAction(Context c, EventItem event) {
+		return checkResponse(c, Internet.getRequest(InfoCityPreferences.getServerBaseURI(c)
+				+"getLikeAction/"+event.getPrimaryKey()+"/"+InfoCityFacebook.getUser().getId()));
 	}
 }

@@ -32,6 +32,8 @@ public class EventItem extends OverlayItem implements Model {
 	private int mLikes;
 	private int mDislikes;
 	
+	private int mLikeAction; //-1: nenhum, 0: like, 1:dislike
+	
 	public EventItem(GeoPoint pos, String title, String snippet, EventType type) {
 		super(pos, title, snippet);
 		mType = type;
@@ -41,6 +43,7 @@ public class EventItem extends OverlayItem implements Model {
 		mContextData = null;
 		mLikes = 0;
 		mDislikes = 0;
+		mLikeAction = -1;
 	}
 	
 	public EventItem(int primarykey, GeoPoint pos, String title, String snippet, EventType type) {
@@ -52,6 +55,7 @@ public class EventItem extends OverlayItem implements Model {
 		mContextData = null;
 		mLikes = 0;
 		mDislikes = 0;
+		mLikeAction = -1;
 	}
 	
 	public EventItem(GeoPoint pos, EventItem event_item) {
@@ -61,6 +65,9 @@ public class EventItem extends OverlayItem implements Model {
 		mPubDate = event_item.getPubDate();
 		mPrimaryKey = event_item.getPrimaryKey();
 		mContextData = event_item.getContextData();
+		mLikes = 0;
+		mDislikes = 0;
+		mLikeAction = -1;
 	}
 	
 	public void setType(EventType type) {
@@ -110,6 +117,12 @@ public class EventItem extends OverlayItem implements Model {
 	public int getDislikes() {
 		return mDislikes;
 	}
+	public void setLikeAction(int like_action) {
+		mLikeAction = like_action; 
+	}
+	public int getLikeAction() {
+		return mLikeAction;
+	}
 	
 	public void setContextData(ContextData context_data) {
 		mContextData = context_data;
@@ -117,6 +130,48 @@ public class EventItem extends OverlayItem implements Model {
 	public ContextData getContextData() {
 		return mContextData;
 	}
+	
+	private void doLikeDislike(boolean like) {
+		int do_like = 0;
+		int do_dislike = 0;
+		switch(mLikeAction) {
+		case -1:
+			do_like = like ? 1 : 0;
+			do_dislike = like ? 0 : 1;
+			break;
+		case 0:
+			do_like = -1;
+			do_dislike = like ? 0 : 1;
+			break;
+		case 1:
+			do_like = like ? 1 : 0;
+			do_dislike = -1;
+			break;
+		}
+		
+		if(like) {
+			if(do_like == 1)
+				mLikeAction = 0;
+			else
+				mLikeAction = -1;
+		} else {
+			if(do_dislike == 1)
+				mLikeAction = 1;
+			else
+				mLikeAction = -1;
+		}
+
+		mLikes += do_like;
+		mDislikes += do_dislike;
+	}
+	
+	public void doLike() {
+		doLikeDislike(true);
+	}
+	public void doDislike() {
+		doLikeDislike(false);
+	}
+	
 	/**
 	 * Classe criada apenas para ser passada para um Gson para ser transformada
 	 * em um JSON. Foi criada pois deve haver uma correlação entre os nomes das
