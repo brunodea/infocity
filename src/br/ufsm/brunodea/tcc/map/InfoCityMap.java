@@ -268,7 +268,7 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 	}
 	
 	private void adjustWindowTitleFacebookIcon() {
-		int drawable_id = InfoCityFacebook.getUser() == null ? R.drawable.ic_facebook_off :
+		int drawable_id = !InfoCityFacebook.isLogged() ? R.drawable.ic_facebook_off :
 			R.drawable.ic_facebook_on;
 		mWindowTitleButtonLogin.setImageResource(drawable_id);
 	}

@@ -114,4 +114,9 @@ public class InfoCityServer {
 		return checkResponse(c, Internet.getRequest(InfoCityPreferences.getServerBaseURI(c)
 				+"getLikeAction/"+event.getPrimaryKey()+"/"+InfoCityFacebook.getUser().getId()));
 	}
+	
+	public static JSONObject countLikesDislikes(Context c, EventItem event)  {
+		return checkResponse(c, Internet.getRequest(InfoCityPreferences.getServerBaseURI(c)
+				+"countLikesDislikes/"+event.getPrimaryKey()));
+	}
 }

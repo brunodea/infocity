@@ -96,6 +96,7 @@ public class InfoEventBalloonOverlayView <Item extends OverlayItem>
 				adjustLikeDislike();				
 			}
 		};
+		
 		adjustLikeAction(h);
 	}
 	
@@ -120,7 +121,7 @@ public class InfoEventBalloonOverlayView <Item extends OverlayItem>
 	private void adjustLikeDislike() {
 		mTextViewLike.setText(mEventItem.getLikes()+"");
 		mTextViewDislike.setText(mEventItem.getDislikes()+"");
-		if(InfoCityFacebook.getUser() == null) {
+		if(!InfoCityFacebook.isLogged()) {
 			mImageButtonLike.setEnabled(false);
 			mImageButtonDislike.setEnabled(false);
 			
@@ -163,17 +164,28 @@ public class InfoEventBalloonOverlayView <Item extends OverlayItem>
 		Thread t_like_action = new Thread() {
 			@Override
 			public void run() {
-				JSONObject res = InfoCityServer.getLikeAction(mContext, mEventItem);
-				if(res.has("like_action")) {
-					try {
-						mEventItem.setLikeAction(res.getInt("like_action"));
-					} catch (JSONException e) {
-						e.printStackTrace();
+				if(InfoCityFacebook.isLogged()) {
+					JSONObject res = InfoCityServer.getLikeAction(mContext, mEventItem);
+					if(res.has("like_action")) {
+						try {
+							mEventItem.setLikeAction(res.getInt("like_action"));
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
 					}
-					handler.sendEmptyMessage(0);
-					if(done_handler != null) {
-						done_handler.sendEmptyMessage(0);
-					}
+				}
+				
+				JSONObject res = InfoCityServer.countLikesDislikes(mContext, mEventItem);
+				try {
+					mEventItem.setLikes(res.getInt("likes"));
+					mEventItem.setDislikes(res.getInt("dislikes"));
+				} catch(JSONException e) {
+					e.printStackTrace();
+				}
+
+				handler.sendEmptyMessage(0);
+				if(done_handler != null) {
+					done_handler.sendEmptyMessage(0);
 				}
 			}
 		};

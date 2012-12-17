@@ -20,4 +20,8 @@ public class InfoCityFacebook {
 	public static Session getSession() {
 		return mCurrSession;
 	}
+	
+	public static boolean isLogged() {
+		return sUser != null;
+	}
 }
