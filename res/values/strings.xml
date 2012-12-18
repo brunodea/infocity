@@ -82,4 +82,5 @@
     <string name="no_fetched_events">Nenhum evento encontrado.</string>
     <string name="prefs_max_events_summary">Número máximo de eventos a serem buscados.</string>
     <string name="prefs_max_events_title">Limite de eventos</string>
+    <string name="suggestion">Sugestão</string>
 </resources>
