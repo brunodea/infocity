@@ -86,12 +86,12 @@ public class InfoCityServer {
 	 * @param context_data Dados relacionados ao contexto.
 	 * @return JSON com a resposta do servidor.
 	 */
-	public static JSONObject getEvents(Context c, float radius,
+	public static JSONObject getEvents(Context c, float radius, int max_events,
 			ContextData context_data) {
 		try {
 			return checkResponse(c, Internet.getRequest(InfoCityPreferences.getServerBaseURI(c)
 					+"getWithin/"+context_data.getLatitude()+"/"+context_data.getLongitude()+"/"+radius+"/"+
-					URLEncoder.encode(context_data.toString(),"UTF-8")));
+					max_events+"/"+URLEncoder.encode(context_data.toString(),"UTF-8")));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

@@ -79,4 +79,7 @@
     <string name="app_id">509896059044144</string>
     <string name="like">Gostar</string>
     <string name="dislike">Desgostar</string>
+    <string name="no_fetched_events">Nenhum evento encontrado.</string>
+    <string name="prefs_max_events_summary">Número máximo de eventos a serem buscados.</string>
+    <string name="prefs_max_events_title">Limite de eventos</string>
 </resources>

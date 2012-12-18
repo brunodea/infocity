@@ -370,8 +370,13 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 		final Handler event_handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				EventItem event = (EventItem) msg.obj;
-				addEventItem(event);
+				if(msg.what == 0) {
+					EventItem event = (EventItem) msg.obj;
+					addEventItem(event);
+				} else if(msg.what == -1) {
+					Toast.makeText(InfoCityMap.this, getResources().getString(R.string.no_fetched_events), 
+							Toast.LENGTH_SHORT).show();
+				}
 			}
 		};
 
@@ -381,17 +386,22 @@ public class InfoCityMap extends MapActivity implements OnClickListener {
 				boolean ok = false;
 				//faz a busca no servidor pelos eventos.
 				JSONObject res = InfoCityServer.getEvents(InfoCityMap.this, 
-						InfoCityPreferences.getEventMaxRadius(InfoCityMap.this), 
+						InfoCityPreferences.getEventMaxRadius(InfoCityMap.this),
+						InfoCityPreferences.getMaxEvents(InfoCityMap.this),
 						mCurrContextSupplier.getContextData());
 				if(res != null && res.has("size")) {
 					try {
 						int size = res.getInt("size");
+						if(size == 0) {
+							event_handler.sendEmptyMessage(-1);
+						}
 						for(int i = 0; i < size; i++) {
 							if(res.has("event_"+i)) {
 								JSONObject event = res.getJSONObject("event_"+i);
 								try {
 									Message msg = event_handler.obtainMessage();
 									msg.obj = Util.eventItemFromJSON(event);
+									msg.what = 0;
 									event_handler.sendMessage(msg);
 								} catch (Exception e) {
 									e.printStackTrace();

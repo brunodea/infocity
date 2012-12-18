@@ -63,4 +63,8 @@ public class InfoCityPreferences {
 		return filter_eventtype == null ? EventTypeManager.instance().type_all() : 
 			EventTypeManager.instance().eventTypeFromTypeName(TypeName.fromValue(filter_eventtype));
 	}
+	
+	public static int getMaxEvents(Context c) {
+		return Integer.parseInt(getStringDefaultPreference(c, "max_events", "10"));
+	}
 }

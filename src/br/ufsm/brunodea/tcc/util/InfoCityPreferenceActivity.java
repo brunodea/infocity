@@ -25,6 +25,7 @@ public class InfoCityPreferenceActivity extends PreferenceActivity
 	
 	private ListPreference mFiltersEventType;
 	
+	private EditTextPreference mMaxEvents;
 	private EditTextPreference mEventRadius;
 	private EditTextPreference mServerIP;
 	private EditTextPreference mServerPort;
@@ -48,6 +49,8 @@ public class InfoCityPreferenceActivity extends PreferenceActivity
     private void initGUI() {
     	mFiltersEventType = (ListPreference)
     			getPreferenceScreen().findPreference("filters_eventtype");
+        mMaxEvents = (EditTextPreference)
+        		getPreferenceScreen().findPreference("max_events");
         mEventRadius = (EditTextPreference)
         		getPreferenceScreen().findPreference("event_radius");
         mServerIP = (EditTextPreference)
@@ -78,6 +81,7 @@ public class InfoCityPreferenceActivity extends PreferenceActivity
     private void setListeners() {
     	mFiltersEventType.setOnPreferenceChangeListener(this);
     	
+    	mMaxEvents.setOnPreferenceChangeListener(this);
         mEventRadius.setOnPreferenceChangeListener(this);
         mServerIP.setOnPreferenceChangeListener(this);
         mServerPort.setOnPreferenceChangeListener(this);
@@ -89,6 +93,7 @@ public class InfoCityPreferenceActivity extends PreferenceActivity
     private void setPreValues() {
     	mFiltersEventType.setSummary(InfoCityPreferences.eventTypeFilter(this).toString());
     	
+    	mMaxEvents.setSummary(InfoCityPreferences.getMaxEvents(this)+"");
         mEventRadius.setSummary(InfoCityPreferences.getEventMaxRadius(this) + "m");
         mServerIP.setSummary(InfoCityPreferences.getServerIP(this));
         mServerPort.setSummary(InfoCityPreferences.getServerPort(this)+"");
@@ -113,6 +118,9 @@ public class InfoCityPreferenceActivity extends PreferenceActivity
 				ok = true;
 				result = RESULT_CODE_EVENT_RADIUS;
 				preference.setSummary(newValue.toString()+"m");
+			} else if(preference == mMaxEvents) {
+				ok = true;
+				preference.setSummary(newValue.toString());
 			} else if(preference == mServerIP) {
 				String ip = newValue.toString();
 				if(ip.matches("^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|" +

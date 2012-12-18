@@ -9,6 +9,12 @@
             android:title="@string/pref_event_radius_title"
             android:defaultValue="50000"
             android:numeric="decimal"/>
+        <EditTextPreference 
+            android:key="max_events"
+            android:summary="@string/prefs_max_events_summary"
+            android:title="@string/prefs_max_events_title"
+            android:defaultValue="10"
+            android:numeric="integer"/>
         <ListPreference 
             android:key="filters_eventtype"
             android:title="@string/pref_filters_types_title"
