@@ -12,6 +12,7 @@ import android.util.Log;
 import br.ufsm.brunodea.tcc.R;
 import br.ufsm.brunodea.tcc.context.ContextData;
 import br.ufsm.brunodea.tcc.internet.facebook.InfoCityFacebook;
+import br.ufsm.brunodea.tcc.model.EventComment;
 import br.ufsm.brunodea.tcc.model.EventItem;
 import br.ufsm.brunodea.tcc.util.InfoCityPreferences;
 
@@ -118,5 +119,15 @@ public class InfoCityServer {
 	public static JSONObject countLikesDislikes(Context c, EventItem event)  {
 		return checkResponse(c, Internet.getRequest(InfoCityPreferences.getServerBaseURI(c)
 				+"countLikesDislikes/"+event.getPrimaryKey()));
+	}
+	
+	public static JSONObject getEventComments(Context c, EventItem event) {
+		return checkResponse(c, Internet.getRequest(InfoCityPreferences.getServerBaseURI(c))
+				+"getComments/"+event.getPrimaryKey());
+	}
+	
+	public static JSONObject saveEventComment(Context c, EventComment comment) {
+		return checkResponse(c, Internet.postRequest(InfoCityPreferences.getServerBaseURI(c)+"saveComment/?",
+				comment.getListNameValuePair()));
 	}
 }

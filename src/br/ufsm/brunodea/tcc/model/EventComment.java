@@ -58,7 +58,7 @@ public class EventComment implements Model {
 	}
 
 	@Override
-	public List<NameValuePair> getListNameValuePair() throws JSONException {
+	public List<NameValuePair> getListNameValuePair() {
 		List<NameValuePair> list = new ArrayList<NameValuePair>();
 		list.add(new BasicNameValuePair("event_id", getEventPrimaryKey()+""));
 		list.add(new BasicNameValuePair("user_id", getUserID()));
