@@ -170,8 +170,15 @@ public class EventCommentActivity extends Activity implements OnClickListener {
 							mEditTextAddComment.setText("");
 							EventComment event_comment = createEventComment(comment); 
 							CommentArrayAdapter caa = (CommentArrayAdapter) mListViewComments.getAdapter();
-							caa.add(event_comment);
-							mListViewComments.setAdapter(caa);
+							if(caa == null) {
+								ArrayList<EventComment> comments = new ArrayList<EventComment>();
+								comments.add(event_comment);
+								caa = new CommentArrayAdapter(EventCommentActivity.this, comments);
+								mListViewComments.setAdapter(caa);
+							} else {
+								caa.add(event_comment);
+							}
+							//mListViewComments.setAdapter(caa);
 							mTextViewInfo.setVisibility(View.GONE);
 						}
 					}

@@ -37,9 +37,9 @@ public class CommentArrayAdapter extends ArrayAdapter<EventComment> {
 		ProfilePictureView ppv = (ProfilePictureView)rowView.findViewById(R.id.profilepic);
 		
 		EventComment eventcomment = mComments.get(position);
+		ppv.setProfileId(eventcomment.getUserID());
 		name.setText(eventcomment.getUserName());
 		comment.setText(eventcomment.getComment());
-		ppv.setProfileId(eventcomment.getUserID());
 		
 		return rowView;
 	}
