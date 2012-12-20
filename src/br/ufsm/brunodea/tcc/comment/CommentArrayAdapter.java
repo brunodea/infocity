@@ -2,6 +2,8 @@ package br.ufsm.brunodea.tcc.comment;
 
 import java.util.ArrayList;
 
+import com.facebook.widget.ProfilePictureView;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,10 +34,12 @@ public class CommentArrayAdapter extends ArrayAdapter<EventComment> {
 
 		TextView name = (TextView)rowView.findViewById(R.id.textview_username);
 		TextView comment = (TextView)rowView.findViewById(R.id.textview_comment);
+		ProfilePictureView ppv = (ProfilePictureView)rowView.findViewById(R.id.profilepic);
 		
 		EventComment eventcomment = mComments.get(position);
 		name.setText(eventcomment.getUserName());
 		comment.setText(eventcomment.getComment());
+		ppv.setProfileId(eventcomment.getUserID());
 		
 		return rowView;
 	}

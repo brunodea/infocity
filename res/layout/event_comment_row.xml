@@ -1,25 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="5dp"
-    android:orientation="vertical" >
+    android:orientation="horizontal" >
     
-    <TextView 
-        android:id="@+id/textview_username"
-        android:layout_width="fill_parent"
+    <com.facebook.widget.ProfilePictureView
+	    android:id="@+id/profilepic"
+	    android:layout_height="wrap_content"
+	    android:layout_width="wrap_content"
+	    app:preset_size="small"
+	    app:is_cropped="true"/>
+    <LinearLayout 
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/default_text_size"
-        android:textStyle="bold"
-        android:layout_marginBottom="10dp"
-        android:layout_gravity="left"/>
-
-    <TextView 
-        android:id="@+id/textview_comment"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/default_text_size"
-        android:layout_marginLeft="5dp"
-        android:layout_gravity="left"/>
-    
+        android:orientation="vertical">
+	    <TextView 
+	        android:id="@+id/textview_username"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="@dimen/default_text_size"
+	        android:textStyle="bold"
+	        android:layout_marginBottom="10dp"
+	        android:layout_gravity="left"/>
+	
+	    <TextView 
+	        android:id="@+id/textview_comment"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="@dimen/default_text_size"
+	        android:layout_marginLeft="5dp"
+	        android:layout_gravity="left"/>
+    </LinearLayout>
 </LinearLayout>
