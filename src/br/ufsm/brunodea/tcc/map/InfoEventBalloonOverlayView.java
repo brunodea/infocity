@@ -7,17 +7,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import br.ufsm.brunodea.tcc.R;
+import br.ufsm.brunodea.tcc.comment.EventCommentActivity;
 import br.ufsm.brunodea.tcc.internet.InfoCityServer;
 import br.ufsm.brunodea.tcc.internet.facebook.InfoCityFacebook;
 import br.ufsm.brunodea.tcc.model.EventItem;
@@ -48,6 +51,8 @@ public class InfoEventBalloonOverlayView <Item extends OverlayItem>
 	
 	private ImageButton mImageButtonLike;
 	private ImageButton mImageButtonDislike;
+	
+	private Button mButtonComments;
 	
 	private ProgressBar mProgressBarLikeDislike;
 	
@@ -116,6 +121,9 @@ public class InfoEventBalloonOverlayView <Item extends OverlayItem>
 		mTextViewDislike = (TextView)v.findViewById(R.id.textview_dislikes);
 		
 		mProgressBarLikeDislike = (ProgressBar)v.findViewById(R.id.progressbar_like_dislike);
+
+		mButtonComments = (Button) v.findViewById(R.id.button_comments);
+		mButtonComments.setOnClickListener(this);
 	}
 
 	private void adjustLikeDislike() {
@@ -195,47 +203,53 @@ public class InfoEventBalloonOverlayView <Item extends OverlayItem>
 	@Override
 	public void onClick(View v) {
 		if(mEventItem != null) {
-			mProgressBarLikeDislike.setVisibility(View.VISIBLE);
-			mImageButtonLike.setEnabled(false);
-			mImageButtonDislike.setEnabled(false);
-			
-			final int like_action = mEventItem.getLikeAction();
-			final int likes = mEventItem.getLikes();
-			final int dislikes = mEventItem.getDislikes();
-			if(v == mImageButtonLike) {
-				mEventItem.doLike();
-			} else if(v == mImageButtonDislike) {
-				mEventItem.doDislike();
-			}
-			
-			final Handler handler = new Handler() {
-				@Override
-				public void handleMessage(Message msg) {
-					if(msg.what == 0) {
-						adjustLikeDislike();
-					} else {
-						mEventItem.setLikeAction(like_action);
-						mEventItem.setLikes(likes);
-						mEventItem.setDislikes(dislikes);
-						
-						Toast.makeText(mContext, mContext.getResources().getString(R.string.server_error), 
-								Toast.LENGTH_SHORT).show();
+			if(v == mImageButtonLike || v == mImageButtonDislike) {
+				mProgressBarLikeDislike.setVisibility(View.VISIBLE);
+				mImageButtonLike.setEnabled(false);
+				mImageButtonDislike.setEnabled(false);
+				
+				final int like_action = mEventItem.getLikeAction();
+				final int likes = mEventItem.getLikes();
+				final int dislikes = mEventItem.getDislikes();
+				if(v == mImageButtonLike) {
+					mEventItem.doLike();
+				} else if(v == mImageButtonDislike) {
+					mEventItem.doDislike();
+				}
+				
+				final Handler handler = new Handler() {
+					@Override
+					public void handleMessage(Message msg) {
+						if(msg.what == 0) {
+							adjustLikeDislike();
+						} else {
+							mEventItem.setLikeAction(like_action);
+							mEventItem.setLikes(likes);
+							mEventItem.setDislikes(dislikes);
+							
+							Toast.makeText(mContext, mContext.getResources().getString(R.string.server_error), 
+									Toast.LENGTH_SHORT).show();
+						}
+						mImageButtonLike.setEnabled(true);
+						mImageButtonDislike.setEnabled(true);
+						mProgressBarLikeDislike.setVisibility(View.GONE);
 					}
-					mImageButtonLike.setEnabled(true);
-					mImageButtonDislike.setEnabled(true);
-					mProgressBarLikeDislike.setVisibility(View.GONE);
-				}
-			};
-			
-			Thread t = new Thread() {
-				@Override
-				public void run() {
-					JSONObject res = InfoCityServer.likeEvent(mContext, mEventItem);
-					handler.sendEmptyMessage(res.has("ok") ? 0 : 1);
-				}
-			};
-			t.start();
-			
+				};
+				
+				Thread t = new Thread() {
+					@Override
+					public void run() {
+						JSONObject res = InfoCityServer.likeEvent(mContext, mEventItem);
+						handler.sendEmptyMessage(res.has("ok") ? 0 : 1);
+					}
+				};
+				t.start();
+			} else if(v == mButtonComments){
+				Intent intent = new Intent(mContext, EventCommentActivity.class);
+				intent.putExtra("event_id", mEventItem.getPrimaryKey());
+				
+				mContext.startActivity(intent);
+			}
 		}
 	}
 }

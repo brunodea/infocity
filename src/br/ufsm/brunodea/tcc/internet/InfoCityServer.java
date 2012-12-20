@@ -121,9 +121,9 @@ public class InfoCityServer {
 				+"countLikesDislikes/"+event.getPrimaryKey()));
 	}
 	
-	public static JSONObject getEventComments(Context c, EventItem event) {
-		return checkResponse(c, Internet.getRequest(InfoCityPreferences.getServerBaseURI(c))
-				+"getComments/"+event.getPrimaryKey());
+	public static JSONObject getEventComments(Context c, int event_id) {
+		return checkResponse(c, Internet.getRequest(InfoCityPreferences.getServerBaseURI(c)
+				+"getComments/"+event_id));
 	}
 	
 	public static JSONObject saveEventComment(Context c, EventComment comment) {

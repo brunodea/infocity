@@ -83,4 +83,10 @@
     <string name="prefs_max_events_summary">Número máximo de eventos a serem buscados.</string>
     <string name="prefs_max_events_title">Limite de eventos</string>
     <string name="suggestion">Sugestão</string>
+    <string name="loading_comments">Carregando comentários</string>
+    <string name="no_comments">Nenhum comentário feito.</string>
+    <string name="add_comment">Comentar</string>
+    <string name="comment_not_empty">Comentário não pode ser vazio.</string>
+    <string name="comments">Comentários</string>
+    <string name="cannot_comment">Você precisa estar logado para comentar.</string>
 </resources>
