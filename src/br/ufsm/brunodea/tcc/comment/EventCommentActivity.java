@@ -1,6 +1,8 @@
 package br.ufsm.brunodea.tcc.comment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -90,8 +92,10 @@ public class EventCommentActivity extends Activity implements OnClickListener {
 			public void handleMessage(Message msg) {
 				adjustVisibilities(false);
 				if(msg.what == 0) {
-					mListViewComments.setAdapter(new CommentArrayAdapter(EventCommentActivity.this,
-							(ArrayList<EventComment>) msg.obj));
+					CommentArrayAdapter caa = new CommentArrayAdapter(EventCommentActivity.this,
+							(ArrayList<EventComment>) msg.obj);
+					caa.sort();
+					mListViewComments.setAdapter(caa);
 				} else if(msg.what == 1) {
 					mTextViewInfo.setVisibility(View.VISIBLE);
 					mTextViewInfo.setText(getResources().getString(R.string.no_comments));
@@ -116,8 +120,11 @@ public class EventCommentActivity extends Activity implements OnClickListener {
 							String user_id = c.getString("user_id");
 							String user_name = c.getString("user_name");
 							String comment = c.getString("comment");
-							
-							comments.add(new EventComment(mEventID, user_id, user_name, comment));
+							String date_str = c.getString("date");
+
+							EventComment event_comment = new EventComment(mEventID, user_id, user_name, comment, null);
+							event_comment.setDate(date_str);
+							comments.add(event_comment);
 						}
 						
 						if(size > 0) {
@@ -142,7 +149,7 @@ public class EventCommentActivity extends Activity implements OnClickListener {
 
 	private EventComment createEventComment(String comment) {
 		return new EventComment(mEventID, InfoCityFacebook.getUser().getId(),
-				InfoCityFacebook.getUser().getName(), comment);
+				InfoCityFacebook.getUser().getName(), comment, new Date());
 	}
 	
 	@Override
@@ -178,7 +185,9 @@ public class EventCommentActivity extends Activity implements OnClickListener {
 							} else {
 								caa.add(event_comment);
 							}
-							//mListViewComments.setAdapter(caa);
+							caa.sort();
+							caa.notifyDataSetChanged();
+
 							mTextViewInfo.setVisibility(View.GONE);
 						}
 					}

@@ -22,8 +22,14 @@
 	        android:layout_height="wrap_content"
 	        android:textSize="@dimen/default_text_size"
 	        android:textStyle="bold"
-	        android:layout_marginBottom="10dp"
 	        android:layout_gravity="left"/>
+        <TextView 
+            android:id="@+id/textview_comment_date"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/small_text_size"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="right"/>
 	
 	    <TextView 
 	        android:id="@+id/textview_comment"

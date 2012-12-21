@@ -79,8 +79,7 @@ public class InfoEventBalloonOverlayView <Item extends OverlayItem>
 	protected void setBalloonData(EventItem item, ViewGroup parent) {
 		mEventItem = item;
 
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		mTextViewPubdate.setText(sdf.format(item.getPubDate()));
+		mTextViewPubdate.setText(SimpleDateFormat.getDateTimeInstance().format(item.getPubDate()));
 		mTextViewTitle.setText(item.getTitle());
 		mTextViewDescription.setText(item.getSnippet());
 		
