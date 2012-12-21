@@ -36,7 +36,7 @@
 	<ListView
 	    android:id="@+id/listview_comments"
 	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
+	    android:layout_height="fill_parent"
         android:layout_alignParentTop="true"
 	    android:layout_marginBottom="50dp"
 	    android:divider="#ffffff"

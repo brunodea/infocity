@@ -1,7 +1,9 @@
 package br.ufsm.brunodea.tcc.comment;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Date;
 
 import com.facebook.widget.ProfilePictureView;
 
@@ -50,7 +52,7 @@ public class CommentArrayAdapter extends ArrayAdapter<EventComment> {
 		super.sort(new Comparator<EventComment>() {
 			@Override
 			public int compare(EventComment lhs, EventComment rhs) {
-				return lhs.getDate().compareTo(rhs.getDate());
+				return lhs.getDate().after(rhs.getDate()) ? 0 : 1;
 			}
 		});
 	}

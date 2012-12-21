@@ -2,6 +2,7 @@ package br.ufsm.brunodea.tcc.comment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.json.JSONException;
@@ -124,6 +125,12 @@ public class EventCommentActivity extends Activity implements OnClickListener {
 
 							EventComment event_comment = new EventComment(mEventID, user_id, user_name, comment, null);
 							event_comment.setDate(date_str);
+
+							Date d = event_comment.getDate();
+							Calendar cal = Calendar.getInstance();
+							cal.setTime(d);
+							cal.add(Calendar.HOUR_OF_DAY, -2); //servidor retorna com +2h. (+2 gmt??)
+							event_comment.setDate(cal.getTime());
 							comments.add(event_comment);
 						}
 						
@@ -166,6 +173,7 @@ public class EventCommentActivity extends Activity implements OnClickListener {
 				Toast.makeText(this, getResources().getString(R.string.comment_not_empty), 
 						Toast.LENGTH_SHORT).show();
 			} else {
+				final EventComment event_comment = createEventComment(comment); 
 				mButtonAddComment.setEnabled(false);
 				mProgressBarSavingComment.setVisibility(View.VISIBLE);
 				final Handler done = new Handler() {
@@ -175,32 +183,19 @@ public class EventCommentActivity extends Activity implements OnClickListener {
 						mButtonAddComment.setEnabled(true);
 						if(msg.what == 1) {
 							mEditTextAddComment.setText("");
-							EventComment event_comment = createEventComment(comment); 
-							CommentArrayAdapter caa = (CommentArrayAdapter) mListViewComments.getAdapter();
-							if(caa == null) {
-								ArrayList<EventComment> comments = new ArrayList<EventComment>();
-								comments.add(event_comment);
-								caa = new CommentArrayAdapter(EventCommentActivity.this, comments);
-								mListViewComments.setAdapter(caa);
-							} else {
-								caa.add(event_comment);
-							}
-							caa.sort();
-							caa.notifyDataSetChanged();
-
+							loadComments();
 							mTextViewInfo.setVisibility(View.GONE);
 						}
 					}
 				};
-				
+
 				Thread t = new Thread() {
 					@Override
 					public void run() {
-						EventComment event_comment = createEventComment(comment); 
 						JSONObject res = InfoCityServer.saveEventComment(EventCommentActivity.this, 
 								event_comment);
 						int what = 0;
-						if(res != null) {
+						if(res != null && !res.has("error")) {
 							what = 1;
 						}
 
