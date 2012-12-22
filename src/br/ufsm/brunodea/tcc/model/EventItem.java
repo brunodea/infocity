@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import br.ufsm.brunodea.tcc.context.ContextData;
+import br.ufsm.brunodea.tcc.internet.facebook.InfoCityFacebook;
 import br.ufsm.brunodea.tcc.util.Util;
 
 import com.google.android.maps.GeoPoint;
@@ -227,6 +228,15 @@ public class EventItem extends OverlayItem implements Model {
 		if(mContextData != null) {
 			params.add(new BasicNameValuePair("context_data", mContextData.toString()));
 		}
+		
+		return params;
+	}
+	
+	public List<NameValuePair> getLikeListNameValuePair() {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("event_id", getPrimaryKey()+""));
+		params.add(new BasicNameValuePair("user_id", InfoCityFacebook.getUser().getId()));
+		params.add(new BasicNameValuePair("like", getLikeAction()+""));
 		
 		return params;
 	}

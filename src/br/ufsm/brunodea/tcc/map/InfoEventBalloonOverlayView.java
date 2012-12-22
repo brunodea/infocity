@@ -203,6 +203,11 @@ public class InfoEventBalloonOverlayView <Item extends OverlayItem>
 	public void onClick(View v) {
 		if(mEventItem != null) {
 			if(v == mImageButtonLike || v == mImageButtonDislike) {
+				if(!InfoCityFacebook.isLogged()) {
+					Toast.makeText(mContext, mContext.getResources().getString(R.string.facebook_permission_not_granted), 
+							Toast.LENGTH_SHORT).show();
+					return;
+				}
 				mProgressBarLikeDislike.setVisibility(View.VISIBLE);
 				mImageButtonLike.setEnabled(false);
 				mImageButtonDislike.setEnabled(false);
