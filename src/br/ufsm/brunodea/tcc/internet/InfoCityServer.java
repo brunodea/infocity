@@ -106,9 +106,8 @@ public class InfoCityServer {
 	}
 	
 	public static JSONObject likeEvent(Context c, EventItem event) {
-		return checkResponse(c, Internet.getRequest(InfoCityPreferences.getServerBaseURI(c)
-				+"likeEvent/"+event.getPrimaryKey()+"/"+InfoCityFacebook.getUser().getId()+"/"
-				+event.getLikeAction()));
+		return checkResponse(c, Internet.postRequest(InfoCityPreferences.getServerBaseURI(c)
+				+"likeEvent/?", event.getLikeListNameValuePair()));
 	}
 	
 	public static JSONObject getLikeAction(Context c, EventItem event) {
